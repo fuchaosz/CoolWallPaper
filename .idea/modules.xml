@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/CoolWallPaper.iml" filepath="$PROJECT_DIR$/CoolWallPaper.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" filepath="$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-xUtils/library-xUtils.iml" filepath="$PROJECT_DIR$/library-xUtils/library-xUtils.iml" />
     </modules>
   </component>
 </project>

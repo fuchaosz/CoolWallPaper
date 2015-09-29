@@ -4,9 +4,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.lidroid.xutils.view.annotation.ViewInject;
 
 public class MainActivity extends ActionBarActivity {
 
+    @ViewInject(R.id.tv_hollo)
+    TextView helloworld;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

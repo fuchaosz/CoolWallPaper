@@ -1,1 +1,1 @@
-include ':app', ':coolwallpaper', ':coolwallpaper'
+include ':app', ':coolwallpaper', ':coolwallpaper',':library-xUtils'
