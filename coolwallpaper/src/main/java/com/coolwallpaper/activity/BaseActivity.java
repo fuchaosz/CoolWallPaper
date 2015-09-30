@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * 基类Activity
- * Created by John on 2015/7/9.
+ * Created by fuchao on 2015/7/9.
  */
 public class BaseActivity extends Activity {
 

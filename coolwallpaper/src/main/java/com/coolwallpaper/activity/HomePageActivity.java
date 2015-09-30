@@ -10,7 +10,7 @@ import android.support.v4.view.ViewPager;
 
 /**
  * 首页
- * Created by John on 2015/8/11.
+ * Created by fuchao on 2015/8/11.
  */
 public class HomePageActivity extends FragmentActivity {
 

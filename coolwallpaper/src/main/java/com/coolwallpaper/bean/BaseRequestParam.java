@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 获取百度图片的请求参数的基类
- * Created by John on 2015/9/29.
+ * Created by fuchao on 2015/9/29.
  */
 public abstract class BaseRequestParam implements Serializable {
 
@@ -81,6 +81,30 @@ public abstract class BaseRequestParam implements Serializable {
      * 注意：这里一般是中文,需要用URLEncoder转换
      */
     protected String tag3;
+
+    /**
+     * 默认构造函数
+     */
+    public BaseRequestParam() {
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param col
+     * @param tag
+     * @param tag3
+     * @param page
+     * @param pageSize
+     */
+    public BaseRequestParam(String col, String tag, String tag3, int page, int pageSize) {
+        this.col = col;
+        this.tag = tag;
+        this.tag3 = tag3;
+        this.pn = page;
+        this.rn = pageSize;
+    }
+
 
     /**
      * 获取图片URL。具体的URL生成方法交给子类去实现
