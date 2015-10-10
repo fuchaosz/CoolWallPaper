@@ -1,8 +1,11 @@
 package com.coolwallpaper.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
+ * 图片Bean
  * Created by fuchao on 2015/9/30.
  */
 public class PictureBean implements Serializable {
@@ -50,16 +53,19 @@ public class PictureBean implements Serializable {
     /**
      * 缩略图url。对应字段：thumbLargeUrl
      */
+    @SerializedName(value = "thumbLargeUrl")
     private String smallImageUrl;
 
     /**
-     * 缩略图宽度  thumbLargeTnWidth
+     * 缩略图宽度  thumbLargeWidth
      */
+    @SerializedName(value = "thumbLargeWidth")
     private int smallImageWidth;
 
     /**
      * 缩略图长度  thumbLargeTnWidth
      */
+    @SerializedName(value = "thumbLargeHeight")
     private int smallImageHeight;
 
     public String getId() {

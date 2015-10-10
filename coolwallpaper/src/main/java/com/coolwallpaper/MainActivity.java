@@ -1,22 +1,26 @@
 package com.coolwallpaper;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 
 public class MainActivity extends ActionBarActivity {
 
     @ViewInject(R.id.tv_hollo)
     TextView helloworld;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ViewUtils.inject(this);
     }
 
     @Override
@@ -39,5 +43,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.btn_show_pic)
+    public void onClick(View v) {
+        //跳转到显示图片的地方
+        ShowPictureActivity.startActivity(this);
+        finish();
     }
 }

@@ -1,9 +1,9 @@
 package com.coolwallpaper.utils;
 
 import com.coolwallpaper.bean.PictureBean;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,22 +14,29 @@ import java.util.List;
  */
 public class PictureParseUtil {
 
-    public static List<PictureBean> parse(JSONArray jsonArray) {
-        if (jsonArray == null) {
+    /**
+     * 解析从网络上下载的壁纸的Json数据
+     *
+     * @param jsonArrayStr json字符串
+     * @return
+     */
+    public static List<PictureBean> parse(String jsonArrayStr) {
+        if (jsonArrayStr == null) {
             return null;
         }
         List<PictureBean> beanList = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-
+        try {
+            JSONArray jsonArray = new JSONArray(jsonArrayStr);
+            Gson gson = new Gson();
+            //遍历，使用Gson将json直接解析成bean
+            for (int i = 0; i < jsonArray.length(); i++) {
+                PictureBean bean = gson.fromJson(jsonArray.get(i).toString(), PictureBean.class);
+                beanList.add(bean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return beanList;
     }
-
-    public static PictureBean parsePictureBean(JSONObject jo) {
-        PictureBean bean = new PictureBean();
-        //bean.setId(Gson);
-        return bean;
-    }
-
 
 }
