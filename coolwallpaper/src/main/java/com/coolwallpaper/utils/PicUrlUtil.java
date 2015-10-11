@@ -14,23 +14,4 @@ public class PicUrlUtil {
         this.url = url;
     }
 
-    //    //解析出数据
-    //    public void getUrl(){
-    //        //获取数据
-    //        //httpClient.get(url, new AsyncHttpResponseHandler() {
-    //            @Override
-    //            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-    //                //解析数据
-    //
-    //
-    //
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-    //
-    //            }
-    //        });
-    //    }
-
 }

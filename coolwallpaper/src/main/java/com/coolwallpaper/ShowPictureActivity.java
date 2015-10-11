@@ -3,11 +3,13 @@ package com.coolwallpaper;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolwallpaper.activity.BaseActivity;
@@ -51,6 +53,11 @@ public class ShowPictureActivity extends BaseActivity {
         this.requetParam = new WallPaperRequetParam();
         this.bitmapUtils = new BitmapUtils(this);
         this.httpUtils = new HttpUtils();
+        //给RecycleView设置LayoutManager，否则会报错
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        this.rvPictue.setLayoutManager(linearLayoutManager);
+        this.rvPictue.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //查询图片
         this.queryPicture();
     }
@@ -113,7 +120,7 @@ public class ShowPictureActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             PictureBean bean = beanList.get(position);
-            bitmapUtils.display(holder.ivPic, bean.getSmallImageUrl());
+            bitmapUtils.display(holder.ivPic, bean.getImageUrl());
             holder.tvDesc.setText(bean.getDesc());
         }
 

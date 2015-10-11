@@ -3,6 +3,7 @@ package com.coolwallpaper.bean;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 图片Bean
@@ -23,7 +24,7 @@ public class PictureBean implements Serializable {
     /**
      * 所有标签,是JSON数组，例如："tags": ["微软壁纸"]
      */
-    private String tags;
+    private List<String> tags;
 
     /**
      * 日期,格式：2015-09-30
@@ -82,14 +83,6 @@ public class PictureBean implements Serializable {
 
     public void setDesc(String desc) {
         this.desc = desc;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
     }
 
     public String getDate() {
@@ -154,5 +147,13 @@ public class PictureBean implements Serializable {
 
     public void setSmallImageHeight(int smallImageHeight) {
         this.smallImageHeight = smallImageHeight;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }
