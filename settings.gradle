@@ -1,1 +1,8 @@
-include ':app', ':coolwallpaper', ':coolwallpaper',':library-xUtils'
+include ':app', ':coolwallpaper', ':coolwallpaper',':library-xUtils', ':sharelib'
+include ':android-common'
+include ':PinterestLikeView'
+include ':pullToRefreshListFragment'
+include ':pullToRefreshViewPager'
+include ':sample-PullToRefresh'
+include ':library-PullToRefresh'
+
