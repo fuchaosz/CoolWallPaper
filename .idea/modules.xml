@@ -4,14 +4,22 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CoolWallPaper.iml" filepath="$PROJECT_DIR$/CoolWallPaper.iml" />
       <module fileurl="file://$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" filepath="$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" filepath="$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PullToRefreshLoadLayout/PullToRefreshLoadLayout.iml" filepath="$PROJECT_DIR$/PullToRefreshLoadLayout/PullToRefreshLoadLayout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-common/android-common.iml" filepath="$PROJECT_DIR$/android-common/android-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-common/android-common.iml" filepath="$PROJECT_DIR$/android-common/android-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" filepath="$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" filepath="$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" filepath="$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-xUtils/library-xUtils.iml" filepath="$PROJECT_DIR$/library-xUtils/library-xUtils.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullToRefreshListFragment/pullToRefreshListFragment.iml" filepath="$PROJECT_DIR$/pullToRefreshListFragment/pullToRefreshListFragment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pullToRefreshListFragment/pullToRefreshListFragment.iml" filepath="$PROJECT_DIR$/pullToRefreshListFragment/pullToRefreshListFragment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pullToRefreshViewPager/pullToRefreshViewPager.iml" filepath="$PROJECT_DIR$/pullToRefreshViewPager/pullToRefreshViewPager.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullToRefreshViewPager/pullToRefreshViewPager.iml" filepath="$PROJECT_DIR$/pullToRefreshViewPager/pullToRefreshViewPager.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample-PullToRefresh/sample-PullToRefresh.iml" filepath="$PROJECT_DIR$/sample-PullToRefresh/sample-PullToRefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample-PullToRefresh/sample-PullToRefresh.iml" filepath="$PROJECT_DIR$/sample-PullToRefresh/sample-PullToRefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sharelib/sharelib.iml" filepath="$PROJECT_DIR$/sharelib/sharelib.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharelib/sharelib.iml" filepath="$PROJECT_DIR$/sharelib/sharelib.iml" />
     </modules>
   </component>
