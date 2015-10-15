@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CoolWallPaper.iml" filepath="$PROJECT_DIR$/CoolWallPaper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" filepath="$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PinterestLikeAdapterView/PinterestLikeAdapterView.iml" filepath="$PROJECT_DIR$/PinterestLikeAdapterView/PinterestLikeAdapterView.iml" />
       <module fileurl="file://$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" filepath="$PROJECT_DIR$/PinterestLikeView/PinterestLikeView.iml" />
       <module fileurl="file://$PROJECT_DIR$/PullToRefreshLoadLayout/PullToRefreshLoadLayout.iml" filepath="$PROJECT_DIR$/PullToRefreshLoadLayout/PullToRefreshLoadLayout.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-common/android-common.iml" filepath="$PROJECT_DIR$/android-common/android-common.iml" />
