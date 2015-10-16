@@ -25,4 +25,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.android.support:cardview-v7:21.+'
     compile project(':sharelib')
+    //ImgaeView允许四个角的每一个有不同的半径值
+    compile project(':library-SelectableRoundedImageViewLib')
 }

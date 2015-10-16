@@ -1,10 +1,9 @@
 package com.dodowaterfall.widget;
 
-import com.dodowaterfall.Constants;
-
 import android.content.res.AssetManager;
 
-//这个类是一个java bean，可以不用这个类
+import com.dodowaterfall.Constants;
+
 public class FlowTag {
 	
 	public final int what = Constants.HANDLER_WHAT;

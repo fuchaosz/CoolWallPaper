@@ -23,6 +23,9 @@
 
         <!--显示图片-->
         <activity android:name=".ShowPictureActivity"/>
+
+        <!--图片列表-->
+        <activity android:name=".ShowPictureListActivity"/>
     </application>
 
 </manifest>

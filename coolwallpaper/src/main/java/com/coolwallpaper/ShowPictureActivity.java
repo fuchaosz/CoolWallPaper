@@ -23,6 +23,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
@@ -36,11 +39,14 @@ public class ShowPictureActivity extends BaseActivity {
     private BitmapUtils bitmapUtils;//显示图片的工具
     private WallPaperRequetParam requetParam;
     private PictureListAdapter adapter;
+    private ImageLoader imageLoader = ImageLoader.getInstance();//图片处理
+    private DisplayImageOptions options;//加载图片的选项
 
     //图片列表
     @ViewInject(R.id.rv_picture)
     RecyclerView rvPictue;
 
+    //启动方法
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, ShowPictureActivity.class);
         context.startActivity(intent);
@@ -53,14 +59,28 @@ public class ShowPictureActivity extends BaseActivity {
         this.requetParam = new WallPaperRequetParam();
         this.bitmapUtils = new BitmapUtils(this);
         this.httpUtils = new HttpUtils();
+        //初始化
+        this.init();
+        //查询图片
+        this.queryPicture();
+    }
+
+    //初始化
+    private void init() {
         //给RecycleView设置LayoutManager，否则会报错
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.rvPictue.setLayoutManager(linearLayoutManager);
         this.rvPictue.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        //查询图片
-        this.queryPicture();
+        //创建图片加载工具
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+        builder.showImageForEmptyUri(R.drawable.lms_spinner);
+        builder.showImageOnFail(R.drawable.lms_spinner);
+        builder.showImageOnLoading(R.drawable.lms_spinner);
+        options = builder.build();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(this));
     }
+
 
     //访问网络,查询图片
     private void queryPicture() {
@@ -120,7 +140,7 @@ public class ShowPictureActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             PictureBean bean = beanList.get(position);
-            bitmapUtils.display(holder.ivPic, bean.getImageUrl());
+            imageLoader.displayImage(bean.getSmallImageUrl(), holder.ivPic, options);
             holder.tvDesc.setText(bean.getDesc());
         }
 
