@@ -18,6 +18,9 @@ import com.coolwallpaper.bean.PictureBean;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.utils.ImageUtil;
 import com.coolwallpaper.utils.PictureParseUtil;
+import com.handmark.pulltorefresh.library.ILoadingLayout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -43,9 +46,10 @@ public class ShowPictureListActivity extends BaseActivity {
     private HttpUtils httpUtils;
     private BaseRequestParam requetParam;
     private ProgressDialog progressDialog;
+    private int currentPage;
 
     @ViewInject(R.id.gv_pic)
-    GridView gridViewPic;
+    PullToRefreshGridView gridView;
 
     /**
      * 启动方法
@@ -65,6 +69,11 @@ public class ShowPictureListActivity extends BaseActivity {
         this.init();
         //添加监听器
         this.addListener();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         //访问网络，获取图片
         this.queryPicture();
     }
@@ -75,10 +84,24 @@ public class ShowPictureListActivity extends BaseActivity {
         this.options = ImageUtil.getDisplayImageOptions();
         this.httpUtils = new HttpUtils();
         this.requetParam = new WallPaperRequetParam();
+        this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        ILoadingLayout loadLayout = gridView.getLoadingLayoutProxy();
+        loadLayout.setPullLabel("上拉加载");
+        loadLayout.setRefreshingLabel("正在加载...");
+        loadLayout.setReleaseLabel("释放加载");
     }
 
     //添加监听器
-    private void addListener(){
+    private void addListener() {
+        //this.gridView.setOnScrollListener(new AutoLoadListener());
+        //添加刷新监听
+        this.gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
+                requetParam.setPn(++currentPage);
+                queryPicture();
+            }
+        });
     }
 
     //查询图片
@@ -94,6 +117,8 @@ public class ShowPictureListActivity extends BaseActivity {
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
+                //停止刷新
+                gridView.onRefreshComplete();
             }
 
             @Override
@@ -115,11 +140,12 @@ public class ShowPictureListActivity extends BaseActivity {
         //若为空则创建adaper
         if (adapter == null) {
             adapter = new PictureGridAdapter(this, beanList);
-            gridViewPic.setAdapter(adapter);
+            gridView.setAdapter(adapter);
         }
         //已经创建了adapter
         else {
-            adapter.setBeanList(beanList);
+            //添加数据
+            adapter.getBeanList().addAll(beanList);
             adapter.notifyDataSetChanged();
         }
     }
@@ -169,7 +195,7 @@ public class ShowPictureListActivity extends BaseActivity {
             PictureBean bean = beanList.get(position);
             //绑定数据
             imageLoader.displayImage(bean.getSmallImageUrl(), holder.ivPic, options);
-            holder.tvDesc.setText(bean.getDesc());
+            //holder.tvDesc.setText(bean.getDesc());\
             return view;
         }
 
@@ -180,6 +206,10 @@ public class ShowPictureListActivity extends BaseActivity {
 
         public void setBeanList(List<PictureBean> beanList) {
             this.beanList = beanList;
+        }
+
+        public List<PictureBean> getBeanList() {
+            return beanList;
         }
     }
 

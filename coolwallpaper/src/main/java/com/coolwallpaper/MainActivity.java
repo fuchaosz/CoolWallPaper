@@ -48,8 +48,9 @@ public class MainActivity extends ActionBarActivity {
     @OnClick(R.id.btn_show_pic)
     public void onClick(View v) {
         //跳转到显示图片的地方
-        //ShowPictureActivity.startActivity(this);
+        // ShowPictureActivity.startActivity(this);
         ShowPictureListActivity.startActivity(this);
         finish();
     }
+
 }

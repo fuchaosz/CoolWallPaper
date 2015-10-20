@@ -1,109 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--显示单个图片的Item-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/transparent"
-              android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@android:color/transparent"
+             android:orientation="vertical"
     >
 
-    <!--可以指定四个角度的ImageView-->
-    <com.joooonho.SelectableRoundedImageView
-        android:id="@+id/iv_pic"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@android:color/transparent"
-        app:sriv_left_top_corner_radius="16dip"
-        app:sriv_right_top_corner_radius="16dip"
-        />
-
-    <!--图片下面描述部分-->
     <LinearLayout
-        android:id="@+id/ly_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/picture_item_shape"
         android:orientation="vertical"
         >
 
-        <TextView
-            android:id="@+id/tv_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:lines="2"
-            android:padding="10dp"
-            android:text="图片描述"
-            />
-
-        <View
+        <!--可以指定四个角度的ImageView-->
+        <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/iv_pic"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/LightGray"
+            android:layout_height="140dp"
+            android:background="@android:color/transparent"
+            app:sriv_left_top_corner_radius="16dip"
+            app:sriv_right_top_corner_radius="16dip"
             />
 
-        <!--收藏与下载-->
+        <!--图片下面描述部分-->
         <LinearLayout
+            android:id="@+id/ly_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:background="@drawable/picture_item_shape"
+            android:orientation="vertical"
             >
 
-            <!--收藏量-->
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:lines="2"
                 android:padding="10dp"
-                >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/list_heart"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="100"
-                    />
-
-            </LinearLayout>
+                android:text="图片描述"
+                />
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/LightGray"
                 />
 
-            <!--下载量-->
+            <!--收藏与下载-->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:padding="10dp"
                 >
 
-                <ImageView
+                <!--收藏量-->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/list_download"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/list_heart"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/LightGray"
                     />
 
-                <TextView
+                <!--下载量-->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
-                    />
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    >
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/list_download"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+
+    <!--进度条-->
+
+</FrameLayout>

@@ -29,4 +29,5 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     //主流的通用刷新开源库
     compile 'in.srain.cube:ultra-ptr:1.0.11'
+    compile project(':library-PullToRefresh')
 }
