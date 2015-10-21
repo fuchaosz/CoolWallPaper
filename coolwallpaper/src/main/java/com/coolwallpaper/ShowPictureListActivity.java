@@ -3,13 +3,16 @@ package com.coolwallpaper;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coolwallpaper.activity.BaseActivity;
@@ -30,6 +33,8 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -102,6 +107,15 @@ public class ShowPictureListActivity extends BaseActivity {
                 queryPicture();
             }
         });
+        //添加item监听
+        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 跳转到图片详情
+                PictureBean tmpBean = adapter.getBeanList().get(position);
+                ShowPictureDetailActivity.startActivity(ShowPictureListActivity.this, tmpBean);
+            }
+        });
     }
 
     //查询图片
@@ -114,9 +128,9 @@ public class ShowPictureListActivity extends BaseActivity {
                 List<PictureBean> list = PictureParseUtil.parse(jsonStr);
                 showPicture(list);
                 //关闭对话框
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
+                //if (progressDialog != null && progressDialog.isShowing()) {
+                //    progressDialog.dismiss();
+                //}
                 //停止刷新
                 gridView.onRefreshComplete();
             }
@@ -129,8 +143,8 @@ public class ShowPictureListActivity extends BaseActivity {
             @Override
             public void onStart() {
                 //显示进度条
-                progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
-                progressDialog.show();
+                //progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
+                //progressDialog.show();
             }
         });
     }
@@ -189,19 +203,44 @@ public class ShowPictureListActivity extends BaseActivity {
                 holder = new ViewHolder();
                 holder.ivPic = (ImageView) view.findViewById(R.id.iv_pic);
                 holder.tvDesc = (TextView) view.findViewById(R.id.tv_desc);
+                holder.progressBar = (ProgressBar) view.findViewById(R.id.progress);
                 view.setTag(holder);
             }
             holder = (ViewHolder) view.getTag();
             PictureBean bean = beanList.get(position);
             //绑定数据
-            imageLoader.displayImage(bean.getSmallImageUrl(), holder.ivPic, options);
-            //holder.tvDesc.setText(bean.getDesc());\
+            imageLoader.displayImage(bean.getSmallImageUrl(), holder.ivPic, holder);
+            holder.tvDesc.setText(bean.getDesc());
             return view;
         }
 
-        class ViewHolder {
+        class ViewHolder implements ImageLoadingListener {
+
             public ImageView ivPic;
             public TextView tvDesc;
+            public ProgressBar progressBar;
+
+            @Override
+            public void onLoadingStarted(String s, View view) {
+                this.ivPic.setImageDrawable(null);
+                this.progressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                this.progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+
         }
 
         public void setBeanList(List<PictureBean> beanList) {

@@ -26,6 +26,10 @@
 
         <!--图片列表-->
         <activity android:name=".ShowPictureListActivity"/>
+
+        <!--图片详情-->
+        <activity android:name=".ShowPictureDetailActivity"/>
+        
     </application>
 
 </manifest>

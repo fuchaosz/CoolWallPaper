@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--添加收藏的按钮-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_add_favorate_normal" android:state_pressed="false"/>
+    <item android:drawable="@drawable/btn_add_favorate_pressed" android:state_pressed="true"/>
+</selector>
