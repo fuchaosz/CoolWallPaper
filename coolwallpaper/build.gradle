@@ -27,4 +27,6 @@ dependencies {
     compile project(':sharelib')
     //ImgaeView允许四个角的每一个有不同的半径值
     compile project(':library-SelectableRoundedImageViewLib')
+    //图片缩放控件
+    compile 'com.commit451:PhotoView:1.2.4'
 }
