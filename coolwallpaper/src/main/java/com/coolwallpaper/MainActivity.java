@@ -3,6 +3,7 @@ package com.coolwallpaper;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
@@ -24,6 +26,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private float centerY;
     private float moveLength;
     private Matrix matrix;
+    private float count = 0;
 
     @ViewInject(R.id.tv_hollo)
     TextView helloworld;
@@ -111,36 +114,39 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         this.maxMoveLength = (widthAfterScale - viewWidth) / 2;
         //将图片移动到中间去
         matrix.postTranslate(-maxMoveLength, 0);
+        //matrix.postTranslate(-maxMoveLength, 0);
         image.setImageMatrix(matrix);
-        //图片左边移动
-        btnLeft.setOnClickListener(new View.OnClickListener() {
+        //屏幕向右移动
+        btnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moveLength -= 100;
                 if (moveLength >= -maxMoveLength) {
-                    matrix.preTranslate(-100, 0);
+                    matrix.postTranslate(-100, 0);
                     image.setImageMatrix(matrix);
+                    count += 100;
                 } else {
                     //超过屏幕范围之后要控制刚好显示到屏幕边上
                     float tmp = maxMoveLength + (moveLength + 100);
-                    matrix.preTranslate(-tmp, 0);
+                    matrix.postTranslate(-tmp, 0);
+                    count += tmp;
                     image.setImageMatrix(matrix);
                     moveLength = -maxMoveLength;
                 }
             }
         });
         //向右移动图片
-        btnRight.setOnClickListener(new View.OnClickListener() {
+        btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moveLength += 100;
                 if (moveLength <= maxMoveLength) {
-                    matrix.preTranslate(100, 0);
+                    matrix.postTranslate(100, 0);
                     image.setImageMatrix(matrix);
                 } else {
                     //超过屏幕范围之后要控制刚好显示到屏幕边上
                     float tmp = maxMoveLength - (moveLength - 100);
-                    matrix.preTranslate(tmp, 0);
+                    matrix.postTranslate(tmp, 0);
                     image.setImageMatrix(matrix);
                     moveLength = maxMoveLength;
                 }
