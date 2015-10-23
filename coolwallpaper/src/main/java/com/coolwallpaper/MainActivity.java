@@ -3,7 +3,6 @@ package com.coolwallpaper;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +45,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //添加监听器
         this.addListener();
         //调整图片
-        this.adjustPicture();
+        this.image.post(new Runnable() {
+            @Override
+            public void run() {
+                adjustPicture();
+            }
+        });
     }
 
     //添加监听器
@@ -91,26 +95,55 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     //调整图片
     private void adjustPicture() {
         this.matrix = image.getImageMatrix();
-        //获取屏幕大小
-        DisplayMetrics dm = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        //获取ImageView的大小
+        int viewHeight = image.getHeight() - image.getPaddingBottom() - image.getPaddingTop();
+        int viewWidth = image.getWidth() - image.getPaddingLeft() - image.getPaddingRight();
         //获取图片的实际大小
         int drawWidth = image.getDrawable().getIntrinsicWidth();
         int drawHeight = image.getDrawable().getIntrinsicHeight();
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
-        matrix.postScale(screenHeight * 1.0f / drawHeight, screenHeight * 1.0f / drawHeight);
+        //图片缩放，保证高度铺满整个屏幕
+        float scale = viewHeight * 1.0f / drawHeight;
+        matrix.postScale(scale, scale);
         image.setImageMatrix(matrix);
-        this.maxMoveLength = (this.image.getDrawable().getBounds().width() - screenWidth) / 2.0f;
-        this.centerX = screenWidth / 2;
-        this.centerY = screenHeight / 2;
-        //图片右移
+        //计算出放大之后的图片的宽度,高度就是屏幕的高度
+        float widthAfterScale = drawWidth * scale;
+        //最大移动距离
+        this.maxMoveLength = (widthAfterScale - viewWidth) / 2;
+        //将图片移动到中间去
+        matrix.postTranslate(-maxMoveLength, 0);
+        image.setImageMatrix(matrix);
+        //图片左边移动
+        btnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveLength -= 100;
+                if (moveLength >= -maxMoveLength) {
+                    matrix.preTranslate(-100, 0);
+                    image.setImageMatrix(matrix);
+                } else {
+                    //超过屏幕范围之后要控制刚好显示到屏幕边上
+                    float tmp = maxMoveLength + (moveLength + 100);
+                    matrix.preTranslate(-tmp, 0);
+                    image.setImageMatrix(matrix);
+                    moveLength = -maxMoveLength;
+                }
+            }
+        });
+        //向右移动图片
         btnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveLength += 20;
-                matrix.preTranslate(moveLength, 0);
-                image.setImageMatrix(matrix);
+                moveLength += 100;
+                if (moveLength <= maxMoveLength) {
+                    matrix.preTranslate(100, 0);
+                    image.setImageMatrix(matrix);
+                } else {
+                    //超过屏幕范围之后要控制刚好显示到屏幕边上
+                    float tmp = maxMoveLength - (moveLength - 100);
+                    matrix.preTranslate(tmp, 0);
+                    image.setImageMatrix(matrix);
+                    moveLength = maxMoveLength;
+                }
             }
         });
 
