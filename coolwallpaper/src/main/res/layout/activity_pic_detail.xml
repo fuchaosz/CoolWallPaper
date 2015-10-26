@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/progress_rotate_circle"
         />
 
     <!--浮动半透明菜单-->

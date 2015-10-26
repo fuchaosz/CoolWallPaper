@@ -3,22 +3,21 @@ package com.coolwallpaper;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 
 import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.bean.PictureBean;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * 显示图片详情
@@ -28,7 +27,9 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     private PictureBean pictureBean;
     private ImageLoader imageLoader;
-    private PhotoViewAttacher attacher;//图片缩放的控件
+    private Matrix matrix;
+    private float maxMoveLength;//最大可以移动的距离
+    private int currentProgress = 50;//当前进度
 
     @ViewInject(R.id.iv_image)
     ImageView ivImage;
@@ -39,6 +40,9 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     @ViewInject(R.id.pb_progress)
     ProgressBar progressBar;
+
+    @ViewInject(R.id.sb_seekbar)
+    SeekBar seekBar;
 
     /**
      * 启动方法，要显示的图片
@@ -59,6 +63,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         this.pictureBean = (PictureBean) getIntent().getSerializableExtra("PICTURE_BEAN");
         //初始化
         this.init();
+        //添加简体器
+        this.addListener();
     }
 
     //初始化
@@ -66,13 +72,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         //创建ImageLoader
         this.imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-        //获取屏幕大小
-        final DisplayMetrics dm = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        //设置ImageView
-        this.ivImage.setMaxHeight(dm.heightPixels);
-        this.ivImage.setMaxWidth(2 * dm.widthPixels);//最大宽度为屏幕的2倍
-        this.attacher = new PhotoViewAttacher(ivImage);
         //显示图片
         this.imageLoader.displayImage(pictureBean.getImageUrl(), ivImage, new ImageLoadingListener() {
             @Override
@@ -89,6 +88,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 //调整图片，使得图片的高度与屏幕一样高
                 scalePictureToScreenHeight();
+                seekBar.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -99,7 +99,34 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         });
     }
 
-    @OnClick(R.id.iv_image)
+    //添加监听器
+    private void addListener() {
+        this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //移动图片
+                movePicture(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        //使得下层的可以点击
+        lyPictureDetailMenu.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             //点击图片
@@ -107,22 +134,78 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 //弹出浮动层菜单
                 lyPictureDetailMenu.setVisibility(View.VISIBLE);
                 break;
+            //顶部向左的箭头
+            case R.id.btn_left:
+                this.finish();
+                break;
         }
     }
 
     //放大图片
     private void scalePictureToScreenHeight() {
-        //获取view大小
+        this.matrix = ivImage.getImageMatrix();
+        //获取ImageView的大小
+        int viewHeight = ivImage.getHeight() - ivImage.getPaddingBottom() - ivImage.getPaddingTop();
         int viewWidth = ivImage.getWidth() - ivImage.getPaddingLeft() - ivImage.getPaddingRight();
-        int viewHeight = ivImage.getHeight() - ivImage.getPaddingTop() - ivImage.getPaddingBottom();
         //获取图片的实际大小
         int drawWidth = ivImage.getDrawable().getIntrinsicWidth();
         int drawHeight = ivImage.getDrawable().getIntrinsicHeight();
-        //        //获取Matrix
-        //        Matrix matrix = ivImage.getImageMatrix();
-        //        matrix.postScale(viewHeight * 1.0f / drawHeight, viewHeight * 1.0f / drawHeight);
-        //        ivImage.setImageMatrix(matrix);
-        this.attacher.setScale(viewHeight * 1.0f / drawHeight);
-        this.attacher.update();
+        //图片缩放，保证高度铺满整个屏幕
+        float scale = viewHeight * 1.0f / drawHeight;
+        matrix.postScale(scale, scale);
+        ivImage.setImageMatrix(matrix);
+        //计算出放大之后的图片的宽度,高度就是屏幕的高度
+        float widthAfterScale = drawWidth * scale;
+        //最大移动距离
+        this.maxMoveLength = (widthAfterScale - viewWidth) / 2;
+        //将图片移动到中间去
+        matrix.postTranslate(-maxMoveLength, 0);
+        ivImage.setImageMatrix(matrix);
+        //        //屏幕向右移动
+        //        btnRight.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        //                moveLength -= 100;
+        //                if (moveLength >= -maxMoveLength) {
+        //                    matrix.postTranslate(-100, 0);
+        //                    image.setImageMatrix(matrix);
+        //                    count += 100;
+        //                } else {
+        //                    //超过屏幕范围之后要控制刚好显示到屏幕边上
+        //                    float tmp = maxMoveLength + (moveLength + 100);
+        //                    matrix.postTranslate(-tmp, 0);
+        //                    count += tmp;
+        //                    image.setImageMatrix(matrix);
+        //                    moveLength = -maxMoveLength;
+        //                }
+        //            }
+        //        });
+        //        //向右移动图片
+        //        btnLeft.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        //                moveLength += 100;
+        //                if (moveLength <= maxMoveLength) {
+        //                    matrix.postTranslate(100, 0);
+        //                    image.setImageMatrix(matrix);
+        //                } else {
+        //                    //超过屏幕范围之后要控制刚好显示到屏幕边上
+        //                    float tmp = maxMoveLength - (moveLength - 100);
+        //                    matrix.postTranslate(tmp, 0);
+        //                    image.setImageMatrix(matrix);
+        //                    moveLength = maxMoveLength;
+        //                }
+        //            }
+        //        });
     }
+
+    //移动图片
+    private void movePicture(int progress) {
+        //计算需要移动的比例
+        float moveDistance = (progress - currentProgress) / 50f * maxMoveLength;
+        matrix.postTranslate(-moveDistance, 0);
+        ivImage.setImageMatrix(matrix);
+        currentProgress = progress;
+    }
+
 }

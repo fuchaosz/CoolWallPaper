@@ -29,7 +29,7 @@
 
         <!--图片详情-->
         <activity android:name=".ShowPictureDetailActivity"/>
-        
+
     </application>
 
 </manifest>

@@ -3,7 +3,6 @@ package com.coolwallpaper;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.util.LogUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
@@ -27,7 +25,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private float moveLength;
     private Matrix matrix;
     private float count = 0;
-
+    
     @ViewInject(R.id.tv_hollo)
     TextView helloworld;
 
@@ -51,7 +49,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         this.image.post(new Runnable() {
             @Override
             public void run() {
-                adjustPicture();
+                //adjustPicture();
             }
         });
     }
@@ -152,12 +150,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 }
             }
         });
-
-        //        attacher = new PhotoViewAttacher(image);
-        //        float scale = screenHeight * 1.0f / drawHeight;
-        //        attacher.setScaleLevels(scale, scale * attacher.getMediumScale(), scale * attacher.getMaximumScale());
-        //        attacher.setScale(scale);
-        //        attacher.update();
     }
 
 }
