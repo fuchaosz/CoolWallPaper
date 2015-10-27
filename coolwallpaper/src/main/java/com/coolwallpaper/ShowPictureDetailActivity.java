@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,6 +17,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import cn.trinea.android.common.util.ToastUtils;
 
 /**
  * 显示图片详情
@@ -63,7 +64,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         this.pictureBean = (PictureBean) getIntent().getSerializableExtra("PICTURE_BEAN");
         //初始化
         this.init();
-        //添加简体器
+        //添加监听器
         this.addListener();
     }
 
@@ -101,6 +102,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     //添加监听器
     private void addListener() {
+        //进度条
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -118,25 +120,34 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
             }
         });
-        //使得下层的可以点击
-        lyPictureDetailMenu.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        findViewById(R.id.btn_left).setOnClickListener(this);
+        findViewById(R.id.iv_image).setOnClickListener(this);
+        findViewById(R.id.ly_picture_detail_menu).setOnClickListener(this);
+        findViewById(R.id.ly_similar_pic).setOnClickListener(this);
+        findViewById(R.id.ly_title).setOnClickListener(this);
     }
 
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             //点击图片
             case R.id.iv_image:
                 //弹出浮动层菜单
                 lyPictureDetailMenu.setVisibility(View.VISIBLE);
+                ToastUtils.show(this, "点击了图片");
                 break;
             //顶部向左的箭头
             case R.id.btn_left:
                 this.finish();
+                break;
+            //点击浮动层
+            case R.id.ly_picture_detail_menu:
+                lyPictureDetailMenu.setVisibility(View.GONE);
+                ToastUtils.show(this, "点击了浮层");
+                break;
+            //点击相似图片
+            case R.id.ly_similar_pic:
+                ToastUtils.show(this, "点击了相似图片");
                 break;
         }
     }
@@ -161,42 +172,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         //将图片移动到中间去
         matrix.postTranslate(-maxMoveLength, 0);
         ivImage.setImageMatrix(matrix);
-        //        //屏幕向右移动
-        //        btnRight.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View v) {
-        //                moveLength -= 100;
-        //                if (moveLength >= -maxMoveLength) {
-        //                    matrix.postTranslate(-100, 0);
-        //                    image.setImageMatrix(matrix);
-        //                    count += 100;
-        //                } else {
-        //                    //超过屏幕范围之后要控制刚好显示到屏幕边上
-        //                    float tmp = maxMoveLength + (moveLength + 100);
-        //                    matrix.postTranslate(-tmp, 0);
-        //                    count += tmp;
-        //                    image.setImageMatrix(matrix);
-        //                    moveLength = -maxMoveLength;
-        //                }
-        //            }
-        //        });
-        //        //向右移动图片
-        //        btnLeft.setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View v) {
-        //                moveLength += 100;
-        //                if (moveLength <= maxMoveLength) {
-        //                    matrix.postTranslate(100, 0);
-        //                    image.setImageMatrix(matrix);
-        //                } else {
-        //                    //超过屏幕范围之后要控制刚好显示到屏幕边上
-        //                    float tmp = maxMoveLength - (moveLength - 100);
-        //                    matrix.postTranslate(tmp, 0);
-        //                    image.setImageMatrix(matrix);
-        //                    moveLength = maxMoveLength;
-        //                }
-        //            }
-        //        });
     }
 
     //移动图片
