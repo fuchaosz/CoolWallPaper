@@ -12,6 +12,7 @@ import android.widget.SeekBar;
 
 import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.bean.PictureBean;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -30,7 +31,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     private ImageLoader imageLoader;
     private Matrix matrix;
     private float maxMoveLength;//最大可以移动的距离
-    private int currentProgress = 50;//当前进度
+    private int currentProgress     = 50;//当前进度
+    private SlidingMenu slidingMenu;//右边的滑出菜单
 
     @ViewInject(R.id.iv_image)
     ImageView ivImage;
