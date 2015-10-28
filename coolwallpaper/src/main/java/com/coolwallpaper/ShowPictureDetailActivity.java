@@ -31,7 +31,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     private ImageLoader imageLoader;
     private Matrix matrix;
     private float maxMoveLength;//最大可以移动的距离
-    private int currentProgress     = 50;//当前进度
+    private int currentProgress = 50;//当前进度
     private SlidingMenu slidingMenu;//右边的滑出菜单
 
     @ViewInject(R.id.iv_image)
@@ -100,6 +100,18 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
             }
         });
+        //侧滑菜单
+        this.slidingMenu = new SlidingMenu(this);
+        this.slidingMenu.setMode(SlidingMenu.LEFT);
+        this.slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        this.slidingMenu.setShadowWidthRes(R.dimen.shadow_width);
+        //设置滑动菜单视图的宽度
+        this.slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        //设置渐入渐出的效果值
+        this.slidingMenu.setFadeDegree(0.35f);
+        this.slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        //为侧滑菜单设置布局
+        this.slidingMenu.setMenu(R.layout.coolwallpaper_menu_left);
     }
 
     //添加监听器
