@@ -52,6 +52,7 @@ public class ShowPictureListActivity extends BaseActivity {
     private BaseRequestParam requetParam;
     private ProgressDialog progressDialog;
     private int currentPage;
+    private List<PictureBean> beanList;
 
     @ViewInject(R.id.gv_pic)
     PullToRefreshGridView gridView;
@@ -113,7 +114,7 @@ public class ShowPictureListActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 跳转到图片详情
                 PictureBean tmpBean = adapter.getBeanList().get(position);
-                ShowPictureDetailActivity.startActivity(ShowPictureListActivity.this, tmpBean);
+                ShowPictureDetailActivity.startActivity(ShowPictureListActivity.this, tmpBean, beanList);
             }
         });
     }
@@ -125,8 +126,8 @@ public class ShowPictureListActivity extends BaseActivity {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String jsonStr = responseInfo.result;
                 //解析数据
-                List<PictureBean> list = PictureParseUtil.parse(jsonStr);
-                showPicture(list);
+                beanList = PictureParseUtil.parse(jsonStr);
+                showPicture(beanList);
                 //关闭对话框
                 //if (progressDialog != null && progressDialog.isShowing()) {
                 //    progressDialog.dismiss();

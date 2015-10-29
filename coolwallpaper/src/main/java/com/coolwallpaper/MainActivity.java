@@ -43,6 +43,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ViewUtils.inject(this);
+        //直接跳转到图片列表
+        ShowPictureListActivity.startActivity(this);
+        finish();
         //添加监听器
         this.addListener();
         //调整图片

@@ -31,4 +31,13 @@
         android:visibility="visible"
         />
 
+    <!--左边的弹出fragment-->
+    <FrameLayout
+        android:id="@+id/fl_left_container"
+        android:layout_width="@dimen/picdetail_fragment_left_width"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+    </FrameLayout>
+
 </FrameLayout>
