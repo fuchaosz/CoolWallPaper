@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,12 +16,18 @@ import android.widget.SeekBar;
 
 import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.event.DownloadPictureFailureEvent;
+import com.coolwallpaper.event.DownloadPictureSuccessEvent;
+import com.coolwallpaper.event.UpdatePictureEvent;
 import com.coolwallpaper.fragment.PictureListFragment;
+import com.coolwallpaper.utils.FileUtil;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import org.simple.eventbus.Subscriber;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,6 +47,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     private int currentProgress = 50;//当前进度
     private PictureListFragment fragment;//左边的图片的列表
     private List<PictureBean> beanList;//图片列表
+    private Drawable favoriteAddDrawable;//没有收藏的时候显示的drawable
+    private Drawable favoriteRemoveDrawable;//收藏了之后显示的drawable
 
     @ViewInject(R.id.iv_image)
     ImageView ivImage;
@@ -57,6 +66,10 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     //左边的Fragment
     @ViewInject(R.id.fl_left_container)
     View flContainer;
+
+    //收藏图片
+    @ViewInject(R.id.iv_favorite)
+    ImageView ivFavorite;
 
     /**
      * 启动方法，要显示的图片
@@ -90,35 +103,17 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         this.imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(this));
         //显示图片
-        this.imageLoader.displayImage(pictureBean.getImageUrl(), ivImage, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                //调整图片，使得图片的高度与屏幕一样高
-                scalePictureToScreenHeight();
-                seekBar.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
+        this.showPicture(true);
         //添加图片列表的Fragment
         this.fragment = PictureListFragment.newInstance(beanList);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.fl_left_container, fragment);
         transaction.commit();
+        //创建收藏图片的Drawable
+        this.favoriteAddDrawable = getResources().getDrawable(R.drawable.btn_add_favorate_selector);
+        this.favoriteRemoveDrawable = getResources().getDrawable(R.drawable.btn_remove_favorate_selector);
+        //默认为未收藏的按钮
+        this.ivFavorite.setImageDrawable(favoriteAddDrawable);
     }
 
     //添加监听器
@@ -146,6 +141,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.ly_picture_detail_menu).setOnClickListener(this);
         findViewById(R.id.ly_similar_pic).setOnClickListener(this);
         findViewById(R.id.ly_title).setOnClickListener(this);
+        findViewById(R.id.ly_favorite_pic).setOnClickListener(this);
     }
 
     @Override
@@ -170,7 +166,46 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 //显示图片列表fragment
                 showFragmentView();
                 break;
+            //收藏图片
+            case R.id.ly_favorite_pic:
+                doFavorite();
+                break;
         }
+    }
+
+    //显示图片
+    private void showPicture(final boolean isInit) {
+        this.imageLoader.stop();
+        this.imageLoader.displayImage(pictureBean.getImageUrl(), ivImage, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+                progressBar.setVisibility(View.VISIBLE);
+                seekBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                //调整图片，使得图片的高度与屏幕一样高
+                if (isInit) {
+                    //只在第一次放大图片，之后就不需要放大了
+                    scalePictureToScreenHeight();
+                }
+                seekBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                //刷新界面
+                ivImage.invalidate();
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
     }
 
     //放大图片
@@ -243,5 +278,45 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         flContainer.clearAnimation();
         flContainer.startAnimation(animation);
         flContainer.setVisibility(View.VISIBLE);
+    }
+
+    //订阅图片刷新事件
+    @Subscriber
+    private void updatePicture(UpdatePictureEvent event) {
+        this.pictureBean = event.getPictureBean();
+        showPicture(false);
+    }
+
+    //订阅下载文件成功的事件
+    @Subscriber
+    private void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
+        ToastUtils.show(this, "图片成功收藏到本地" + event.getSavePath());
+    }
+
+    //订阅下载文件失败的事件
+    @Subscriber
+    private void downloadFailuerEvent(DownloadPictureFailureEvent event) {
+        ToastUtils.show(this, "图片 " + event.getPictureBean().getDesc() + " 收藏失败");
+        //设置按钮为未收藏的状态
+        this.ivFavorite.setImageDrawable(favoriteAddDrawable);
+    }
+
+    //点击了收藏按钮
+    private void doFavorite() {
+        //如果是没有收藏的状态
+        if (ivFavorite.getDrawable() == favoriteAddDrawable) {
+            //设置按钮为已经收藏的状态
+            this.ivFavorite.setImageDrawable(favoriteRemoveDrawable);
+            //下载图片
+            FileUtil.getInstance().downloadPictureFile(pictureBean);
+        }
+        //已经收藏的状态
+        else {
+            //设置按钮为未收藏的状态
+            this.ivFavorite.setImageDrawable(favoriteAddDrawable);
+            //删除收藏的图片
+            FileUtil.getInstance().deleteDownloadPictureFile(FileUtil.getFileName(pictureBean.getDownloadUrl()));
+            ToastUtils.show(this, "取消收藏成功");
+        }
     }
 }

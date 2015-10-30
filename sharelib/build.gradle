@@ -23,7 +23,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.android.support:recyclerview-v7:21.+'
-    compile 'de.greenrobot:eventbus:2.4.0'
     compile project(':library-xUtils')
     compile project(':android-common')
     compile 'com.loopj.android:android-async-http:1.4.9'
@@ -31,4 +30,7 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile project(':library-PullToRefresh')
     compile project(':library-SlidingMenu')
+    // add AndroidEventBus dependency
+    compile 'org.simple:androideventbus:1.0.5'
+    //compile 'de.greenrobot:eventbus:2.4.0'
 }

@@ -90,6 +90,7 @@
             >
 
             <ImageView
+                android:id="@+id/iv_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_add_favorate_selector"

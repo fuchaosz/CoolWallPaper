@@ -1,20 +1,23 @@
 package com.coolwallpaper.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.coolwallpaper.R;
 import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.event.UpdatePictureEvent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import org.simple.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,7 +26,7 @@ import java.util.List;
  * 显示图片列表的fragment
  * Created by fuchao on 2015/10/28.
  */
-public class PictureListFragment extends Fragment {
+public class PictureListFragment extends BaseFragment {
 
     private ListView lvPicture;
     private List<PictureBean> beanList;
@@ -55,6 +58,20 @@ public class PictureListFragment extends Fragment {
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         this.adapter = new PicAdapter(getActivity(), beanList);
         this.lvPicture.setAdapter(adapter);
+        //添加监听器
+        this.addListener();
+    }
+
+    //添加监听器
+    private void addListener() {
+        //添加list点击监听
+        this.lvPicture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //点击图片列表之后，发送消息，让被点击的图片显示出来
+                EventBus.getDefault().post(new UpdatePictureEvent(beanList.get(position)));
+            }
+        });
     }
 
     //列表数据适配器
@@ -95,6 +112,8 @@ public class PictureListFragment extends Fragment {
             } else {
                 holder = (ViewHolder) view.getTag();
             }
+            //清空之前的数据
+            holder.ivImage.setImageDrawable(null);
             //绑定数据
             imageLoader.displayImage(beanList.get(position).getSmallImageUrl(), holder.ivImage);
             return view;

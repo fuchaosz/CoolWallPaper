@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import com.lidroid.xutils.ViewUtils;
 
+import org.simple.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityList.add(this);
+        //注册AndroidEventBus
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -47,8 +51,10 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        //取消AndroidEventBus注册
+        EventBus.getDefault().unregister(this);
         activityList.remove(this);
+        super.onDestroy();
     }
 
 }
