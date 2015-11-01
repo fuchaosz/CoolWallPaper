@@ -8,37 +8,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.coolwallpaper.R;
+import com.special.ResideMenu.ResideMenu;
+
 /**
  * 首页
  * Created by fuchao on 2015/8/11.
  */
-public class HomePageActivity extends FragmentActivity {
+public class HomePageActivity extends BaseActivity {
 
     public static final String[] titles = {"推荐", "最热", "最新", "高清", "热搜", "美女"};
+    private ResideMenu resideMenu;
 
-    //TitlePageIndicator titlePageIndicator;
-
-    ViewPager viewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+        setContentView(R.layout.activity_home_page);
+
     }
 
-    class TabAdapter extends FragmentPagerAdapter {
-
-        public TabAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-    }
 }

@@ -29,4 +29,6 @@ dependencies {
     compile project(':library-SelectableRoundedImageViewLib')
     //图片缩放控件
     compile 'com.commit451:PhotoView:1.2.4'
+    //增加侧滑菜单
+    compile project(':library-ResideMenu')
 }
