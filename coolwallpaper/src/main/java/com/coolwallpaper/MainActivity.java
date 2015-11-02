@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.coolwallpaper.activity.HomePageActivity;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -44,7 +45,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ViewUtils.inject(this);
         //直接跳转到图片列表
-        ShowPictureListActivity.startActivity(this);
+        //ShowPictureListActivity.startActivity(this);
+        //跳转到主页
+        HomePageActivity.startActivity(this);
         finish();
         //添加监听器
         this.addListener();
