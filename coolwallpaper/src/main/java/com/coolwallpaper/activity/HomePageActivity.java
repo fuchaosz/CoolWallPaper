@@ -54,6 +54,15 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    //创建侧滑菜单
+    private void createResideMenu() {
+        //创建左边的菜单
+        String[] titles = {"我的壁纸", "本机相册", "我要供图", "检查升级", "更多设置"};
+        //int[] icons = {R.drawable. };
+
+
+    }
+
     //添加监听器
     private void addListener() {
         this.btnTest.setOnClickListener(this);
