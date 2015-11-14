@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -47,7 +46,6 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
         this.resideMenu.attachToActivity(this);
         this.resideMenu.setScaleValue(0.7f);
-        this.resideMenu.setUse3D(false);
         //创建MenuItem
         String[] titles = {"title1", "title2", "title3", "title4", "title5", "title6"};
         for (int i = 0; i < titles.length; i++) {

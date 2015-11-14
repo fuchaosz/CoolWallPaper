@@ -21,14 +21,14 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:21.+'
-    compile 'com.android.support:cardview-v7:21.+'
     compile project(':sharelib')
     //ImgaeView允许四个角的每一个有不同的半径值
     compile project(':library-SelectableRoundedImageViewLib')
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.+'
+    compile 'com.android.support:cardview-v7:21.+'
     //图片缩放控件
     compile 'com.commit451:PhotoView:1.2.4'
-    //增加侧滑菜单
-    compile project(':library-ResideMenu')
+    //侧滑菜单ResideMenu
+    compile 'com.specyci:residemenu:1.6+'
 }

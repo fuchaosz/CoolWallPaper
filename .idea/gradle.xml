@@ -6,7 +6,7 @@
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="D:\Program Files\Android\Android Studio\gradle\gradle-2.4" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/coolwallpaper" />
             <option value="$PROJECT_DIR$/library-PullToRefresh" />
-            <option value="$PROJECT_DIR$/library-ResideMenu" />
             <option value="$PROJECT_DIR$/library-SelectableRoundedImageViewLib" />
             <option value="$PROJECT_DIR$/library-SlidingMenu" />
             <option value="$PROJECT_DIR$/library-xUtils" />
