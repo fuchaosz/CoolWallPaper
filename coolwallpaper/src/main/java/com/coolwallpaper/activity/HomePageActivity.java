@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.coolwallpaper.R;
 import com.special.ResideMenu.ResideMenu;
@@ -18,7 +20,6 @@ import com.special.ResideMenu.ResideMenuItem;
  */
 public class HomePageActivity extends Activity implements View.OnClickListener {
 
-    public static final String[] titles = {"推荐", "最热", "最新", "高清", "热搜", "美女"};
     private ResideMenu resideMenu;
     private Button btnTest;
 
@@ -45,22 +46,31 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
         this.resideMenu = new ResideMenu(this);
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
         this.resideMenu.attachToActivity(this);
-        this.resideMenu.setScaleValue(0.7f);
+        this.resideMenu.setScaleValue(0.5f);
         //创建MenuItem
-        String[] titles = {"title1", "title2", "title3", "title4", "title5", "title6"};
-        for (int i = 0; i < titles.length; i++) {
-            ResideMenuItem menuItem = new ResideMenuItem(this, R.drawable.icon_order_like, titles[i]);
-            resideMenu.addMenuItem(menuItem, ResideMenu.DIRECTION_LEFT);
-        }
+        this.createResideMenu();
     }
 
     //创建侧滑菜单
     private void createResideMenu() {
         //创建左边的菜单
         String[] titles = {"我的壁纸", "本机相册", "我要供图", "检查升级", "更多设置"};
-        //int[] icons = {R.drawable. };
-
-
+        int[] icons = {R.drawable.icon_download, R.drawable.icon_pic, R.drawable.icon_pen, R.drawable.icon_upload, R.drawable.icon_moreset};
+        for (int i = 0; i < titles.length; i++) {
+            ResideMenuItem menuItem = new ResideMenuItem(this, icons[i], titles[i]);
+            this.resideMenu.addMenuItem(menuItem, ResideMenu.DIRECTION_LEFT);
+        }
+        //创建右边的菜单cmd
+        String[] titlesRight = {"首页", "热门", "风景", "美女", "明星", "创意", "名车", "影视", "游戏", "动漫"};
+        int[] iconsRight = {R.drawable.icon_home, R.drawable.icon_hot, R.drawable.icon_scenery, R.drawable.icon_girl, R.drawable.icon_star, R.drawable.icon_idea, R.drawable.icon_motorbike, R.drawable.icon_movie, R.drawable.icon_game, R.drawable.icon_anime};
+        for (int i = 0; i < titlesRight.length; i++) {
+            ResideMenuItem menuItem = new ResideMenuItem(this, iconsRight[i], titlesRight[i]);
+            menuItem.setOrientation(LinearLayout.HORIZONTAL);
+            TextView tv = new TextView(this);
+            tv.setText("hello");
+            menuItem.addView(tv);
+            this.resideMenu.addMenuItem(menuItem, ResideMenu.DIRECTION_RIGHT);
+        }
     }
 
     //添加监听器
