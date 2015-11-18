@@ -32,4 +32,8 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     //AndroidEventBus事件总线
     compile 'org.simple:androideventbus:1.0.5'
+    //ViewPagerIndicator库
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    //用更高版本的support
+    compile 'com.android.support:support-v13:+'
 }

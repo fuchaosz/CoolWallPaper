@@ -1,16 +1,19 @@
 package com.coolwallpaper.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolwallpaper.R;
+import com.coolwallpaper.fragment.HomePageFragment;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
@@ -21,7 +24,10 @@ import com.special.ResideMenu.ResideMenuItem;
 public class HomePageActivity extends Activity implements View.OnClickListener {
 
     private ResideMenu resideMenu;
-    private Button btnTest;
+    private Fragment fragment;
+
+    @ViewInject(R.id.ly_container)
+    View lyContainer;
 
     //启动方法
     public static void startActivity(Context context) {
@@ -33,7 +39,6 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_home_page);
-        this.btnTest = (Button) findViewById(R.id.btn_test);
         //初始化
         this.init();
         //添加监听器
@@ -49,6 +54,15 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
         this.resideMenu.setScaleValue(0.5f);
         //创建MenuItem
         this.createResideMenu();
+        //创建二级标题
+        String[] subTagArray = {"美轮美奂", "花草植物", "国外风光", "唯美意境", "旅游风光", "海底世界", "冰天雪地", "山水相映", "海滩沙滩", "在路上", "自然风光", "沙漠戈壁", "璀璨星空"};
+        //创建Fragment
+        this.fragment = HomePageFragment.newInstance("风景", subTagArray);
+        //添加到container
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.ly_container, fragment);
+        ft.commit();
     }
 
     //创建侧滑菜单
@@ -75,22 +89,18 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
 
     //添加监听器
     private void addListener() {
-        this.btnTest.setOnClickListener(this);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        //使用滑动开启/关闭菜单
-        return resideMenu.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        //使用滑动开启/关闭菜单
+//        return resideMenu.dispatchTouchEvent(ev);
+//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //测试按钮
-            case R.id.btn_test:
-                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-                break;
         }
     }
+
 }
