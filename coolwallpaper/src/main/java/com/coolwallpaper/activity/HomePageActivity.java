@@ -52,6 +52,9 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
         this.resideMenu.attachToActivity(this);
         this.resideMenu.setScaleValue(0.5f);
+        //关闭左滑右滑开关
+        this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+        this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
         //创建MenuItem
         this.createResideMenu();
         //创建二级标题
@@ -91,11 +94,11 @@ public class HomePageActivity extends Activity implements View.OnClickListener {
     private void addListener() {
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        //使用滑动开启/关闭菜单
-//        return resideMenu.dispatchTouchEvent(ev);
-//    }
+    //    @Override
+    //    public boolean dispatchTouchEvent(MotionEvent ev) {
+    //        //使用滑动开启/关闭菜单
+    //        return resideMenu.dispatchTouchEvent(ev);
+    //    }
 
     @Override
     public void onClick(View v) {

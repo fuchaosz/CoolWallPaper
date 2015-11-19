@@ -21,22 +21,22 @@ import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.PictureBean;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.utils.ImageUtil;
-import com.coolwallpaper.utils.PictureParseUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,13 +48,13 @@ public class ShowPictureListFragment extends BaseFragment {
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private DisplayImageOptions options;
     private PictureGridAdapter adapter;
-    private HttpUtils httpUtils;
     private BaseRequestParam requetParam;
     private ProgressDialog progressDialog;
     private int currentPage;
     private List<PictureBean> beanList;
     private String tag;
     private String tag3;
+    private OkHttpClient okHttpClient;//网络访问采用okhttp
 
     @ViewInject(R.id.gv_pic)
     PullToRefreshGridView gridView;
@@ -100,7 +100,7 @@ public class ShowPictureListFragment extends BaseFragment {
     private void init() {
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         this.options = ImageUtil.getDisplayImageOptions();
-        this.httpUtils = new HttpUtils();
+        this.okHttpClient = new OkHttpClient();
         this.requetParam = new WallPaperRequetParam();
         this.requetParam.setTag(tag);
         this.requetParam.setTag3(tag3);
@@ -113,33 +113,47 @@ public class ShowPictureListFragment extends BaseFragment {
 
     //查询图片
     private void queryPicture() {
-        this.httpUtils.send(HttpRequest.HttpMethod.GET, requetParam.getUrl(), new RequestCallBack<String>() {
+        final Request request = new Request.Builder().url(requetParam.getUrl()).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
             @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String jsonStr = responseInfo.result;
-                //解析数据
-                beanList = PictureParseUtil.parse(jsonStr);
-                showPicture(beanList);
-                //关闭对话框
-                //if (progressDialog != null && progressDialog.isShowing()) {
-                //    progressDialog.dismiss();
-                //}
-                //停止刷新
-                gridView.onRefreshComplete();
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
+            public void onFailure(Request request, IOException e) {
 
             }
 
             @Override
-            public void onStart() {
-                //显示进度条
-                //progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
-                //progressDialog.show();
+            public void onResponse(Response response) throws IOException {
+                String jsonStr = response.body().string();
             }
         });
+
+//        this.httpUtils.send(HttpRequest.HttpMethod.GET, requetParam.getUrl(), new RequestCallBack<String>() {
+//            @Override
+//            public void onSuccess(ResponseInfo<String> responseInfo) {
+//                String jsonStr = responseInfo.result;
+//                //解析数据
+//                beanList = PictureParseUtil.parse(jsonStr);
+//                showPicture(beanList);
+//                //关闭对话框
+//                //if (progressDialog != null && progressDialog.isShowing()) {
+//                //    progressDialog.dismiss();
+//                //}
+//                //停止刷新
+//                gridView.onRefreshComplete();
+//            }
+//
+//            @Override
+//            public void onFailure(HttpException error, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onStart() {
+//                //显示进度条
+//                //progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
+//                //progressDialog.show();
+//            }
+//        });
     }
 
     //添加监听器

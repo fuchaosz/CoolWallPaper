@@ -36,4 +36,8 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     //用更高版本的support
     compile 'com.android.support:support-v13:+'
+    //使用square开源的网络访问框架okhttp
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    //okhttp依赖于okio
+    compile 'com.squareup.okio:okio:1.5.0'
 }
