@@ -87,7 +87,7 @@ public class ShowPictureListActivity extends BaseActivity {
     //初始化
     private void init() {
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-        this.options = ImageUtil.getDisplayImageOptions();
+        this.options = ImageUtil.getInstance().getDisplayImageOptions();
         this.httpUtils = new HttpUtils();
         this.requetParam = new WallPaperRequetParam();
         this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);

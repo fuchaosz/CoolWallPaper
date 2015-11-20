@@ -2,13 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:background="@color/white"
+              android:orientation="vertical"
+    >
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/ly_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
-    </FrameLayout>
+        <!--暂时先把ViewPager放到HomePagerActivity-->
+        <!--ViewPagerIndicator-->
+        <com.astuetz.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -93,7 +93,7 @@ public class HomePageFragment extends BaseFragment {
         private String tag;
 
         public MyPagerAdapter(Context context, String tag, String[] subTagArray) {
-            super(getFragmentManager());
+            super(getChildFragmentManager());
             this.context = context;
             this.tag = tag;
             this.subTagArray = subTagArray;
