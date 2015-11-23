@@ -4,9 +4,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import com.coolwallpaper.constant.AppBus;
 import com.lidroid.xutils.ViewUtils;
-
-import org.simple.eventbus.EventBus;
 
 /**
  * 基本类型Fragment
@@ -17,8 +16,8 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //注册EventBus
-        EventBus.getDefault().register(this);
+        //注册otto
+        AppBus.getInstance().register(this);
     }
 
     @Override
@@ -31,7 +30,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         //取消注册EevntBus
-        EventBus.getDefault().unregister(this);
+        AppBus.getInstance().unregister(this);
         super.onDestroy();
     }
 }

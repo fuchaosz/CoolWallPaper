@@ -13,11 +13,10 @@ import android.widget.ListView;
 
 import com.coolwallpaper.R;
 import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.UpdatePictureEvent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import org.simple.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.util.List;
@@ -69,7 +68,7 @@ public class PictureListFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //点击图片列表之后，发送消息，让被点击的图片显示出来
-                EventBus.getDefault().post(new UpdatePictureEvent(beanList.get(position)));
+                AppBus.getInstance().post(new UpdatePictureEvent(beanList.get(position)));
             }
         });
     }

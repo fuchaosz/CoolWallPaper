@@ -26,8 +26,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.otto.Subscribe;
 
-import org.simple.eventbus.Subscriber;
 
 import java.io.Serializable;
 import java.util.List;
@@ -281,20 +281,20 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     }
 
     //订阅图片刷新事件
-    @Subscriber
+    @Subscribe
     private void updatePicture(UpdatePictureEvent event) {
         this.pictureBean = event.getPictureBean();
         showPicture(false);
     }
 
     //订阅下载文件成功的事件
-    @Subscriber
+    @Subscribe
     private void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
         ToastUtils.show(this, "图片成功收藏到本地" + event.getSavePath());
     }
 
     //订阅下载文件失败的事件
-    @Subscriber
+    @Subscribe
     private void downloadFailuerEvent(DownloadPictureFailureEvent event) {
         ToastUtils.show(this, "图片 " + event.getPictureBean().getDesc() + " 收藏失败");
         //设置按钮为未收藏的状态

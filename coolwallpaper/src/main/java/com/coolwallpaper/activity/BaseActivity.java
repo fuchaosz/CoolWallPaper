@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.coolwallpaper.constant.AppBus;
 import com.lidroid.xutils.ViewUtils;
 
-import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityList.add(this);
-        //注册AndroidEventBus
-        EventBus.getDefault().register(this);
+        //注册事件总线otto
+        AppBus.getInstance().register(this);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        //取消AndroidEventBus注册
-        EventBus.getDefault().unregister(this);
+        //取消otto注册
+        AppBus.getInstance().unregister(this);
         activityList.remove(this);
         super.onDestroy();
     }

@@ -4,6 +4,7 @@ import android.os.Environment;
 
 import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
 import com.lidroid.xutils.HttpUtils;
@@ -11,8 +12,6 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-
-import org.simple.eventbus.EventBus;
 
 import java.io.File;
 
@@ -91,13 +90,13 @@ public class FileUtil {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
                 //发送下载成功消息
-                EventBus.getDefault().post(new DownloadPictureSuccessEvent(pictureBean, filePath));
+                AppBus.getInstance().post(new DownloadPictureSuccessEvent(pictureBean, filePath));
             }
 
             @Override
             public void onFailure(HttpException error, String msg) {
                 //发送下载失败的消息
-                EventBus.getDefault().post(new DownloadPictureFailureEvent(pictureBean));
+                AppBus.getInstance().post(new DownloadPictureFailureEvent(pictureBean));
             }
         });
     }

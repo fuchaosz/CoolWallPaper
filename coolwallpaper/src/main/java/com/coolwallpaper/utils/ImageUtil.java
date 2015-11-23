@@ -64,7 +64,7 @@ public class ImageUtil {
         //不启用内存缓存,否则会报oom的错误
         builder.cacheInMemory(false);
         //启用外部缓存
-        builder.cacheOnDisk(true);
+        builder.cacheOnDisk(false);
         //是否考虑JPEG图像EXIF参数（旋转，翻转）
         builder.considerExifParams(true);
         //设置图片的编码类型

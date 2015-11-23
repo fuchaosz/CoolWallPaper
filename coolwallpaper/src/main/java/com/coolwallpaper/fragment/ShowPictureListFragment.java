@@ -9,18 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coolwallpaper.R;
-import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.PictureBean;
 import com.coolwallpaper.bean.WallPaperRequetParam;
+import com.coolwallpaper.constant.TestURL;
 import com.coolwallpaper.utils.ImageUtil;
 import com.coolwallpaper.utils.PictureParseUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -95,10 +93,12 @@ public class ShowPictureListFragment extends BaseFragment {
         this.init();
         //添加监听器
         this.addListener();
-        if(beanList == null || beanList.size() == 0){
-            //查询数据
-            this.queryPicture();
-        }
+        //        if(beanList == null || beanList.size() == 0){
+        //            //查询数据
+        //            this.queryPicture();
+        //        }
+        //测试代码
+        this.gridView.setAdapter(new TestAdapter());
     }
 
     @Override
@@ -128,11 +128,17 @@ public class ShowPictureListFragment extends BaseFragment {
         this.requetParam = new WallPaperRequetParam();
         this.requetParam.setTag(tag);
         this.requetParam.setTag3(tag3);
-        this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        //this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        this.gridView.setMode(PullToRefreshBase.Mode.DISABLED);
         ILoadingLayout loadLayout = gridView.getLoadingLayoutProxy();
         loadLayout.setPullLabel("上拉加载");
         loadLayout.setRefreshingLabel("正在加载...");
         loadLayout.setReleaseLabel("释放加载");
+    }
+
+    //从数据库中查询图片
+    private void queryDB(){
+
     }
 
     //查询图片
@@ -194,23 +200,23 @@ public class ShowPictureListFragment extends BaseFragment {
     //添加监听器
     private void addListener() {
         //this.gridView.setOnScrollListener(new AutoLoadListener());
-        //添加刷新监听
-        this.gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
-                requetParam.setPn(++currentPage);
-                queryPicture();
-            }
-        });
-        //添加item监听
-        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 跳转到图片详情
-                PictureBean tmpBean = adapter.getBeanList().get(position);
-                ShowPictureDetailActivity.startActivity(getActivity(), tmpBean, beanList);
-            }
-        });
+        //        //添加刷新监听
+        //        this.gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
+        //            @Override
+        //            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
+        //                requetParam.setPn(++currentPage);
+        //                queryPicture();
+        //            }
+        //        });
+        //        //添加item监听
+        //        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //            @Override
+        //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //                // 跳转到图片详情
+        //                PictureBean tmpBean = adapter.getBeanList().get(position);
+        //                ShowPictureDetailActivity.startActivity(getActivity(), tmpBean, beanList);
+        //            }
+        //        });
     }
 
     //显示图片
@@ -318,6 +324,56 @@ public class ShowPictureListFragment extends BaseFragment {
 
         public List<PictureBean> getBeanList() {
             return beanList;
+        }
+    }
+
+    //测试用适配器
+    private class TestAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return TestURL.urls.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            ViewHolder holder = null;
+            if (view == null) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.picture_item, null);
+                holder = new ViewHolder(view);
+                view.setTag(holder);
+            }
+            holder = (ViewHolder) view.getTag();
+            //加载图片
+            String url = TestURL.urls[position];
+            imageLoader.displayImage(url, holder.ivPic, options);
+            return view;
+        }
+
+        private class ViewHolder {
+
+            public ImageView ivPic;
+            public TextView tvDesc;
+            public ProgressBar progressBar;
+
+            public ViewHolder(View view) {
+                ivPic = (ImageView) view.findViewById(R.id.iv_pic);
+                tvDesc = (TextView) view.findViewById(R.id.tv_desc);
+                progressBar = (ProgressBar) view.findViewById(R.id.progress);
+                //默认隐藏ProgressBar
+                progressBar.setVisibility(View.GONE);
+            }
         }
     }
 }
