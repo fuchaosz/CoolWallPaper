@@ -1,4 +1,4 @@
-include ':app', ':coolwallpaper', ':library-xUtils', ':sharelib', ':library-SlidingMenu'
+include ':app', ':coolwallpaper', ':library-xUtils', ':sharelib', ':library-SlidingMenu', ':daogenerator'
 include ':android-common'
 include ':pullToRefreshListFragment'
 include ':pullToRefreshViewPager'

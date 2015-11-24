@@ -56,6 +56,7 @@ public class ShowPictureListFragment extends BaseFragment {
     private String tag3;
     private OkHttpClient okHttpClient;//网络访问采用okhttp
     private HttpUtils httpUtils;
+    private
 
     @ViewInject(R.id.gv_pic)
     PullToRefreshGridView gridView;
@@ -137,7 +138,9 @@ public class ShowPictureListFragment extends BaseFragment {
     }
 
     //从数据库中查询图片
-    private void queryDB(){
+    private void queryDB() {
+        //使用GreenDAO来查询数据库
+        //DevOpenHelper helper = new DaoMaster.DevOpenHelper(getActivity(), ConstDB.DB_PICTURE, null);
 
     }
 

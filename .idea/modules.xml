@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/android-common/android-common.iml" filepath="$PROJECT_DIR$/android-common/android-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" filepath="$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/daogenerator/daogenerator.iml" filepath="$PROJECT_DIR$/daogenerator/daogenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" filepath="$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-SelectableRoundedImageViewLib/library-SelectableRoundedImageViewLib.iml" filepath="$PROJECT_DIR$/library-SelectableRoundedImageViewLib/library-SelectableRoundedImageViewLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-SlidingMenu/library-SlidingMenu.iml" filepath="$PROJECT_DIR$/library-SlidingMenu/library-SlidingMenu.iml" />
