@@ -1,9 +1,6 @@
 package com.coolwallpaper.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 图片Bean
@@ -11,149 +8,148 @@ import java.util.List;
  */
 public class PictureBean implements Serializable {
 
-    /**
-     * 图片ID，太长了所以用String
-     */
-    private String id;
 
     /**
-     * 图片描述
+     * thumbURL : http://img2.imgtn.bdimg.com/it/u=1331604501,2780813711&fm=21&gp=0.jpg
+     * middleURL : http://img2.imgtn.bdimg.com/it/u=1331604501,2780813711&fm=21&gp=0.jpg
+     * hasLarge : true
+     * hoverURL : http://img2.imgtn.bdimg.com/it/u=1331604501,2780813711&fm=23&gp=0.jpg
+     * pageNum : 60
+     * objURL : http://www.bz55.com/uploads/allimg/150408/139-15040Q15052.jpg
+     * fromURL : http://www.bz55.com/qichebizhi/19112.html
+     * fromURLHost : www.bz55.com
+     * width : 1680
+     * height : 1050
+     * type : jpg
+     * di : 97263019700
+     * bdImgnewsDate : 1970-01-01 08:00
+     * fromPageTitle : 经典<strong>兰博基尼</strong>埃文塔多跑车图片win7 壁纸
      */
-    private String desc;
 
-    /**
-     * 所有标签,是JSON数组，例如："tags": ["微软壁纸"]
-     */
-    private List<String> tags;
+    private String thumbURL;
+    private String middleURL;
+    private boolean hasLarge;
+    private String hoverURL;
+    private int pageNum;
+    private String objURL;
+    private String fromURL;
+    private String fromURLHost;
+    private int width;
+    private int height;
+    private String type;
+    private String di;
+    private String bdImgnewsDate;
+    private String fromPageTitle;
 
-    /**
-     * 日期,格式：2015-09-30
-     */
-    private String date;
-
-    /**
-     * 下载链接
-     */
-    private String downloadUrl;
-
-    /**
-     * 和downloadUrl好像是一样的
-     */
-    private String imageUrl;
-
-    /**
-     * 图片宽度
-     */
-    private String imageWidth;
-
-    /**
-     * 图片高度
-     */
-    private String imageHeight;
-
-    /**
-     * 缩略图url。对应字段：thumbLargeUrl
-     */
-    @SerializedName(value = "thumbLargeUrl")
-    private String smallImageUrl;
-
-    /**
-     * 缩略图宽度  thumbLargeWidth
-     */
-    @SerializedName(value = "thumbLargeWidth")
-    private int smallImageWidth;
-
-    /**
-     * 缩略图长度  thumbLargeTnWidth
-     */
-    @SerializedName(value = "thumbLargeHeight")
-    private int smallImageHeight;
-
-    public String getId() {
-        return id;
+    public void setThumbURL(String thumbURL) {
+        this.thumbURL = thumbURL;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setMiddleURL(String middleURL) {
+        this.middleURL = middleURL;
     }
 
-    public String getDesc() {
-        return desc;
+    public void setHasLarge(boolean hasLarge) {
+        this.hasLarge = hasLarge;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setHoverURL(String hoverURL) {
+        this.hoverURL = hoverURL;
     }
 
-    public String getDate() {
-        return date;
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setObjURL(String objURL) {
+        this.objURL = objURL;
     }
 
-    public String getDownloadUrl() {
-        return downloadUrl;
+    public void setFromURL(String fromURL) {
+        this.fromURL = fromURL;
     }
 
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
+    public void setFromURLHost(String fromURLHost) {
+        this.fromURLHost = fromURLHost;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public void setWidth(int width) {
+        this.width = width;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    public String getImageWidth() {
-        return imageWidth;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setImageWidth(String imageWidth) {
-        this.imageWidth = imageWidth;
+    public void setDi(String di) {
+        this.di = di;
     }
 
-    public String getImageHeight() {
-        return imageHeight;
+    public void setBdImgnewsDate(String bdImgnewsDate) {
+        this.bdImgnewsDate = bdImgnewsDate;
     }
 
-    public void setImageHeight(String imageHeight) {
-        this.imageHeight = imageHeight;
+    public void setFromPageTitle(String fromPageTitle) {
+        this.fromPageTitle = fromPageTitle;
     }
 
-    public String getSmallImageUrl() {
-        return smallImageUrl;
+    public String getThumbURL() {
+        return thumbURL;
     }
 
-    public void setSmallImageUrl(String smallImageUrl) {
-        this.smallImageUrl = smallImageUrl;
+    public String getMiddleURL() {
+        return middleURL;
     }
 
-    public int getSmallImageWidth() {
-        return smallImageWidth;
+    public boolean isHasLarge() {
+        return hasLarge;
     }
 
-    public void setSmallImageWidth(int smallImageWidth) {
-        this.smallImageWidth = smallImageWidth;
+    public String getHoverURL() {
+        return hoverURL;
     }
 
-    public int getSmallImageHeight() {
-        return smallImageHeight;
+    public int getPageNum() {
+        return pageNum;
     }
 
-    public void setSmallImageHeight(int smallImageHeight) {
-        this.smallImageHeight = smallImageHeight;
+    public String getObjURL() {
+        return objURL;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public String getFromURL() {
+        return fromURL;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public String getFromURLHost() {
+        return fromURLHost;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getDi() {
+        return di;
+    }
+
+    public String getBdImgnewsDate() {
+        return bdImgnewsDate;
+    }
+
+    public String getFromPageTitle() {
+        return fromPageTitle;
     }
 }

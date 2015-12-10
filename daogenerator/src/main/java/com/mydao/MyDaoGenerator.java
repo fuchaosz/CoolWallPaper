@@ -12,8 +12,7 @@ public class MyDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         Schema schema = new Schema(1, "com.coolwallpaper.model");
-        addNote(schema);
-        new DaoGenerator().generateAll(schema,"coolwallpaper/src/main/java-gen");
+        new DaoGenerator().generateAll(schema, "coolwallpaper/src/main/java");
     }
 
     public static void addNote(Schema schema) {
@@ -21,5 +20,19 @@ public class MyDaoGenerator {
         note.addIdProperty();
         note.addStringProperty("text").notNull();
         note.addStringProperty("comment");
+        note.setSuperclass("BaseRequestParam");
+    }
+
+    //添加图片实体
+    public static void addPictureEntity(Schema schema) {
+        Entity picture = schema.addEntity("Picture");
+        picture.addIdProperty().notNull().autoincrement().primaryKey();//id是主键
+        picture.addStringProperty("id");
+        picture.addStringProperty("desc");
+        //picture.addStr
+        picture.addStringProperty("date");
+        picture.addStringProperty("downloadUrl");
+        picture.addStringProperty("imageUrl");
+        //picture.addStringProperty()
     }
 }
