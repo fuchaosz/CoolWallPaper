@@ -176,7 +176,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     //显示图片
     private void showPicture(final boolean isInit) {
         this.imageLoader.stop();
-        this.imageLoader.displayImage(pictureBean.getImageUrl(), ivImage, new ImageLoadingListener() {
+        this.imageLoader.displayImage(pictureBean.getDownloadUrl(), ivImage, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
                 progressBar.setVisibility(View.VISIBLE);

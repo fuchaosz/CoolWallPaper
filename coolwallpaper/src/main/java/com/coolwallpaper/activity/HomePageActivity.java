@@ -67,14 +67,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         //创建MenuItem
         this.createResideMenu();
         //创建二级标题
-        String[] subTagArray = {"美轮美奂", "花草植物", "国外风光", "唯美意境", "旅游风光", "海底世界", "冰天雪地", "山水相映", "海滩沙滩", "在路上", "自然风光", "沙漠戈壁", "璀璨星空"};
-        //        //创建Fragment
-        //        this.fragment = HomePageFragment.newInstance("风景", subTagArray);
-        //        //添加到container
-        //        FragmentManager fm = getFragmentManager();
-        //        FragmentTransaction ft = fm.beginTransaction();
-        //        ft.add(R.id.ly_container, fragment);
-        //        ft.commit();
+        String[] subTagArray = {"雪景", "山水", "田园", "公路", "海底", "宇宙", "夜景", "秋天", "日出", "沙漠", "星空", "自然", "海滩"};
         this.adapter = new MyPagerAdapter(this, "风景", subTagArray);
         this.viewPager.setAdapter(adapter);
         this.tabs.setViewPager(viewPager);

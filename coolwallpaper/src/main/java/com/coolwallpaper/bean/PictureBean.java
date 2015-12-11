@@ -1,5 +1,7 @@
 package com.coolwallpaper.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -8,10 +10,8 @@ import java.io.Serializable;
  */
 public class PictureBean implements Serializable {
 
-
     /**
      * thumbURL : http://img2.imgtn.bdimg.com/it/u=1331604501,2780813711&fm=21&gp=0.jpg
-     * middleURL : http://img2.imgtn.bdimg.com/it/u=1331604501,2780813711&fm=21&gp=0.jpg
      * hasLarge : true
      * hoverURL : http://img2.imgtn.bdimg.com/it/u=1331604501,2780813711&fm=23&gp=0.jpg
      * pageNum : 60
@@ -26,43 +26,54 @@ public class PictureBean implements Serializable {
      * fromPageTitle : 经典<strong>兰博基尼</strong>埃文塔多跑车图片win7 壁纸
      */
 
+    /**
+     * 缩略图
+     */
+    @SerializedName("hoverURL")
     private String thumbURL;
-    private String middleURL;
-    private boolean hasLarge;
-    private String hoverURL;
-    private int pageNum;
-    private String objURL;
+
+    /**
+     * 原图地址
+     */
+    @SerializedName("objURL")
+    private String downloadUrl;
+
+    /**
+     * 图片来源
+     */
     private String fromURL;
+
+    /**
+     * 图片来源网址的host
+     */
     private String fromURLHost;
+
+    /**
+     * 原图的宽度
+     */
     private int width;
+
+    /**
+     * 原图的高度
+     */
     private int height;
+
+    /**
+     * 原图的类型，例如:type
+     */
     private String type;
-    private String di;
-    private String bdImgnewsDate;
-    private String fromPageTitle;
+
+    /**
+     * 图片描述，这里是图片来源的页面的标题
+     */
+    @SerializedName("fromPageTitle")
+    private String desc;
+
+    public PictureBean() {
+    }
 
     public void setThumbURL(String thumbURL) {
         this.thumbURL = thumbURL;
-    }
-
-    public void setMiddleURL(String middleURL) {
-        this.middleURL = middleURL;
-    }
-
-    public void setHasLarge(boolean hasLarge) {
-        this.hasLarge = hasLarge;
-    }
-
-    public void setHoverURL(String hoverURL) {
-        this.hoverURL = hoverURL;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public void setObjURL(String objURL) {
-        this.objURL = objURL;
     }
 
     public void setFromURL(String fromURL) {
@@ -85,40 +96,8 @@ public class PictureBean implements Serializable {
         this.type = type;
     }
 
-    public void setDi(String di) {
-        this.di = di;
-    }
-
-    public void setBdImgnewsDate(String bdImgnewsDate) {
-        this.bdImgnewsDate = bdImgnewsDate;
-    }
-
-    public void setFromPageTitle(String fromPageTitle) {
-        this.fromPageTitle = fromPageTitle;
-    }
-
     public String getThumbURL() {
         return thumbURL;
-    }
-
-    public String getMiddleURL() {
-        return middleURL;
-    }
-
-    public boolean isHasLarge() {
-        return hasLarge;
-    }
-
-    public String getHoverURL() {
-        return hoverURL;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public String getObjURL() {
-        return objURL;
     }
 
     public String getFromURL() {
@@ -141,15 +120,15 @@ public class PictureBean implements Serializable {
         return type;
     }
 
-    public String getDi() {
-        return di;
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
-    public String getBdImgnewsDate() {
-        return bdImgnewsDate;
+    public String getDesc() {
+        return desc;
     }
 
-    public String getFromPageTitle() {
-        return fromPageTitle;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

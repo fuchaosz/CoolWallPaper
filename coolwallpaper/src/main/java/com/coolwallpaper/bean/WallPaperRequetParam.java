@@ -16,23 +16,26 @@ public class WallPaperRequetParam extends BaseRequestParam {
     }
 
     /**
-     * 构造函数.默认每页30个
+     * 构造函数.默认每页30个,默认显示全部
      *
      * @param page 起始页数
      */
     public WallPaperRequetParam(int page) {
-        this("全部", "", page, 30);
+        this("", "", page, 30);
     }
 
     /**
      * 构造函数
      *
-     * @param title1
-     * @param title2
+     * @param title1 一级标题,例如:风景
+     * @param title2 二级标题,例如:雪景
      * @param page
      */
     public WallPaperRequetParam(String title1, String title2, int page, int pageSize) {
-        super("壁纸", title1, title2, page, pageSize);
+        this.title1 = title1;
+        this.title2 = title2;
+        this.pn = page;
+        this.rn = pageSize;
     }
 
 
@@ -40,23 +43,25 @@ public class WallPaperRequetParam extends BaseRequestParam {
     public String getUrl() {
         //组装参数,组合成URL
         StringBuilder builder = new StringBuilder();
+        word = "壁纸 " + title1 + " " + title2;
         try {
             builder.append(baseUrl);
-            builder.append("?app=" + app);
-            builder.append("&col=" + URLEncoder.encode(col, "UTF-8"));
-            builder.append("&fr=" + fr);
-            builder.append("&from=" + from);
-            builder.append("&height=" + height);
-            builder.append("&ic=" + ic);
+            builder.append("?tn=" + tn);
             builder.append("&ie=" + ie);
-            builder.append("&image_id=" + imageId);
-            builder.append("&oe=" + oe);
-            builder.append("&p=" + p);
+            builder.append("&word=" + URLEncoder.encode(word.trim(), "UTF-8"));
+            builder.append("&cg=" + cg);
             builder.append("&pn=" + pn);
             builder.append("&rn=" + rn);
-            builder.append("&tag=" + tag);
-            builder.append("&tag3=" + tag3);
+            builder.append("&itg=" + itg);
+            builder.append("&z=" + z);
+            builder.append("&fr=" + fr);
             builder.append("&width=" + width);
+            builder.append("&height=" + height);
+            builder.append("&lm=" + lm);
+            builder.append("&ic=" + ic);
+            builder.append("&s=" + s);
+            builder.append("&st=" + st);
+            builder.append("&gsm=" + gsm);
         } catch (Exception e) {
             e.printStackTrace();
         }

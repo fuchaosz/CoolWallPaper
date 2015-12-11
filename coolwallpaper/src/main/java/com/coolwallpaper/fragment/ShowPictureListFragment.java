@@ -52,8 +52,8 @@ public class ShowPictureListFragment extends BaseFragment {
     private ProgressDialog progressDialog;
     private int currentPage;
     private List<PictureBean> beanList;
-    private String tag;
-    private String tag3;
+    private String title1;
+    private String title2;
     private OkHttpClient okHttpClient;//网络访问采用okhttp
     private HttpUtils httpUtils;
     private
@@ -64,15 +64,15 @@ public class ShowPictureListFragment extends BaseFragment {
     /**
      * 创建实例方法
      *
-     * @param tag  二级标题,例如:风景
-     * @param tag3 三级标题,例如:自然风光
+     * @param title1 一级标题,例如:风景
+     * @param title2 二级标题,例如:雪景
      * @return
      */
-    public static ShowPictureListFragment newInstance(String tag, String tag3) {
+    public static ShowPictureListFragment newInstance(String title1, String title2) {
         ShowPictureListFragment fragment = new ShowPictureListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("TAG", tag);
-        bundle.putString("TAG3", tag3);
+        bundle.putString("TITLE_1", title1);
+        bundle.putString("TITLE_2", title2);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -88,8 +88,8 @@ public class ShowPictureListFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
-        this.tag = bundle.getString("TAG");
-        this.tag3 = bundle.getString("TAG3");
+        this.title1 = bundle.getString("TITLE_1");
+        this.title2 = bundle.getString("TITLE_2");
         //初始化
         this.init();
         //添加监听器
@@ -127,8 +127,8 @@ public class ShowPictureListFragment extends BaseFragment {
         this.httpUtils = new HttpUtils();
         this.okHttpClient = new OkHttpClient();
         this.requetParam = new WallPaperRequetParam();
-        this.requetParam.setTag(tag);
-        this.requetParam.setTag3(tag3);
+        this.requetParam.setTitle1(title1);
+        this.requetParam.setTitle2(title2);
         //this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         this.gridView.setMode(PullToRefreshBase.Mode.DISABLED);
         ILoadingLayout loadLayout = gridView.getLoadingLayoutProxy();
@@ -279,7 +279,7 @@ public class ShowPictureListFragment extends BaseFragment {
             holder = (ViewHolder) view.getTag();
             PictureBean bean = beanList.get(position);
             //绑定数据
-            imageLoader.displayImage(bean.getSmallImageUrl(), holder.ivPic, options);
+            imageLoader.displayImage(bean.getThumbURL(), holder.ivPic, options);
             holder.tvDesc.setText(bean.getDesc());
             return view;
         }
