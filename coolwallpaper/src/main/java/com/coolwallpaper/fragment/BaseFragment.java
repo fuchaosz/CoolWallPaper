@@ -7,6 +7,8 @@ import android.view.View;
 import com.coolwallpaper.constant.AppBus;
 import com.lidroid.xutils.ViewUtils;
 
+import butterknife.ButterKnife;
+
 /**
  * 基本类型Fragment
  * Created by fuchao on 2015/10/30.
@@ -25,6 +27,8 @@ public class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //xUtils注解
         ViewUtils.inject(this, view);
+        //注册butterKnife
+        ButterKnife.bind(this,view);
     }
 
     @Override

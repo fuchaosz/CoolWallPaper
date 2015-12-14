@@ -94,10 +94,6 @@ public class ShowPictureListFragment extends BaseFragment {
         this.init();
         //添加监听器
         this.addListener();
-        //        if(beanList == null || beanList.size() == 0){
-        //            //查询数据
-        //            this.queryPicture();
-        //        }
         //测试代码
         this.gridView.setAdapter(new TestAdapter());
     }
@@ -124,7 +120,6 @@ public class ShowPictureListFragment extends BaseFragment {
     private void init() {
         this.imageLoader.init(ImageUtil.getInstance().getImageLoaderConfiguration());
         this.options = ImageUtil.getInstance().getDisplayImageOptions();
-        this.httpUtils = new HttpUtils();
         this.okHttpClient = new OkHttpClient();
         this.requetParam = new WallPaperRequetParam();
         this.requetParam.setTitle1(title1);

@@ -12,6 +12,8 @@ import com.lidroid.xutils.ViewUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 /**
  * 基类Activity
  * Created by fuchao on 2015/7/9.
@@ -26,6 +28,8 @@ public class BaseActivity extends Activity {
         activityList.add(this);
         //注册事件总线otto
         AppBus.getInstance().register(this);
+        //注册ButterKnife
+        ButterKnife.bind(this);
     }
 
     @Override
