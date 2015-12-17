@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.coolwallpaper.R;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.UpdatePictureEvent;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,12 +28,12 @@ import java.util.List;
 public class PictureListFragment extends BaseFragment {
 
     private ListView lvPicture;
-    private List<PictureBean> beanList;
+    private List<PictureResult> beanList;
     private ImageLoader imageLoader;
     private PicAdapter adapter;
 
     //创建方法
-    public static PictureListFragment newInstance(List<PictureBean> beanList) {
+    public static PictureListFragment newInstance(List<PictureResult> beanList) {
         PictureListFragment fragment = new PictureListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("BEAN_LIST", (Serializable) beanList);
@@ -52,7 +52,7 @@ public class PictureListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.beanList = (List<PictureBean>) getArguments().getSerializable("BEAN_LIST");
+        this.beanList = (List<PictureResult>) getArguments().getSerializable("BEAN_LIST");
         this.imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         this.adapter = new PicAdapter(getActivity(), beanList);
@@ -76,10 +76,10 @@ public class PictureListFragment extends BaseFragment {
     //列表数据适配器
     private class PicAdapter extends BaseAdapter {
 
-        private List<PictureBean> beanList;
+        private List<PictureResult> beanList;
         private Context context;
 
-        public PicAdapter(Context context, List<PictureBean> beanList) {
+        public PicAdapter(Context context, List<PictureResult> beanList) {
             this.context = context;
             this.beanList = beanList;
         }
@@ -114,7 +114,7 @@ public class PictureListFragment extends BaseFragment {
             //清空之前的数据
             holder.ivImage.setImageDrawable(null);
             //绑定数据
-            imageLoader.displayImage(beanList.get(position).getSmallImageUrl(), holder.ivImage);
+            imageLoader.displayImage(beanList.get(position).getThumbUrl(), holder.ivImage);
             return view;
         }
 

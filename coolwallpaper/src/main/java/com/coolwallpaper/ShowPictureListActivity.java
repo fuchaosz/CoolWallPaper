@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.utils.ImageUtil;
 import com.coolwallpaper.utils.PictureParseUtil;
@@ -52,7 +52,7 @@ public class ShowPictureListActivity extends BaseActivity {
     private BaseRequestParam requetParam;
     private ProgressDialog progressDialog;
     private int currentPage;
-    private List<PictureBean> beanList;
+    private List<PictureResult> beanList;
 
     @ViewInject(R.id.gv_pic)
     PullToRefreshGridView gridView;
@@ -113,7 +113,7 @@ public class ShowPictureListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 跳转到图片详情
-                PictureBean tmpBean = adapter.getBeanList().get(position);
+                PictureResult tmpBean = adapter.getBeanList().get(position);
                 ShowPictureDetailActivity.startActivity(ShowPictureListActivity.this, tmpBean, beanList);
             }
         });
@@ -151,7 +151,7 @@ public class ShowPictureListActivity extends BaseActivity {
     }
 
     //显示图片
-    private void showPicture(List<PictureBean> beanList) {
+    private void showPicture(List<PictureResult> beanList) {
         //若为空则创建adaper
         if (adapter == null) {
             adapter = new PictureGridAdapter(this, beanList);
@@ -168,11 +168,11 @@ public class ShowPictureListActivity extends BaseActivity {
     //适配器
     private class PictureGridAdapter extends BaseAdapter {
 
-        private List<PictureBean> beanList;
+        private List<PictureResult> beanList;
         private Context context;
 
         //构造函数
-        public PictureGridAdapter(Context context, List<PictureBean> beanList) {
+        public PictureGridAdapter(Context context, List<PictureResult> beanList) {
             this.context = context;
             this.beanList = beanList;
         }
@@ -208,7 +208,7 @@ public class ShowPictureListActivity extends BaseActivity {
                 view.setTag(holder);
             }
             holder = (ViewHolder) view.getTag();
-            PictureBean bean = beanList.get(position);
+            PictureResult bean = beanList.get(position);
             //绑定数据
             imageLoader.displayImage(bean.getThumbURL(), holder.ivPic, holder);
             holder.tvDesc.setText(bean.getDesc());
@@ -244,11 +244,11 @@ public class ShowPictureListActivity extends BaseActivity {
 
         }
 
-        public void setBeanList(List<PictureBean> beanList) {
+        public void setBeanList(List<PictureResult> beanList) {
             this.beanList = beanList;
         }
 
-        public List<PictureBean> getBeanList() {
+        public List<PictureResult> getBeanList() {
             return beanList;
         }
     }

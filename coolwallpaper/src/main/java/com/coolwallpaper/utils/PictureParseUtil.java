@@ -1,6 +1,6 @@
 package com.coolwallpaper.utils;
 
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -21,11 +21,11 @@ public class PictureParseUtil {
      * @param jsonArrayStr json字符串
      * @return
      */
-    public static List<PictureBean> parse(String jsonArrayStr) {
+    public static List<PictureResult> parse(String jsonArrayStr) {
         if (jsonArrayStr == null) {
             return null;
         }
-        List<PictureBean> beanList = new ArrayList<>();
+        List<PictureResult> beanList = new ArrayList<>();
         try {
             //注意：图片都保存在imgs属性中
             JSONObject jo = new JSONObject(jsonArrayStr);
@@ -34,7 +34,7 @@ public class PictureParseUtil {
             //遍历，使用Gson将json直接解析成bean
             for (int i = 0; i < jsonArray.length(); i++) {
                 String tmp = jsonArray.get(i).toString();
-                PictureBean bean = gson.fromJson(tmp, PictureBean.class);
+                PictureResult bean = gson.fromJson(tmp, PictureResult.class);
                 beanList.add(bean);
             }
         } catch (Exception e) {

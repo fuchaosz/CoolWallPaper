@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolwallpaper.activity.BaseActivity;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.utils.PictureParseUtil;
 import com.lidroid.xutils.BitmapUtils;
@@ -90,7 +90,7 @@ public class ShowPictureActivity extends BaseActivity {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 String jsonStr = responseInfo.result;
                 //解析数据
-                List<PictureBean> beanList = PictureParseUtil.parse(jsonStr);
+                List<PictureResult> beanList = PictureParseUtil.parse(jsonStr);
                 //显示数据
                 showPicture(beanList);
             }
@@ -103,7 +103,7 @@ public class ShowPictureActivity extends BaseActivity {
     }
 
     //显示图片
-    private void showPicture(List<PictureBean> beanList) {
+    private void showPicture(List<PictureResult> beanList) {
         //若为空则创建adaper
         if (adapter == null) {
             adapter = new PictureListAdapter(beanList);
@@ -119,14 +119,14 @@ public class ShowPictureActivity extends BaseActivity {
     //图片的适配器
     public class PictureListAdapter extends RecyclerView.Adapter<PictureListAdapter.ViewHolder> {
 
-        private List<PictureBean> beanList;
+        private List<PictureResult> beanList;
 
         /**
          * 构造函数
          *
          * @param beanList 图片列表
          */
-        public PictureListAdapter(List<PictureBean> beanList) {
+        public PictureListAdapter(List<PictureResult> beanList) {
             this.beanList = beanList;
         }
 
@@ -139,7 +139,7 @@ public class ShowPictureActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            PictureBean bean = beanList.get(position);
+            PictureResult bean = beanList.get(position);
             imageLoader.displayImage(bean.getThumbURL(), holder.ivPic, options);
             holder.tvDesc.setText(bean.getDesc());
         }
@@ -161,7 +161,7 @@ public class ShowPictureActivity extends BaseActivity {
             }
         }
 
-        public void setBeanList(List<PictureBean> beanList) {
+        public void setBeanList(List<PictureResult> beanList) {
             this.beanList = beanList;
         }
     }

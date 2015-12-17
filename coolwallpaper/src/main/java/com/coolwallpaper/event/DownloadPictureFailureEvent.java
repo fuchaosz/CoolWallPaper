@@ -1,6 +1,6 @@
 package com.coolwallpaper.event;
 
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 
 /**
  * 下载图片失败的消息
@@ -8,13 +8,13 @@ import com.coolwallpaper.bean.PictureBean;
  */
 public class DownloadPictureFailureEvent extends BaseEvent{
 
-    private PictureBean pictureBean;
+    private PictureResult pictureBean;
 
-    public DownloadPictureFailureEvent(PictureBean pictureBean){
+    public DownloadPictureFailureEvent(PictureResult pictureBean){
         this.pictureBean = pictureBean;
     }
 
-    public PictureBean getPictureBean() {
+    public PictureResult getPictureBean() {
         return pictureBean;
     }
 }

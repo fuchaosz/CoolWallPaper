@@ -1,6 +1,6 @@
 package com.coolwallpaper.event;
 
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 
 /**
  * 更新图片的事件，用于显示新的图片
@@ -8,17 +8,17 @@ import com.coolwallpaper.bean.PictureBean;
  */
 public class UpdatePictureEvent extends BaseEvent{
 
-    private PictureBean pictureBean;
+    private PictureResult pictureBean;
 
-    public UpdatePictureEvent(PictureBean pictureBean) {
+    public UpdatePictureEvent(PictureResult pictureBean) {
         this.pictureBean = pictureBean;
     }
 
-    public PictureBean getPictureBean() {
+    public PictureResult getPictureBean() {
         return pictureBean;
     }
 
-    public void setPictureBean(PictureBean pictureBean) {
+    public void setPictureBean(PictureResult pictureBean) {
         this.pictureBean = pictureBean;
     }
 }

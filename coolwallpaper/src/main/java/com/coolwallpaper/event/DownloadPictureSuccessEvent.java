@@ -1,6 +1,6 @@
 package com.coolwallpaper.event;
 
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 
 import cn.trinea.android.common.util.FileUtils;
 
@@ -10,15 +10,15 @@ import cn.trinea.android.common.util.FileUtils;
  */
 public class DownloadPictureSuccessEvent extends BaseEvent {
 
-    private PictureBean pictureBean;//下载的PictureBean
+    private PictureResult pictureBean;//下载的PictureBean
     private String savePath;//文件在本地的保存路径，绝对路径
 
-    public DownloadPictureSuccessEvent(PictureBean pictureBean, String savePath) {
+    public DownloadPictureSuccessEvent(PictureResult pictureBean, String savePath) {
         this.pictureBean = pictureBean;
         this.savePath = savePath;
     }
 
-    public PictureBean getPictureBean() {
+    public PictureResult getPictureBean() {
         return pictureBean;
     }
 

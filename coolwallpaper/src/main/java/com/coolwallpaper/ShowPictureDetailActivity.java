@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import com.coolwallpaper.activity.BaseActivity;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
 import com.coolwallpaper.event.UpdatePictureEvent;
@@ -40,13 +40,13 @@ import cn.trinea.android.common.util.ToastUtils;
  */
 public class ShowPictureDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private PictureBean pictureBean;
+    private PictureResult pictureBean;
     private ImageLoader imageLoader;
     private Matrix matrix;
     private float maxMoveLength;//最大可以移动的距离
     private int currentProgress = 50;//当前进度
     private PictureListFragment fragment;//左边的图片的列表
-    private List<PictureBean> beanList;//图片列表
+    private List<PictureResult> beanList;//图片列表
     private Drawable favoriteAddDrawable;//没有收藏的时候显示的drawable
     private Drawable favoriteRemoveDrawable;//收藏了之后显示的drawable
 
@@ -78,7 +78,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
      * @param bean     当前显示的图片
      * @param beanList 图片列表
      */
-    public static void startActivity(Context context, PictureBean bean, List<PictureBean> beanList) {
+    public static void startActivity(Context context, PictureResult bean, List<PictureResult> beanList) {
         Intent intent = new Intent(context, ShowPictureDetailActivity.class);
         intent.putExtra("PICTURE_BEAN", bean);
         intent.putExtra("BEAN_LIST", (Serializable) beanList);
@@ -89,8 +89,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_detail);
-        this.pictureBean = (PictureBean) getIntent().getSerializableExtra("PICTURE_BEAN");
-        this.beanList = (List<PictureBean>) getIntent().getSerializableExtra("BEAN_LIST");
+        this.pictureBean = (PictureResult) getIntent().getSerializableExtra("PICTURE_BEAN");
+        this.beanList = (List<PictureResult>) getIntent().getSerializableExtra("BEAN_LIST");
         //初始化
         this.init();
         //添加监听器

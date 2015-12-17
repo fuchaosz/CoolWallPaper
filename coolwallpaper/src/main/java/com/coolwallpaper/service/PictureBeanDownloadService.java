@@ -6,7 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.coolwallpaper.bean.BaseRequestParam;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureBeanFailureEvent;
 import com.coolwallpaper.event.DownloadPictureBeanSuccessEvent;
@@ -30,7 +30,7 @@ public class PictureBeanDownloadService extends BaseService {
 
     private BaseRequestParam param;//图片URL的请求参数
     private OkHttpClient okHttpClient;//访问网络采用okhttp
-    private List<PictureBean> beanList;
+    private List<PictureResult> beanList;
 
     @Nullable
     @Override

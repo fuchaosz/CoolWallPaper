@@ -7,9 +7,9 @@ package com.coolwallpaper.constant;
 public class ConstDB {
 
     /**
-     * 保存图片数据库
+     * 保存图片数据库。数据库一般只有一个
      */
-    public static final String DB_PICTURE = "db_picture";
+    public static final String DB_NAME = "db_coolwallpaper";
 
     /**
      * 图片表

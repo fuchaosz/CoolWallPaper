@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +15,18 @@ import android.widget.TextView;
 
 import com.coolwallpaper.R;
 import com.coolwallpaper.bean.BaseRequestParam;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.constant.TestURL;
+import com.coolwallpaper.model.Param;
+import com.coolwallpaper.model.ParamDao;
+import com.coolwallpaper.model.Picture;
+import com.coolwallpaper.model.PictureDao;
+import com.coolwallpaper.utils.DBUtil;
 import com.coolwallpaper.utils.ImageUtil;
-import com.coolwallpaper.utils.PictureParseUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,6 +35,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.List;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * 最底层的单个Fragement，只显示图片列表
@@ -50,13 +50,11 @@ public class ShowPictureListFragment extends BaseFragment {
     private PictureGridAdapter adapter;
     private BaseRequestParam requetParam;
     private ProgressDialog progressDialog;
-    private int currentPage;
-    private List<PictureBean> beanList;
+    private List<PictureResult> beanList;
     private String title1;
     private String title2;
     private OkHttpClient okHttpClient;//网络访问采用okhttp
-    private HttpUtils httpUtils;
-    private
+    private List<Picture> pictureList;
 
     @ViewInject(R.id.gv_pic)
     PullToRefreshGridView gridView;
@@ -98,24 +96,6 @@ public class ShowPictureListFragment extends BaseFragment {
         this.gridView.setAdapter(new TestAdapter());
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart()");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume()");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause()");
-    }
-
     //初始化
     private void init() {
         this.imageLoader.init(ImageUtil.getInstance().getImageLoaderConfiguration());
@@ -130,13 +110,32 @@ public class ShowPictureListFragment extends BaseFragment {
         loadLayout.setPullLabel("上拉加载");
         loadLayout.setRefreshingLabel("正在加载...");
         loadLayout.setReleaseLabel("释放加载");
+        //查询数据库数据
+        this.queryDB();
+        //创建adapter
+
     }
 
     //从数据库中查询图片
-    private void queryDB() {
-        //使用GreenDAO来查询数据库
-        //DevOpenHelper helper = new DaoMaster.DevOpenHelper(getActivity(), ConstDB.DB_PICTURE, null);
-
+    private List<Picture> queryDB() {
+        List<Picture> result = null;
+        //查询参数
+        ParamDao paramDao = DBUtil.getInstance().getParamDao();
+        QueryBuilder qb = paramDao.queryBuilder();
+        qb.where(ParamDao.Properties.Title1.eq(title1), ParamDao.Properties.Title2.eq(title2));
+        List paramList = qb.list();
+        //如果没有查到参数，说明这个参数还没有查询过
+        if (paramList == null || paramList.size() == 0) {
+            return null;
+        }
+        //取出第一个param
+        Param param = (Param) paramList.get(0);
+        //接着根据Param查图片
+        PictureDao pictureDao = DBUtil.getInstance().getPictureDao();
+        qb = pictureDao.queryBuilder();
+        qb.where(PictureDao.Properties.ParamId.eq(param.getId()));
+        result = qb.list();
+        return result;
     }
 
     //查询图片
@@ -166,33 +165,33 @@ public class ShowPictureListFragment extends BaseFragment {
         //            }
         //        });
 
-        this.httpUtils.send(HttpRequest.HttpMethod.GET, requetParam.getUrl(), new RequestCallBack<String>() {
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                String jsonStr = responseInfo.result;
-                //解析数据
-                beanList = PictureParseUtil.parse(jsonStr);
-                showPicture(beanList);
-                //关闭对话框
-                //if (progressDialog != null && progressDialog.isShowing()) {
-                //    progressDialog.dismiss();
-                //}
-                //停止刷新
-                gridView.onRefreshComplete();
-            }
-
-            @Override
-            public void onFailure(HttpException error, String msg) {
-
-            }
-
-            @Override
-            public void onStart() {
-                //显示进度条
-                //progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
-                //progressDialog.show();
-            }
-        });
+        //        this.httpUtils.send(HttpRequest.HttpMethod.GET, requetParam.getUrl(), new RequestCallBack<String>() {
+        //            @Override
+        //            public void onSuccess(ResponseInfo<String> responseInfo) {
+        //                String jsonStr = responseInfo.result;
+        //                //解析数据
+        //                beanList = PictureParseUtil.parse(jsonStr);
+        //                showPicture(beanList);
+        //                //关闭对话框
+        //                //if (progressDialog != null && progressDialog.isShowing()) {
+        //                //    progressDialog.dismiss();
+        //                //}
+        //                //停止刷新
+        //                gridView.onRefreshComplete();
+        //            }
+        //
+        //            @Override
+        //            public void onFailure(HttpException error, String msg) {
+        //
+        //            }
+        //
+        //            @Override
+        //            public void onStart() {
+        //                //显示进度条
+        //                //progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
+        //                //progressDialog.show();
+        //            }
+        //        });
     }
 
     //添加监听器
@@ -218,7 +217,7 @@ public class ShowPictureListFragment extends BaseFragment {
     }
 
     //显示图片
-    private void showPicture(List<PictureBean> beanList) {
+    private void showPicture(List<PictureResult> beanList) {
         //若为空则创建adaper
         if (adapter == null) {
             adapter = new PictureGridAdapter(getActivity(), beanList);
@@ -235,11 +234,11 @@ public class ShowPictureListFragment extends BaseFragment {
     //适配器
     private class PictureGridAdapter extends BaseAdapter {
 
-        private List<PictureBean> beanList;
+        private List<PictureResult> beanList;
         private Context context;
 
         //构造函数
-        public PictureGridAdapter(Context context, List<PictureBean> beanList) {
+        public PictureGridAdapter(Context context, List<PictureResult> beanList) {
             this.context = context;
             this.beanList = beanList;
         }
@@ -272,9 +271,9 @@ public class ShowPictureListFragment extends BaseFragment {
                 view.setTag(holder);
             }
             holder = (ViewHolder) view.getTag();
-            PictureBean bean = beanList.get(position);
+            PictureResult bean = beanList.get(position);
             //绑定数据
-            imageLoader.displayImage(bean.getThumbURL(), holder.ivPic, options);
+            imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, options);
             holder.tvDesc.setText(bean.getDesc());
             return view;
         }
@@ -316,11 +315,11 @@ public class ShowPictureListFragment extends BaseFragment {
 
         }
 
-        public void setBeanList(List<PictureBean> beanList) {
+        public void setBeanList(List<PictureResult> beanList) {
             this.beanList = beanList;
         }
 
-        public List<PictureBean> getBeanList() {
+        public List<PictureResult> getBeanList() {
             return beanList;
         }
     }

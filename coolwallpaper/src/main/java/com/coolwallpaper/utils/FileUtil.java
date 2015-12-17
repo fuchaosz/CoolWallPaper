@@ -3,7 +3,7 @@ package com.coolwallpaper.utils;
 import android.os.Environment;
 
 import com.coolwallpaper.MyApplication;
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
@@ -80,7 +80,7 @@ public class FileUtil {
      *
      * @param pictureBean
      */
-    public void downloadPictureFile(final PictureBean pictureBean) {
+    public void downloadPictureFile(final PictureResult pictureBean) {
         //获取文件下载url
         String url = pictureBean.getDownloadUrl();
         String fielNameStr = url.substring(url.lastIndexOf("/"), url.length());

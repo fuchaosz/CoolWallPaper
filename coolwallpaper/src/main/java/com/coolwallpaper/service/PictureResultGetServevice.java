@@ -1,0 +1,140 @@
+package com.coolwallpaper.service;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+
+import com.coolwallpaper.bean.BaseRequestParam;
+import com.coolwallpaper.bean.PictureResult;
+import com.coolwallpaper.model.Param;
+import com.coolwallpaper.model.ParamDao;
+import com.coolwallpaper.model.Picture;
+import com.coolwallpaper.utils.DBUtil;
+import com.coolwallpaper.utils.PictureParseUtil;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import de.greenrobot.dao.query.QueryBuilder;
+
+/**
+ * 从网络获取PictureResult图片的服务
+ * Created by fuchao on 2015/12/16.
+ */
+public class PictureResultGetServevice extends BaseService {
+
+    private OkHttpClient okHttpClient;//采用okHttp来访问网络
+    private ExecutorService executor;//线程池
+
+    /**
+     * 启动服务的方法
+     *
+     * @param context
+     * @param param   要访问网络的参数
+     */
+    public static void startService(Context context, BaseRequestParam param) {
+        Intent intent = new Intent(context, PictureResultGetServevice.class);
+        intent.putExtra("BaseRequestParam", param);
+        context.startService(intent);
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        this.okHttpClient = new OkHttpClient();
+        //创建一个可缓存的线程池
+        this.executor = Executors.newCachedThreadPool();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        //取出参数
+        BaseRequestParam requestParam = (BaseRequestParam) intent.getSerializableExtra("BaseRequestParam");
+        //放进线程池里面访问网络，获取数据
+        executor.execute(new GetPictureRunable(okHttpClient, requestParam));
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    //下载图片列表信息的线程体
+    public class GetPictureRunable implements Runnable {
+
+        private BaseRequestParam requestParam;
+        private OkHttpClient client;
+        private List<PictureResult> list;
+
+        GetPictureRunable(OkHttpClient client, BaseRequestParam requestParam) {
+            this.client = client;
+            this.requestParam = requestParam;
+        }
+
+        @Override
+        public void run() {
+            Request request = new Request.Builder().url(requestParam.getUrl()).build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    //发送失败消息
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    String jsonStr = response.body().string();
+                    //解析数据
+                    list = PictureParseUtil.parse(jsonStr);
+                    //保存数据
+                    save();
+                    //发送成功消息
+                }
+            });
+        }
+
+        //保存到数据库中
+        private void save() {
+            //判断数据是否为空
+            if (list == null) {
+                return;
+            }
+            Param param = null;
+            //保存Param之前查询有无重复数据
+            ParamDao paramDao = DBUtil.getInstance().getParamDao();
+            QueryBuilder<Param> qb = paramDao.queryBuilder();
+            qb.where(ParamDao.Properties.Title1.eq(requestParam.getTitle1()), ParamDao.Properties.Title2.eq(requestParam.getTitle2()));
+            List<Param> paramList = qb.list();
+            //如果没有重复的数据
+            if (paramList == null || paramList.size() == 0) {
+                //创建新的param
+                param.setTitle1(requestParam.getTitle1());
+                param.setTitle2(requestParam.getTitle2());
+                //保存到数据库
+                paramDao.insert(param);
+            }
+            //之前已经保存了
+            else {
+                param = paramList.get(0);
+            }
+            //转换数据
+            List<Picture> pictureList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                Picture tmp = new Picture();
+
+            }
+        }
+    }
+}

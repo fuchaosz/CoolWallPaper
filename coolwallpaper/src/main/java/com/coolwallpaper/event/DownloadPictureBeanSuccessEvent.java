@@ -1,6 +1,6 @@
 package com.coolwallpaper.event;
 
-import com.coolwallpaper.bean.PictureBean;
+import com.coolwallpaper.bean.PictureResult;
 
 import java.util.List;
 
@@ -10,17 +10,17 @@ import java.util.List;
  */
 public class DownloadPictureBeanSuccessEvent extends BaseEvent {
 
-    private List<PictureBean> beanList;
+    private List<PictureResult> beanList;
 
-    public DownloadPictureBeanSuccessEvent(List<PictureBean> beanList) {
+    public DownloadPictureBeanSuccessEvent(List<PictureResult> beanList) {
         this.beanList = beanList;
     }
 
-    public List<PictureBean> getBeanList() {
+    public List<PictureResult> getBeanList() {
         return beanList;
     }
 
-    public void setBeanList(List<PictureBean> beanList) {
+    public void setBeanList(List<PictureResult> beanList) {
         this.beanList = beanList;
     }
 }
