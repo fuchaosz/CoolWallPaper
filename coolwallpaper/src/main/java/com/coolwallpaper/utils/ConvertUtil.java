@@ -17,7 +17,15 @@ public class ConvertUtil {
      */
     public static Picture toPicture(PictureResult result) {
         if (result == null) {
-            return result;
+            return null;
         }
+        Picture picture = new Picture();
+        picture.setThumbUrl(result.getThumbUrl());
+        picture.setDownloadUrl(result.getDownloadUrl());
+        picture.setFromUrl(result.getFromUrl());
+        picture.setWidth(result.getWidth());
+        picture.setHeight(result.getHeight());
+        picture.setDesc(result.getDesc());
+        return picture;
     }
 }

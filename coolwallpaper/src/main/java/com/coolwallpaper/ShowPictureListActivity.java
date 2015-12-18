@@ -210,7 +210,7 @@ public class ShowPictureListActivity extends BaseActivity {
             holder = (ViewHolder) view.getTag();
             PictureResult bean = beanList.get(position);
             //绑定数据
-            imageLoader.displayImage(bean.getThumbURL(), holder.ivPic, holder);
+            imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, holder);
             holder.tvDesc.setText(bean.getDesc());
             return view;
         }

@@ -1,14 +1,14 @@
 package com.coolwallpaper.event;
 
 /**
- * PictureBean下载失败事件
+ * PictureResult下载失败事件
  * Created by fuchao on 2015/11/24.
  */
-public class DownloadPictureBeanFailureEvent extends BaseEvent {
+public class DownloadPictureResultFailureEvent extends BaseEvent {
 
     private String reason;//失败原因
 
-    public DownloadPictureBeanFailureEvent(String reason) {
+    public DownloadPictureResultFailureEvent(String reason) {
         this.reason = reason;
     }
 

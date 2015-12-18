@@ -1,5 +1,6 @@
 package com.coolwallpaper.service;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -7,9 +8,14 @@ import android.support.annotation.Nullable;
 
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.PictureResult;
+import com.coolwallpaper.constant.AppBus;
+import com.coolwallpaper.event.DownloadPictureResultFailureEvent;
+import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.Picture;
+import com.coolwallpaper.model.PictureDao;
+import com.coolwallpaper.utils.ConvertUtil;
 import com.coolwallpaper.utils.DBUtil;
 import com.coolwallpaper.utils.PictureParseUtil;
 import com.squareup.okhttp.Call;
@@ -67,7 +73,7 @@ public class PictureResultGetServevice extends BaseService {
         BaseRequestParam requestParam = (BaseRequestParam) intent.getSerializableExtra("BaseRequestParam");
         //放进线程池里面访问网络，获取数据
         executor.execute(new GetPictureRunable(okHttpClient, requestParam));
-        return super.onStartCommand(intent, flags, startId);
+        return super.onStartCommand(intent, Service.START_REDELIVER_INTENT, startId);
     }
 
     //下载图片列表信息的线程体
@@ -76,6 +82,7 @@ public class PictureResultGetServevice extends BaseService {
         private BaseRequestParam requestParam;
         private OkHttpClient client;
         private List<PictureResult> list;
+        private List<Picture> pictureList = new ArrayList<>();
 
         GetPictureRunable(OkHttpClient client, BaseRequestParam requestParam) {
             this.client = client;
@@ -91,6 +98,7 @@ public class PictureResultGetServevice extends BaseService {
                 @Override
                 public void onFailure(Request request, IOException e) {
                     //发送失败消息
+                    AppBus.getInstance().post(new DownloadPictureResultFailureEvent(e.toString()));
                 }
 
                 @Override
@@ -101,6 +109,7 @@ public class PictureResultGetServevice extends BaseService {
                     //保存数据
                     save();
                     //发送成功消息
+                    AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(pictureList));
                 }
             });
         }
@@ -120,20 +129,32 @@ public class PictureResultGetServevice extends BaseService {
             //如果没有重复的数据
             if (paramList == null || paramList.size() == 0) {
                 //创建新的param
+                param = new Param();
                 param.setTitle1(requestParam.getTitle1());
                 param.setTitle2(requestParam.getTitle2());
                 //保存到数据库
                 paramDao.insert(param);
+                //刷新一下，获取id
+                param.refresh();
             }
             //之前已经保存了
             else {
                 param = paramList.get(0);
             }
+            PictureDao pictureDao = DBUtil.getInstance().getPictureDao();
             //转换数据
-            List<Picture> pictureList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
-                Picture tmp = new Picture();
-
+                Picture tmp = ConvertUtil.toPicture(list.get(i));
+                tmp.setParam(param);
+                pictureList.add(tmp);
+                //插入之前先判断一下有没有这个数据
+                QueryBuilder qb2 = pictureDao.queryBuilder();
+                qb2.where(PictureDao.Properties.DownloadUrl.eq(tmp.getDownloadUrl()));
+                //如果没有查到数据
+                if (qb2.count() == 0) {
+                    //插入数据
+                    pictureDao.insert(tmp);
+                }
             }
         }
     }

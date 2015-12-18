@@ -140,7 +140,7 @@ public class ShowPictureActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             PictureResult bean = beanList.get(position);
-            imageLoader.displayImage(bean.getThumbURL(), holder.ivPic, options);
+            imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, options);
             holder.tvDesc.setText(bean.getDesc());
         }
 

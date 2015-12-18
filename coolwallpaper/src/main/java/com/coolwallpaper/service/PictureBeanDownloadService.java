@@ -8,8 +8,7 @@ import android.support.annotation.Nullable;
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.constant.AppBus;
-import com.coolwallpaper.event.DownloadPictureBeanFailureEvent;
-import com.coolwallpaper.event.DownloadPictureBeanSuccessEvent;
+import com.coolwallpaper.event.DownloadPictureResultFailureEvent;
 import com.coolwallpaper.event.NetworkConnectionTimeOutEvent;
 import com.coolwallpaper.utils.PictureParseUtil;
 import com.squareup.okhttp.Call;
@@ -100,13 +99,13 @@ public class PictureBeanDownloadService extends BaseService {
     //下载成功
     private void downloadSuccess() {
         //发送下载成功消息
-        AppBus.getInstance().post(new DownloadPictureBeanSuccessEvent(beanList));
+        //AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(beanList));
     }
 
     //下载失败
     private void downloadFailure(String reason) {
         //发送下载失败的消息
-        AppBus.getInstance().post(new DownloadPictureBeanFailureEvent(reason));
+        AppBus.getInstance().post(new DownloadPictureResultFailureEvent(reason));
     }
 
     //访问网络超时

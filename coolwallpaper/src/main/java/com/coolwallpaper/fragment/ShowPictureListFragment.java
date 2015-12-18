@@ -15,13 +15,14 @@ import android.widget.TextView;
 
 import com.coolwallpaper.R;
 import com.coolwallpaper.bean.BaseRequestParam;
-import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.constant.TestURL;
+import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.model.PictureDao;
+import com.coolwallpaper.service.PictureResultGetServevice;
 import com.coolwallpaper.utils.DBUtil;
 import com.coolwallpaper.utils.ImageUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -32,7 +33,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.squareup.okhttp.OkHttpClient;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -48,12 +49,9 @@ public class ShowPictureListFragment extends BaseFragment {
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private DisplayImageOptions options;
     private PictureGridAdapter adapter;
-    private BaseRequestParam requetParam;
     private ProgressDialog progressDialog;
-    private List<PictureResult> beanList;
     private String title1;
     private String title2;
-    private OkHttpClient okHttpClient;//网络访问采用okhttp
     private List<Picture> pictureList;
 
     @ViewInject(R.id.gv_pic)
@@ -93,17 +91,13 @@ public class ShowPictureListFragment extends BaseFragment {
         //添加监听器
         this.addListener();
         //测试代码
-        this.gridView.setAdapter(new TestAdapter());
+        //this.gridView.setAdapter(new TestAdapter());
     }
 
     //初始化
     private void init() {
         this.imageLoader.init(ImageUtil.getInstance().getImageLoaderConfiguration());
         this.options = ImageUtil.getInstance().getDisplayImageOptions();
-        this.okHttpClient = new OkHttpClient();
-        this.requetParam = new WallPaperRequetParam();
-        this.requetParam.setTitle1(title1);
-        this.requetParam.setTitle2(title2);
         //this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         this.gridView.setMode(PullToRefreshBase.Mode.DISABLED);
         ILoadingLayout loadLayout = gridView.getLoadingLayoutProxy();
@@ -111,9 +105,19 @@ public class ShowPictureListFragment extends BaseFragment {
         loadLayout.setRefreshingLabel("正在加载...");
         loadLayout.setReleaseLabel("释放加载");
         //查询数据库数据
-        this.queryDB();
-        //创建adapter
-
+        pictureList = this.queryDB();
+        //创建适配器
+        this.adapter = new PictureGridAdapter(getActivity(), pictureList);
+        this.gridView.setAdapter(adapter);
+        //如果查询出来的数据为空则启动服务
+        if (pictureList == null || pictureList.size() == 0) {
+            //构造网络参数
+            BaseRequestParam requestParam = new WallPaperRequetParam();
+            requestParam.setTitle1(title1);
+            requestParam.setTitle2(title2);
+            //启动下载图片列表的服务
+            PictureResultGetServevice.startService(getActivity(), requestParam);
+        }
     }
 
     //从数据库中查询图片
@@ -136,62 +140,6 @@ public class ShowPictureListFragment extends BaseFragment {
         qb.where(PictureDao.Properties.ParamId.eq(param.getId()));
         result = qb.list();
         return result;
-    }
-
-    //查询图片
-    private void queryPicture() {
-        //        final Request request = new Request.Builder().url(requetParam.getUrl()).build();
-        //        Calsl call = okHttpClient.newCall(request);
-        //        call.enqueue(new Callback() {
-        //            @Override
-        //            public void onFailure(Request request, IOException e) {
-        //
-        //            }
-        //
-        //            @Override
-        //            public void onResponse(Response response) throws IOException {
-        //                String jsonStr = response.body().string();
-        //                //解析数据
-        //                beanList = PictureParseUtil.parse(jsonStr);
-        //                //更新ui
-        //                getActivity().runOnUiThread(new Runnable() {
-        //                    @Override
-        //                    public void run() {
-        //                        showPicture(beanList);
-        //                        //停止刷新
-        //                        gridView.onRefreshComplete();
-        //                    }
-        //                });
-        //            }
-        //        });
-
-        //        this.httpUtils.send(HttpRequest.HttpMethod.GET, requetParam.getUrl(), new RequestCallBack<String>() {
-        //            @Override
-        //            public void onSuccess(ResponseInfo<String> responseInfo) {
-        //                String jsonStr = responseInfo.result;
-        //                //解析数据
-        //                beanList = PictureParseUtil.parse(jsonStr);
-        //                showPicture(beanList);
-        //                //关闭对话框
-        //                //if (progressDialog != null && progressDialog.isShowing()) {
-        //                //    progressDialog.dismiss();
-        //                //}
-        //                //停止刷新
-        //                gridView.onRefreshComplete();
-        //            }
-        //
-        //            @Override
-        //            public void onFailure(HttpException error, String msg) {
-        //
-        //            }
-        //
-        //            @Override
-        //            public void onStart() {
-        //                //显示进度条
-        //                //progressDialog = ProgressDialog.show(ShowPictureListActivity.this, "正在加载", "请等待....");
-        //                //progressDialog.show();
-        //            }
-        //        });
     }
 
     //添加监听器
@@ -217,7 +165,7 @@ public class ShowPictureListFragment extends BaseFragment {
     }
 
     //显示图片
-    private void showPicture(List<PictureResult> beanList) {
+    private void showPicture(List<Picture> beanList) {
         //若为空则创建adaper
         if (adapter == null) {
             adapter = new PictureGridAdapter(getActivity(), beanList);
@@ -234,11 +182,11 @@ public class ShowPictureListFragment extends BaseFragment {
     //适配器
     private class PictureGridAdapter extends BaseAdapter {
 
-        private List<PictureResult> beanList;
+        private List<Picture> beanList;
         private Context context;
 
         //构造函数
-        public PictureGridAdapter(Context context, List<PictureResult> beanList) {
+        public PictureGridAdapter(Context context, List<Picture> beanList) {
             this.context = context;
             this.beanList = beanList;
         }
@@ -271,7 +219,7 @@ public class ShowPictureListFragment extends BaseFragment {
                 view.setTag(holder);
             }
             holder = (ViewHolder) view.getTag();
-            PictureResult bean = beanList.get(position);
+            Picture bean = beanList.get(position);
             //绑定数据
             imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, options);
             holder.tvDesc.setText(bean.getDesc());
@@ -312,16 +260,23 @@ public class ShowPictureListFragment extends BaseFragment {
             public void onLoadingCancelled(String s, View view) {
 
             }
-
         }
 
-        public void setBeanList(List<PictureResult> beanList) {
-            this.beanList = beanList;
-        }
-
-        public List<PictureResult> getBeanList() {
+        public List<Picture> getBeanList() {
             return beanList;
         }
+
+        public void setBeanList(List<Picture> beanList) {
+            this.beanList = beanList;
+        }
+    }
+
+    //otto接收事件
+    @Subscribe
+    public void onDownloadSuccess(DownloadPictureResultSuccessEvent event) {
+        pictureList = event.getPictureList();
+        adapter.setBeanList(pictureList);
+        adapter.notifyDataSetChanged();
     }
 
     //测试用适配器

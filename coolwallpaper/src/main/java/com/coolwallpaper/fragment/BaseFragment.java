@@ -19,7 +19,7 @@ public class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //注册otto
-        AppBus.getInstance().register(this);
+        //AppBus.getInstance().register(this);
     }
 
     @Override
@@ -29,6 +29,8 @@ public class BaseFragment extends Fragment {
         ViewUtils.inject(this, view);
         //注册butterKnife
         ButterKnife.bind(this,view);
+        //注册otto
+        AppBus.getInstance().register(this);
     }
 
     @Override

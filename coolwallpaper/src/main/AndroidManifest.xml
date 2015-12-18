@@ -37,6 +37,15 @@
 
         <!--主页-->
         <activity android:name=".activity.HomePageActivity"/>
+
+        <activity android:name=".ShowPictureListActivity2"/>
+
+        <!--下载图片信息的服务-->
+        <service android:name=".service.PictureResultGetServevice">
+            <intent-filter>
+                <action android:name="action_download_result_service"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
