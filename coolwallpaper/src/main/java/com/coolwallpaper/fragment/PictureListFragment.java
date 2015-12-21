@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.coolwallpaper.R;
-import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.UpdatePictureEvent;
+import com.coolwallpaper.model.Picture;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -28,12 +28,12 @@ import java.util.List;
 public class PictureListFragment extends BaseFragment {
 
     private ListView lvPicture;
-    private List<PictureResult> beanList;
+    private List<Picture> beanList;
     private ImageLoader imageLoader;
     private PicAdapter adapter;
 
     //创建方法
-    public static PictureListFragment newInstance(List<PictureResult> beanList) {
+    public static PictureListFragment newInstance(List<Picture> beanList) {
         PictureListFragment fragment = new PictureListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("BEAN_LIST", (Serializable) beanList);
@@ -52,7 +52,7 @@ public class PictureListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.beanList = (List<PictureResult>) getArguments().getSerializable("BEAN_LIST");
+        this.beanList = (List<Picture>) getArguments().getSerializable("BEAN_LIST");
         this.imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         this.adapter = new PicAdapter(getActivity(), beanList);
@@ -76,10 +76,10 @@ public class PictureListFragment extends BaseFragment {
     //列表数据适配器
     private class PicAdapter extends BaseAdapter {
 
-        private List<PictureResult> beanList;
+        private List<Picture> beanList;
         private Context context;
 
-        public PicAdapter(Context context, List<PictureResult> beanList) {
+        public PicAdapter(Context context, List<Picture> beanList) {
             this.context = context;
             this.beanList = beanList;
         }

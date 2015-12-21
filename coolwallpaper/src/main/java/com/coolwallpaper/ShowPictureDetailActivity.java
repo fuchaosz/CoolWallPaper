@@ -15,11 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import com.coolwallpaper.activity.BaseActivity;
-import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
 import com.coolwallpaper.event.UpdatePictureEvent;
 import com.coolwallpaper.fragment.PictureListFragment;
+import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.utils.FileUtil;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -27,7 +27,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.squareup.otto.Subscribe;
-
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,13 +39,13 @@ import cn.trinea.android.common.util.ToastUtils;
  */
 public class ShowPictureDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private PictureResult pictureBean;
+    private Picture pictureBean;
     private ImageLoader imageLoader;
     private Matrix matrix;
     private float maxMoveLength;//最大可以移动的距离
     private int currentProgress = 50;//当前进度
     private PictureListFragment fragment;//左边的图片的列表
-    private List<PictureResult> beanList;//图片列表
+    private List<Picture> beanList;//图片列表
     private Drawable favoriteAddDrawable;//没有收藏的时候显示的drawable
     private Drawable favoriteRemoveDrawable;//收藏了之后显示的drawable
 
@@ -78,7 +77,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
      * @param bean     当前显示的图片
      * @param beanList 图片列表
      */
-    public static void startActivity(Context context, PictureResult bean, List<PictureResult> beanList) {
+    public static void startActivity(Context context, Picture bean, List<Picture> beanList) {
         Intent intent = new Intent(context, ShowPictureDetailActivity.class);
         intent.putExtra("PICTURE_BEAN", bean);
         intent.putExtra("BEAN_LIST", (Serializable) beanList);
@@ -89,8 +88,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_detail);
-        this.pictureBean = (PictureResult) getIntent().getSerializableExtra("PICTURE_BEAN");
-        this.beanList = (List<PictureResult>) getIntent().getSerializableExtra("BEAN_LIST");
+        this.pictureBean = (Picture) getIntent().getSerializableExtra("PICTURE_BEAN");
+        this.beanList = (List<Picture>) getIntent().getSerializableExtra("BEAN_LIST");
         //初始化
         this.init();
         //添加监听器
@@ -282,20 +281,20 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     //订阅图片刷新事件
     @Subscribe
-    private void updatePicture(UpdatePictureEvent event) {
+    public void updatePicture(UpdatePictureEvent event) {
         this.pictureBean = event.getPictureBean();
         showPicture(false);
     }
 
     //订阅下载文件成功的事件
     @Subscribe
-    private void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
+    public void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
         ToastUtils.show(this, "图片成功收藏到本地" + event.getSavePath());
     }
 
     //订阅下载文件失败的事件
     @Subscribe
-    private void downloadFailuerEvent(DownloadPictureFailureEvent event) {
+    public void downloadFailuerEvent(DownloadPictureFailureEvent event) {
         ToastUtils.show(this, "图片 " + event.getPictureBean().getDesc() + " 收藏失败");
         //设置按钮为未收藏的状态
         this.ivFavorite.setImageDrawable(favoriteAddDrawable);

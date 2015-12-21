@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import java.util.List;
  */
 public class HomePageActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final String TAG = "[HomePageActivity]";
     private ResideMenu resideMenu;
     private Fragment fragment;
     private MyPagerAdapter adapter;
@@ -61,9 +64,10 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
         this.resideMenu.attachToActivity(this);
         this.resideMenu.setScaleValue(0.5f);
+        //this.resideMenu.addIgnoredView(viewPager);
         //关闭左滑右滑开关
         this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+        //this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
         //创建MenuItem
         this.createResideMenu();
         //创建二级标题
@@ -97,13 +101,45 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
 
     //添加监听器
     private void addListener() {
+        //给viewpager添加滑动监听器
+        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.i(TAG, "position = " + position + "  positionOffset = " + positionOffset + "  positionOffsetPixels = " + positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //滑动到最左边
+                if (position == 0) {
+                    resideMenu.clearIgnoredViewList();
+                    resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+                    resideMenu.setSwipeDirectionEnable(ResideMenu.DIRECTION_LEFT);
+                }
+                //滑动到最右边
+                else if (position == adapter.getCount() - 1) {
+                    resideMenu.clearIgnoredViewList();
+                    resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+                    resideMenu.setSwipeDirectionEnable(ResideMenu.DIRECTION_RIGHT);
+                }
+                //其他位置
+                else {
+                    resideMenu.addIgnoredView(viewPager);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.i(TAG, "state = " + state);
+            }
+        });
     }
 
-    //    @Override
-    //    public boolean dispatchTouchEvent(MotionEvent ev) {
-    //        //使用滑动开启/关闭菜单
-    //        return resideMenu.dispatchTouchEvent(ev);
-    //    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        //使用滑动开启/关闭菜单
+        return resideMenu.dispatchTouchEvent(ev);
+    }
 
     @Override
     public void onClick(View v) {

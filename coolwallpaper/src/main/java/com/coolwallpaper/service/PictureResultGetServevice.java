@@ -71,8 +71,11 @@ public class PictureResultGetServevice extends BaseService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //取出参数
         BaseRequestParam requestParam = (BaseRequestParam) intent.getSerializableExtra("BaseRequestParam");
-        //放进线程池里面访问网络，获取数据
-        executor.execute(new GetPictureRunable(okHttpClient, requestParam));
+        //判断一下空指针
+        if(requestParam != null){
+            //放进线程池里面访问网络，获取数据
+            executor.execute(new GetPictureRunable(okHttpClient, requestParam));
+        }
         return super.onStartCommand(intent, Service.START_REDELIVER_INTENT, startId);
     }
 
@@ -109,7 +112,7 @@ public class PictureResultGetServevice extends BaseService {
                     //保存数据
                     save();
                     //发送成功消息
-                    AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(pictureList));
+                    AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(requestParam));
                 }
             });
         }

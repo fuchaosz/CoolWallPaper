@@ -1,23 +1,26 @@
 package com.coolwallpaper.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.coolwallpaper.R;
+import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.WallPaperRequetParam;
-import com.coolwallpaper.constant.TestURL;
 import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
+import com.coolwallpaper.listener.AutoLoadListener;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.Picture;
@@ -49,10 +52,11 @@ public class ShowPictureListFragment extends BaseFragment {
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private DisplayImageOptions options;
     private PictureGridAdapter adapter;
-    private ProgressDialog progressDialog;
     private String title1;
     private String title2;
     private List<Picture> pictureList;
+    private BaseRequestParam requestParam;//访问网络的参数
+
 
     @ViewInject(R.id.gv_pic)
     PullToRefreshGridView gridView;
@@ -90,16 +94,13 @@ public class ShowPictureListFragment extends BaseFragment {
         this.init();
         //添加监听器
         this.addListener();
-        //测试代码
-        //this.gridView.setAdapter(new TestAdapter());
     }
 
     //初始化
     private void init() {
         this.imageLoader.init(ImageUtil.getInstance().getImageLoaderConfiguration());
         this.options = ImageUtil.getInstance().getDisplayImageOptions();
-        //this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        this.gridView.setMode(PullToRefreshBase.Mode.DISABLED);
+        this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         ILoadingLayout loadLayout = gridView.getLoadingLayoutProxy();
         loadLayout.setPullLabel("上拉加载");
         loadLayout.setRefreshingLabel("正在加载...");
@@ -109,14 +110,19 @@ public class ShowPictureListFragment extends BaseFragment {
         //创建适配器
         this.adapter = new PictureGridAdapter(getActivity(), pictureList);
         this.gridView.setAdapter(adapter);
+        //构造网络参数
+        requestParam = new WallPaperRequetParam();
+        requestParam.setTitle1(title1);
+        requestParam.setTitle2(title2);
         //如果查询出来的数据为空则启动服务
         if (pictureList == null || pictureList.size() == 0) {
-            //构造网络参数
-            BaseRequestParam requestParam = new WallPaperRequetParam();
-            requestParam.setTitle1(title1);
-            requestParam.setTitle2(title2);
             //启动下载图片列表的服务
             PictureResultGetServevice.startService(getActivity(), requestParam);
+        }
+        //数据库有数据
+        else {
+            //设置页数,从0开始,注意pn是当前的页数，如果当前有30条数据，当前就pn就是0
+            requestParam.setPn(pictureList.size() - requestParam.getRn());
         }
     }
 
@@ -144,39 +150,25 @@ public class ShowPictureListFragment extends BaseFragment {
 
     //添加监听器
     private void addListener() {
-        //this.gridView.setOnScrollListener(new AutoLoadListener());
-        //        //添加刷新监听
-        //        this.gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
-        //            @Override
-        //            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
-        //                requetParam.setPn(++currentPage);
-        //                queryPicture();
-        //            }
-        //        });
-        //        //添加item监听
-        //        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        //            @Override
-        //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //                // 跳转到图片详情
-        //                PictureBean tmpBean = adapter.getBeanList().get(position);
-        //                ShowPictureDetailActivity.startActivity(getActivity(), tmpBean, beanList);
-        //            }
-        //        });
-    }
-
-    //显示图片
-    private void showPicture(List<Picture> beanList) {
-        //若为空则创建adaper
-        if (adapter == null) {
-            adapter = new PictureGridAdapter(getActivity(), beanList);
-            gridView.setAdapter(adapter);
-        }
-        //已经创建了adapter
-        else {
-            //添加数据
-            adapter.getBeanList().addAll(beanList);
-            adapter.notifyDataSetChanged();
-        }
+        this.gridView.setOnScrollListener(new AutoLoadListener());
+        //添加刷新监听
+        this.gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
+                requestParam.setPn(requestParam.getPn() + requestParam.getRn());
+                //访问网络获取图片
+                PictureResultGetServevice.startService(getActivity(), requestParam);
+            }
+        });
+        //添加item监听
+        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 跳转到图片详情
+                Picture tmpBean = adapter.getBeanList().get(position);
+                ShowPictureDetailActivity.startActivity(getActivity(), tmpBean, adapter.getBeanList());
+            }
+        });
     }
 
     //适配器
@@ -222,7 +214,7 @@ public class ShowPictureListFragment extends BaseFragment {
             Picture bean = beanList.get(position);
             //绑定数据
             imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, options);
-            holder.tvDesc.setText(bean.getDesc());
+            holder.tvDesc.setText(Html.fromHtml(bean.getDesc()));
             return view;
         }
 
@@ -274,58 +266,11 @@ public class ShowPictureListFragment extends BaseFragment {
     //otto接收事件
     @Subscribe
     public void onDownloadSuccess(DownloadPictureResultSuccessEvent event) {
-        pictureList = event.getPictureList();
+        //查询数据
+        pictureList = this.queryDB();
         adapter.setBeanList(pictureList);
         adapter.notifyDataSetChanged();
-    }
-
-    //测试用适配器
-    private class TestAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return TestURL.urls.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            ViewHolder holder = null;
-            if (view == null) {
-                view = LayoutInflater.from(getActivity()).inflate(R.layout.picture_item, null);
-                holder = new ViewHolder(view);
-                view.setTag(holder);
-            }
-            holder = (ViewHolder) view.getTag();
-            //加载图片
-            String url = TestURL.urls[position];
-            imageLoader.displayImage(url, holder.ivPic, options);
-            return view;
-        }
-
-        private class ViewHolder {
-
-            public ImageView ivPic;
-            public TextView tvDesc;
-            public ProgressBar progressBar;
-
-            public ViewHolder(View view) {
-                ivPic = (ImageView) view.findViewById(R.id.iv_pic);
-                tvDesc = (TextView) view.findViewById(R.id.tv_desc);
-                progressBar = (ProgressBar) view.findViewById(R.id.progress);
-                //默认隐藏ProgressBar
-                progressBar.setVisibility(View.GONE);
-            }
-        }
+        //停止刷新
+        gridView.onRefreshComplete();
     }
 }

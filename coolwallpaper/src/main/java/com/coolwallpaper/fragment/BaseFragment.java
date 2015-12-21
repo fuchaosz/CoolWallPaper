@@ -18,8 +18,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //注册otto
-        //AppBus.getInstance().register(this);
     }
 
     @Override
@@ -28,15 +26,25 @@ public class BaseFragment extends Fragment {
         //xUtils注解
         ViewUtils.inject(this, view);
         //注册butterKnife
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         //注册otto
         AppBus.getInstance().register(this);
     }
 
     @Override
-    public void onDestroy() {
-        //取消注册EevntBus
+    public void onPause() {
+        super.onPause();
+        //取消注册otto
         AppBus.getInstance().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
     }
 }

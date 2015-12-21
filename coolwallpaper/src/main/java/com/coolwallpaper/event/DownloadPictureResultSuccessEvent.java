@@ -1,8 +1,6 @@
 package com.coolwallpaper.event;
 
-import com.coolwallpaper.model.Picture;
-
-import java.util.List;
+import com.coolwallpaper.bean.BaseRequestParam;
 
 /**
  * 下载PicturenResult成功的消息
@@ -10,17 +8,17 @@ import java.util.List;
  */
 public class DownloadPictureResultSuccessEvent extends BaseEvent {
 
-    private List<Picture> pictureList;
+    private BaseRequestParam requestParam;//查询的参数
 
-    public DownloadPictureResultSuccessEvent(List<Picture> beanList) {
-        this.pictureList = beanList;
+    public DownloadPictureResultSuccessEvent(BaseRequestParam requestParam) {
+        this.requestParam = requestParam;
     }
 
-    public List<Picture> getPictureList() {
-        return pictureList;
+    public BaseRequestParam getRequestParam() {
+        return requestParam;
     }
 
-    public void setPictureList(List<Picture> pictureList) {
-        this.pictureList = pictureList;
+    public void setRequestParam(BaseRequestParam requestParam) {
+        this.requestParam = requestParam;
     }
 }
