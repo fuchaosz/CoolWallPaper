@@ -29,11 +29,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
 
     public static final String TAG = "[HomePageActivity]";
     private ResideMenu resideMenu;
-    private Fragment fragment;
     private MyPagerAdapter adapter;
-
-    @ViewInject(R.id.ly_container)
-    View lyContainer;
 
     @ViewInject(R.id.tabs)
     PagerSlidingTabStrip tabs;
