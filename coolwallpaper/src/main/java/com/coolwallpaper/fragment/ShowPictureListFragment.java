@@ -214,6 +214,8 @@ public class ShowPictureListFragment extends BaseFragment {
             Picture bean = beanList.get(position);
             //绑定数据
             imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, options);
+            //显示图片改用Glide
+            //Glide.with(getActivity()).load(bean.getThumbUrl()).into(holder.ivPic);
             holder.tvDesc.setText(Html.fromHtml(bean.getDesc()));
             return view;
         }

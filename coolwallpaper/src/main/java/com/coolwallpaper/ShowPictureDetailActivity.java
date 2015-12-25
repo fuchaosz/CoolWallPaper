@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
+import com.bumptech.glide.Glide;
 import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
@@ -102,7 +103,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         this.imageLoader = ImageLoader.getInstance();
         this.imageLoader.init(ImageLoaderConfiguration.createDefault(this));
         //显示图片
-        this.showPicture(true);
+        //this.showPicture(true);
+        this.showPictureWithGlide(true);
         //添加图片列表的Fragment
         this.fragment = PictureListFragment.newInstance(beanList);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -205,6 +207,11 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
             }
         });
+    }
+
+    //显示图片，使用Glide
+    private void showPictureWithGlide(boolean isInit) {
+        Glide.with(this).load(pictureBean.getDownloadUrl()).crossFade().into(ivImage);
     }
 
     //放大图片
