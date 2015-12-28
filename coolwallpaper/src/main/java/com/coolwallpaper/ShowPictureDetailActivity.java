@@ -15,6 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
@@ -210,8 +213,30 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     }
 
     //显示图片，使用Glide
-    private void showPictureWithGlide(boolean isInit) {
-        Glide.with(this).load(pictureBean.getDownloadUrl()).crossFade().into(ivImage);
+    private void showPictureWithGlide(final boolean isInit) {
+        Glide.with(this).load(pictureBean.getDownloadUrl()).into(new SimpleTarget<GlideDrawable>() {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                //显示图片
+                ivImage.setImageDrawable(resource);
+                //第一次加载的话要放大图片
+                if (isInit) {
+                    scalePictureToScreenHeight();
+                }
+                //隐藏进度条
+                seekBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadStarted(Drawable placeholder) {
+                super.onLoadStarted(placeholder);
+                //显示进度条
+                progressBar.setVisibility(View.VISIBLE);
+                seekBar.setVisibility(View.GONE);
+            }
+        });
+        //.into(ivImage);
     }
 
     //放大图片
