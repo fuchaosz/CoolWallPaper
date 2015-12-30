@@ -37,4 +37,6 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     //侧滑菜单ResideMenu,引入了源码
     //compile 'com.specyci:residemenu:1.6+'
+    //facebook的Stetho，用于chrome调试app
+    compile 'com.facebook.stetho:stetho:1.2.0'
 }
