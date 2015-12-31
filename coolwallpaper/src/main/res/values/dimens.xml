@@ -5,4 +5,5 @@
     <dimen name="shadow_width">50dp</dimen>
     <dimen name="slidingmenu_offset">100dp</dimen>
     <dimen name="picdetail_fragment_left_width">160dp</dimen>
+    <dimen name="menu_icon_size">30dp</dimen>
 </resources>

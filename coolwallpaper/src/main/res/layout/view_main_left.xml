@@ -1,185 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--左边的SlidingMenu-->
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:orientation="vertical"
+    >
 
+    <!--我的壁纸-->
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
 
-        <RelativeLayout
-            android:id="@id/menu_activity_area"
-            style="@style/leftMenuItemStyle">
+        <ImageView
+            android:layout_width="@dimen/menu_icon_size"
+            android:layout_height="@dimen/menu_icon_size"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_download"
+            />
 
-            <ImageView
-                android:id="@id/supplychart"
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/activity_icon"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:layout_toRightOf="@id/supplychart"
-                android:text="活动专区"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@id/menu_download_wallpaper"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:src="@drawable/icon_downloaded"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:text="我的壁纸"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@id/menu_local_wallpaper"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:src="@drawable/icon_local"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:text="本机相册"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@id/automartic"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:id="@id/icon_automartic"
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_automartic"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:layout_toRightOf="@id/icon_automartic"
-                android:text="壁纸随心换"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@id/recommendation_rl"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:id="@id/recommendation_iv"
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:src="@drawable/icon_recommendation"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:text="精品应用"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@id/destop_rl"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:id="@id/destop_iv"
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:src="@drawable/icon_destop"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:text="手机主题"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@id/menu_supplychart"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:src="@drawable/icon_supplychart"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:text="我要供图"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@id/menu_moreset"
-            style="@style/leftMenuItemStyle">
-
-            <ImageView
-                android:id="@id/iv_more_setting"
-                android:layout_width="@dimen/left_menu_icon_size"
-                android:layout_height="@dimen/left_menu_icon_size"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_moreset"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:layout_toRightOf="@id/iv_more_setting"
-                android:text="更多设置"
-                android:textColor="@color/white"
-                android:textSize="@dimen/left_menu_text_size"/>
-        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的壁纸"
+            android:textColor="@color/white"
+            />
     </LinearLayout>
-</RelativeLayout>
+
+    <!--本机相册-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/menu_icon_size"
+            android:layout_height="@dimen/menu_icon_size"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_pic"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="本机相册"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+    <!--我要供图-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/menu_icon_size"
+            android:layout_height="@dimen/menu_icon_size"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_pen"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我要供图"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+    <!--检查升级-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/menu_icon_size"
+            android:layout_height="@dimen/menu_icon_size"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_upload"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="检查升级"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+    <!--更多设置-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/menu_icon_size"
+            android:layout_height="@dimen/menu_icon_size"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_moreset"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更多设置"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
