@@ -38,6 +38,9 @@
         <!--主页-->
         <activity android:name=".activity.HomePageActivity"/>
 
+        <!--主页2,使用SlidingMenu-->
+        <activity android:name=".activity.HomePageActivity2"/>
+
         <activity android:name=".ShowPictureListActivity2"/>
 
         <!--下载图片信息的服务-->
@@ -46,6 +49,7 @@
                 <action android:name="action_download_result_service"/>
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

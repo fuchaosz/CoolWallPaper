@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.coolwallpaper.R;
@@ -17,12 +14,9 @@ import com.coolwallpaper.fragment.ShowPictureListFragment;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.special.ResideMenu.ResideMenu;
-import com.special.ResideMenu.ResideMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
 
 /**
  * 首页，侧滑菜单采用SlidingMenu
@@ -33,6 +27,7 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
     public static final String TAG = "[HomePageActivity2]";
     private MyPagerAdapter adapter;
     private SlidingMenu slidingMenu;//侧滑菜单采用SlidingMenu
+    private ResideMenu resideMenu;
 
     @ViewInject(R.id.tabs)
     PagerSlidingTabStrip tabs;
@@ -58,57 +53,24 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
 
     //初始化
     private void init() {
-        //配置SlidingMenu
-        this.slidingMenu = new SlidingMenu(this);
-        this.slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
-        //设置触摸模式，可以选择全屏划出，或者是边缘划出，或者是不可划出
-        this.slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        this.slidingMenu.setShadowWidth(0);
-        this.slidingMenu.setShadowDrawable(R.drawable.coolwallpaper_main_bg);
-        //设置侧滑栏完全展开之后，距离另外一边的距离，单位px，设置的越大，侧滑栏的宽度越小
-        this.slidingMenu.setBehindOffset(100);
-        //设置渐变的程度，范围是0-1.0f,设置的越大，则在侧滑栏刚划出的时候，颜色就越暗。1.0f的时候，颜色为全黑
-        this.slidingMenu.setFadeDegree(0.3f);
-        this.slidingMenu.attachToActivity(this,);
-
-        //创建ResidMenu
-        this.resideMenu = new ResideMenu(this);
-        this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
-        this.resideMenu.attachToActivity(this);
-        this.resideMenu.setScaleValue(0.5f);
-        //this.resideMenu.addIgnoredView(viewPager);
-        //关闭左滑右滑开关
-        this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        //this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
-        //创建MenuItem
-        this.createResideMenu();
+        //        //配置SlidingMenu
+        //        this.slidingMenu = new SlidingMenu(this);
+        //        this.slidingMenu.setMode(SlidingMenu.LEFT);
+        //        //设置触摸模式，可以选择全屏划出，或者是边缘划出，或者是不可划出
+        //        this.slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        //        this.slidingMenu.setShadowWidth(0);
+        //        this.slidingMenu.setShadowDrawable(R.drawable.coolwallpaper_main_bg);
+        //        //设置侧滑栏完全展开之后，距离另外一边的距离，单位px，设置的越大，侧滑栏的宽度越小
+        //        this.slidingMenu.setBehindOffset(300);
+        //        //设置渐变的程度，范围是0-1.0f,设置的越大，则在侧滑栏刚划出的时候，颜色就越暗。1.0f的时候，颜色为全黑
+        //        this.slidingMenu.setFadeDegree(0.3f);
+        //        this.slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        //        this.slidingMenu.setMenu(R.layout.menu_main_left);
         //创建二级标题
         String[] subTagArray = {"雪景", "山水", "田园", "公路", "海底", "宇宙", "夜景", "秋天", "日出", "沙漠", "星空", "自然", "海滩"};
         this.adapter = new MyPagerAdapter(this, "风景", subTagArray);
         this.viewPager.setAdapter(adapter);
         this.tabs.setViewPager(viewPager);
-    }
-
-    //创建侧滑菜单
-    private void createResideMenu() {
-        //创建左边的菜单
-        String[] titles = {"我的壁纸", "本机相册", "我要供图", "检查升级", "更多设置"};
-        int[] icons = {R.drawable.icon_download, R.drawable.icon_pic, R.drawable.icon_pen, R.drawable.icon_upload, R.drawable.icon_moreset};
-        for (int i = 0; i < titles.length; i++) {
-            ResideMenuItem menuItem = new ResideMenuItem(this, icons[i], titles[i]);
-            this.resideMenu.addMenuItem(menuItem, ResideMenu.DIRECTION_LEFT);
-        }
-        //创建右边的菜单cmd
-        String[] titlesRight = {"首页", "热门", "风景", "美女", "明星", "创意", "名车", "影视", "游戏", "动漫"};
-        int[] iconsRight = {R.drawable.icon_home, R.drawable.icon_hot, R.drawable.icon_scenery, R.drawable.icon_girl, R.drawable.icon_star, R.drawable.icon_idea, R.drawable.icon_motorbike, R.drawable.icon_movie, R.drawable.icon_game, R.drawable.icon_anime};
-        for (int i = 0; i < titlesRight.length; i++) {
-            ResideMenuItem menuItem = new ResideMenuItem(this, iconsRight[i], titlesRight[i]);
-            menuItem.setOrientation(LinearLayout.HORIZONTAL);
-            TextView tv = new TextView(this);
-            tv.setText("hello");
-            menuItem.addView(tv);
-            this.resideMenu.addMenuItem(menuItem, ResideMenu.DIRECTION_RIGHT);
-        }
     }
 
     //添加监听器
@@ -124,19 +86,12 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
             public void onPageSelected(int position) {
                 //滑动到最左边
                 if (position == 0) {
-                    resideMenu.clearIgnoredViewList();
-                    resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-                    resideMenu.setSwipeDirectionEnable(ResideMenu.DIRECTION_LEFT);
                 }
                 //滑动到最右边
                 else if (position == adapter.getCount() - 1) {
-                    resideMenu.clearIgnoredViewList();
-                    resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
-                    resideMenu.setSwipeDirectionEnable(ResideMenu.DIRECTION_RIGHT);
                 }
                 //其他位置
                 else {
-                    resideMenu.addIgnoredView(viewPager);
                 }
             }
 
@@ -148,19 +103,12 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        //使用滑动开启/关闭菜单
-        return resideMenu.dispatchTouchEvent(ev);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
         }
     }
 
     //定义Adapter
-    //private class MyPagerAdapter extends FragmentStatePagerAdapter {
     private class MyPagerAdapter extends android.support.v13.app.FragmentPagerAdapter {
 
         private Context context;

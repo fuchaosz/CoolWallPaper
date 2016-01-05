@@ -56,7 +56,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/LightGray"
+            android:background="@color/lightGray"
             />
 
         <!--收藏与下载-->
@@ -93,7 +93,7 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/LightGray"
+                android:background="@color/lightGray"
                 />
 
             <!--下载量-->

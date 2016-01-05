@@ -2,9 +2,11 @@
 <!--左边的SlidingMenu-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="fill_parent"
+    android:gravity="center_vertical"
     android:orientation="vertical"
+    android:padding="20dp"
     >
 
     <!--我的壁纸-->

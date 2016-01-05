@@ -56,16 +56,15 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     //初始化
     private void init() {
         //创建ResidMenu
-        this.resideMenu = new ResideMenu(this);
+        this.resideMenu = new ResideMenu(this, R.layout.menu_main_left, R.layout.menu_main_right);
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
         this.resideMenu.attachToActivity(this);
         this.resideMenu.setScaleValue(0.5f);
-        //this.resideMenu.addIgnoredView(viewPager);
         //关闭左滑右滑开关
         this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         //this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
         //创建MenuItem
-        this.createResideMenu();
+        //this.createResideMenu();
         //创建二级标题
         String[] subTagArray = {"雪景", "山水", "田园", "公路", "海底", "宇宙", "夜景", "秋天", "日出", "沙漠", "星空", "自然", "海滩"};
         this.adapter = new MyPagerAdapter(this, "风景", subTagArray);
@@ -73,7 +72,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         this.tabs.setViewPager(viewPager);
     }
 
-    //创建侧滑菜单
+    //创建侧滑菜单,使用自定义的Menu就不能再使用addMenuItem
     private void createResideMenu() {
         //创建左边的菜单
         String[] titles = {"我的壁纸", "本机相册", "我要供图", "检查升级", "更多设置"};

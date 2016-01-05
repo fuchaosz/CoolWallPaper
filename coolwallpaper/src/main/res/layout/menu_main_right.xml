@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--主页右边的SlidingMenu布局-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="right|center_vertical"
+              android:orientation="vertical"
+              android:padding="10dp"
+    >
+
+    <!--表格布局-->
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <!--第一排-->
+        <TableRow>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_home"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="首页"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <View
+                style="@style/menu_right_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_hot"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="热门"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+        <!--第二排-->
+        <TableRow>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_scenery"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="风景"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <View
+                style="@style/menu_right_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_girl"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="美女"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+        <!--第三排-->
+        <TableRow>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_star"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="明星"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <View
+                style="@style/menu_right_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_idea"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="创意"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+        <!--第四排-->
+        <TableRow>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_pen"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="名车"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <View
+                style="@style/menu_right_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_scenery"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="影视"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+        <!--第五排-->
+        <TableRow>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_game"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="游戏"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+
+            <View
+                style="@style/menu_right_divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="1"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="@dimen/menu_icon_size"
+                    android:layout_height="@dimen/menu_icon_size"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_anime"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="动漫"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

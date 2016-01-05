@@ -48,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //ShowPictureListActivity.startActivity(this);
         //跳转到主页
         HomePageActivity.startActivity(this);
+        //HomePageActivity2.startActivity(this);
         //跳转到测试图片列表界面
         //ShowPictureListActivity2.startActivity(this);
         finish();
