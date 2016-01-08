@@ -6,4 +6,12 @@
     <dimen name="slidingmenu_offset">100dp</dimen>
     <dimen name="picdetail_fragment_left_width">160dp</dimen>
     <dimen name="menu_icon_size">30dp</dimen>
+    <!--标题栏的高度-->
+    <dimen name="action_bar_height">60dp</dimen>
+    <!--标题栏的字体大小-->
+    <dimen name="action_bar_title_size">20sp</dimen>
+    <!--图片列表中每个图片的高度-->
+    <dimen name="pic_item_height">140dp</dimen>
+    <dimen name="pic_item_height_big">200dp</dimen>
+
 </resources>

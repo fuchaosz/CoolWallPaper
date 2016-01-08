@@ -30,6 +30,8 @@ dependencies {
     //ImgaeView允许四个角的每一个有不同的半径值
     compile project(':library-SelectableRoundedImageViewLib')
     compile project(':library-ResideMenu')
+    //Jackworth的ViewPagerIndicator库
+    compile project(':library-ViewPagerIndicator')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.+'
     compile 'com.android.support:cardview-v7:21.+'

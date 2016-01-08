@@ -11,6 +11,7 @@
 
     <!--我的壁纸-->
     <LinearLayout
+        android:id="@+id/ly_my_wallpaper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -35,6 +36,7 @@
 
     <!--本机相册-->
     <LinearLayout
+        android:id="@+id/ly_local_paper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -59,6 +61,7 @@
 
     <!--我要供图-->
     <LinearLayout
+        android:id="@+id/ly_provide_paper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -83,6 +86,7 @@
 
     <!--检查升级-->
     <LinearLayout
+        android:id="@+id/ly_check_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -107,6 +111,7 @@
 
     <!--更多设置-->
     <LinearLayout
+        android:id="@+id/ly_more_set"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

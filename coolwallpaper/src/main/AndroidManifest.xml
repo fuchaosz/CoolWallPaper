@@ -38,7 +38,7 @@
         <!--主页-->
         <activity android:name=".activity.HomePageActivity"/>
 
-        <!--主页2,使用SlidingMenu-->
+        <!--主页2-->
         <activity android:name=".activity.HomePageActivity2"/>
 
         <activity android:name=".ShowPictureListActivity2"/>

@@ -17,7 +17,9 @@
         <!--第一排-->
         <TableRow>
 
+            <!--首页-->
             <LinearLayout
+                android:id="@+id/ly_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -47,11 +49,14 @@
                 android:layout_columnWeight="1"
                 />
 
+            <!--热门-->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ly_hot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
+                android:padding="20dp"
                 >
 
                 <ImageView
@@ -73,7 +78,9 @@
         <!--第二排-->
         <TableRow>
 
+            <!--风景-->
             <LinearLayout
+                android:id="@+id/ly_scenery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -103,7 +110,9 @@
                 android:layout_columnWeight="1"
                 />
 
+            <!--美女-->
             <LinearLayout
+                android:id="@+id/ly_girl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -130,7 +139,9 @@
         <!--第三排-->
         <TableRow>
 
+            <!--明星-->
             <LinearLayout
+                android:id="@+id/ly_star"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -160,7 +171,9 @@
                 android:layout_columnWeight="1"
                 />
 
+            <!--创意-->
             <LinearLayout
+                android:id="@+id/ly_idea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -187,7 +200,9 @@
         <!--第四排-->
         <TableRow>
 
+            <!--名车-->
             <LinearLayout
+                android:id="@+id/ly_car"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -217,7 +232,9 @@
                 android:layout_columnWeight="1"
                 />
 
+            <!--影视-->
             <LinearLayout
+                android:id="@+id/ly_film"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -244,7 +261,9 @@
         <!--第五排-->
         <TableRow>
 
+            <!--游戏-->
             <LinearLayout
+                android:id="@+id/ly_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -274,7 +293,9 @@
                 android:layout_columnWeight="1"
                 />
 
+            <!--动漫-->
             <LinearLayout
+                android:id="@+id/ly_anime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

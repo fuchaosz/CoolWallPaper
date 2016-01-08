@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.coolwallpaper.constant.AppBus;
 import com.lidroid.xutils.ViewUtils;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class BaseActivity extends Activity {
         activityList.add(this);
         //注册事件总线otto
         AppBus.getInstance().register(this);
-        //注册ButterKnife
-        ButterKnife.bind(this);
     }
 
     @Override
@@ -37,6 +34,8 @@ public class BaseActivity extends Activity {
         super.setContentView(layoutResID);
         //注册xUtils的view注解
         ViewUtils.inject(this);
+        //注册ButterKnife
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -44,6 +43,8 @@ public class BaseActivity extends Activity {
         super.setContentView(view);
         //注册xUtils的view注解
         ViewUtils.inject(this);
+        //注册ButterKnife
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -51,6 +52,8 @@ public class BaseActivity extends Activity {
         super.setContentView(view, params);
         //注册xUtils的view注解
         ViewUtils.inject(this);
+        //注册ButterKnife
+        ButterKnife.bind(this);
     }
 
     @Override

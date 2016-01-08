@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--显示图片列表-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lv_paper"
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        ptr:ptrHeaderBackground="@color/transparent"
+        >
+
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+</LinearLayout>

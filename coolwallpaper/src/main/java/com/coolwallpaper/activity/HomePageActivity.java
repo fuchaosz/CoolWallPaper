@@ -28,8 +28,10 @@ import java.util.List;
 public class HomePageActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String TAG = "[HomePageActivity]";
-    private ResideMenu resideMenu;
+    private ResideMenu resideMenu;//侧滑菜单
     private MyPagerAdapter adapter;
+    private View leftMenuView;//左边菜单
+    private View rightMenuView;//右边菜单
 
     @ViewInject(R.id.tabs)
     PagerSlidingTabStrip tabs;
@@ -60,6 +62,8 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
         this.resideMenu.attachToActivity(this);
         this.resideMenu.setScaleValue(0.5f);
+        this.leftMenuView = resideMenu.getLeftMenuView();
+        this.rightMenuView = resideMenu.getRightMenuView();
         //关闭左滑右滑开关
         this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         //this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
@@ -96,6 +100,23 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
 
     //添加监听器
     private void addListener() {
+        //左边的menu
+        leftMenuView.findViewById(R.id.ly_my_wallpaper).setOnClickListener(this);
+        leftMenuView.findViewById(R.id.ly_local_paper).setOnClickListener(this);
+        leftMenuView.findViewById(R.id.ly_provide_paper).setOnClickListener(this);
+        leftMenuView.findViewById(R.id.ly_check_update).setOnClickListener(this);
+        leftMenuView.findViewById(R.id.ly_more_set).setOnClickListener(this);
+        //右边的menu
+        rightMenuView.findViewById(R.id.ly_home).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_hot).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_scenery).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_girl).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_star).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_idea).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_car).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_film).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_game).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_anime).setOnClickListener(this);
         //给viewpager添加滑动监听器
         this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -139,6 +160,55 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //我的壁纸
+            case R.id.ly_my_wallpaper:
+                break;
+            //本机相册
+            case R.id.ly_local_paper:
+                //跳转到系统相册
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 0);
+                break;
+            //我要供图
+            case R.id.ly_provide_paper:
+                break;
+            //检查升级
+            case R.id.ly_check_update:
+                break;
+            //更多设置
+            case R.id.ly_more_set:
+                break;
+            //主页
+            case R.id.ly_home:
+                break;
+            //热门
+            case R.id.ly_hot:
+                break;
+            //风景
+            case R.id.ly_scenery:
+                break;
+            //美女
+            case R.id.ly_girl:
+                break;
+            //明星
+            case R.id.ly_star:
+                break;
+            //创意
+            case R.id.ly_idea:
+                break;
+            //名车
+            case R.id.ly_car:
+                break;
+            //影视
+            case R.id.ly_film:
+                break;
+            //游戏
+            case R.id.ly_game:
+                break;
+            //动漫
+            case R.id.ly_anime:
+                break;
         }
     }
 
