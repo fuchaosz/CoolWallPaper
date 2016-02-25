@@ -22,8 +22,8 @@ import java.io.File;
 public class FileUtil {
 
     private static FileUtil fileUtil;
-    private String DIRECTORY_DOWNLOAD = "/mnt/sdcard/coolwallpaper/download";//下载文件的保存目录
-    private String DIRECTORY_FAVORITE = "/mnt/sdcard/coolwallpaper/favorite";//收藏文件的保存目录
+    public String DIRECTORY_DOWNLOAD = "/mnt/sdcard/coolwallpaper/download";//下载文件的保存目录
+    public String DIRECTORY_FAVORITE = "/mnt/sdcard/coolwallpaper/favorite";//收藏文件的保存目录
     private HttpUtils httpUtils;
 
     //获取单例

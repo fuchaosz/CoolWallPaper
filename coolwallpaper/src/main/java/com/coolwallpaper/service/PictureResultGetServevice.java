@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.PictureResult;
@@ -71,8 +72,9 @@ public class PictureResultGetServevice extends BaseService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //取出参数
         BaseRequestParam requestParam = (BaseRequestParam) intent.getSerializableExtra("BaseRequestParam");
+        Log.d(TAG, "onStartCommand() title1=" + requestParam.getTitle1() + " title2=" + requestParam.getTitle2());
         //判断一下空指针
-        if(requestParam != null){
+        if (requestParam != null) {
             //放进线程池里面访问网络，获取数据
             executor.execute(new GetPictureRunable(okHttpClient, requestParam));
         }
@@ -94,7 +96,7 @@ public class PictureResultGetServevice extends BaseService {
 
         @Override
         public void run() {
-            Request request = new Request.Builder().url(requestParam.getUrl()).build();
+            final Request request = new Request.Builder().url(requestParam.getUrl()).build();
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
 
@@ -111,6 +113,7 @@ public class PictureResultGetServevice extends BaseService {
                     list = PictureParseUtil.parse(jsonStr);
                     //保存数据
                     save();
+                    Log.d(TAG, String.format("send Message DownloadPictureResultSuccessEvent() title1=%s title2=%s", requestParam.getTitle1(), requestParam.getTitle2()));
                     //发送成功消息
                     AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(requestParam));
                 }

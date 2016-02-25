@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 
 import com.coolwallpaper.R;
 import com.coolwallpaper.fragment.BaseFragment;
-import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +32,13 @@ public class SubPageFragment extends BaseFragment implements View.OnClickListene
     private PaperViewPagerAdapter adapter;
 
     @Bind(R.id.tb_indicator)
-    TabPageIndicator indicator;
+    TitlePageIndicator indicator;
 
     @Bind(R.id.vp_paper)
     ViewPager viewPager;
+
+    @Bind(R.id.ly_title)
+    View lyTitle;
 
     /**
      * 创建实例的方法
@@ -73,12 +79,25 @@ public class SubPageFragment extends BaseFragment implements View.OnClickListene
 
     //添加监听器
     private void addListener() {
-
+        //给列表添加滑动监听器
+        this.viewPager.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+            @Override
+            public boolean onGenericMotion(View v, MotionEvent event) {
+                return false;
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    //隐藏标题栏
+    private void hideTitleBar() {
+        Animation animation = new TranslateAnimation(0, 0, 0, -lyTitle.getWidth());
+        animation.setFillAfter(true);
+        lyTitle.startAnimation(animation);
     }
 
     //viewpager适配器
@@ -106,6 +125,11 @@ public class SubPageFragment extends BaseFragment implements View.OnClickListene
         @Override
         public int getCount() {
             return fragmentList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return subTitles[position];
         }
     }
 }

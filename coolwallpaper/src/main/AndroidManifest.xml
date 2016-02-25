@@ -50,6 +50,9 @@
             </intent-filter>
         </service>
 
+        <!--本地壁纸-->
+        <activity android:name=".LocalPaperActivity"/>
+
     </application>
 
 </manifest>

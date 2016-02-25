@@ -32,6 +32,8 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     //使用Square的事件总线otto
     compile 'com.squareup:otto:1.3.8'
+    //另外一个事件总线AndroidEventBus
+    //compile 'org.simple:androideventbus:1.0.5.1'
     //ViewPagerIndicator库
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     //用更高版本的support
@@ -48,4 +50,10 @@ dependencies {
     //compile 'com.facebook.fresco:fresco:0.6.0+'
     //google推荐的图片库glide
     compile 'com.github.bumptech.glide:glide:3.6.1'
+    //gif显示库android-gif-drawable
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    //日志框架Logger
+    compile 'com.orhanobut:logger:1.3'
+    //代替toast的消息提示AppMsg
+    compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
 }

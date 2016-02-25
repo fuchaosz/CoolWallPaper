@@ -10,6 +10,8 @@ import com.coolwallpaper.constant.AppBus;
  */
 public abstract class BaseService extends Service {
 
+    protected String TAG = "BaseService";
+
     @Override
     public void onCreate() {
         super.onCreate();

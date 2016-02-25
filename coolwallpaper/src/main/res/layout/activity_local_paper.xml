@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--本地壁纸-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <!--列表栏-->
+    <GridView
+        android:id="@+id/gv_paper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="2"
+        android:visibility="gone"
+        >
+    </GridView>
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:id="@+id/ly_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:background="@color/halfTransparent"
+        >
+
+        <ImageView
+            android:id="@+id/ly_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:src="@drawable/icon_arrow_left"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="本地壁纸"
+            android:textColor="@color/white"
+            android:textSize="@dimen/action_bar_title_size"
+            />
+
+        <ImageView
+            android:id="@+id/ly_del"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:padding="15dp"
+            android:src="@drawable/icon_rubbish"
+            />
+    </RelativeLayout>
+
+    <!--空白页-->
+    <LinearLayout
+        android:id="@+id/ly_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ly_title"
+        android:background="@color/lavender"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="visible"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_phone"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加本地图片"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
+
+    <!--最下面的确认删除按钮-->
+    <LinearLayout
+        android:id="@+id/ly_del_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/skyblue"
+        android:gravity="center"
+        android:padding="20dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除(11)"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_big_x1"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

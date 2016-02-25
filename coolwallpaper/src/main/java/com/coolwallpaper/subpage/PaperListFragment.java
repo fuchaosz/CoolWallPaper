@@ -3,6 +3,7 @@ package com.coolwallpaper.subpage;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.coolwallpaper.R;
 import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.WallPaperRequetParam;
+import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
+import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.fragment.BaseFragment;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
@@ -97,9 +103,6 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
         requestParam = new WallPaperRequetParam();
         requestParam.setTitle1(title1);
         requestParam.setTitle2(title2);
-        //创建适配器
-        this.adapter = new PictureGridAdapter(getActivity(), pictureList);
-        this.listView.setAdapter(adapter);
         //如果查询出来的数据为空则启动服务
         if (pictureList == null || pictureList.size() == 0) {
             //启动下载图片列表的服务
@@ -109,6 +112,10 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
         else {
             //设置页数,从0开始,注意pn是当前的页数，如果当前有30条数据，当前就pn就是0
             requestParam.setPn(pictureList.size() - requestParam.getRn());
+            //创建适配器
+            this.adapter = new PictureGridAdapter(getActivity(), pictureList);
+            //设置适配器
+            this.listView.setAdapter(adapter);
         }
     }
 
@@ -200,28 +207,36 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
             if (position == 0) {
                 view = LayoutInflater.from(context).inflate(R.layout.picture_item_2, null);
                 Picture bean = pictureList.get(position);
-                ImageView ivItem = (ImageView) view.findViewById(R.id.iv_item);
-                Glide.with(getActivity()).load(bean.getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(ivItem);
+                final ImageView ivItem = (ImageView) view.findViewById(R.id.iv_item);
+                Glide.with(getActivity()).load(bean.getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(new SimpleTarget<GlideDrawable>() {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        //当第一幅图片加载上去之后，就发消息加载完毕
+                        AppBus.getInstance().post(new LoadingFinishEvent());
+                        ivItem.setImageDrawable(resource);
+                    }
+                });
             }
             //其余
             else {
-                if (view == null) {
+                //注意：view不为空，但是tag是空的时候，那么
+                if (view == null || view.getTag() == null) {
                     view = LayoutInflater.from(context).inflate(R.layout.picture_item_3, null);
                     holder = new ViewHolder(view);
                     view.setTag(holder);
                 }
                 holder = (ViewHolder) view.getTag();
                 int sum = (position + 1) * 2 - 1;//全部填满时候总的图片数
-                int start = (position + 1) * 2 - 4;//本层的起始位置
+                int start = 2 * position - 1;//本层的起始位置
                 //判断有没有越界
                 if (sum <= pictureList.size()) {
                     //没有越界，可以显示两幅图
-                    Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).into(holder.ivLeft);
-                    Glide.with(getActivity()).load(pictureList.get(start + 1).getThumbUrl()).into(holder.ivRight);
+                    Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
+                    Glide.with(getActivity()).load(pictureList.get(start + 1).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivRight);
                 }
                 //越界了，只能显示一幅图
                 else {
-                    Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).into(holder.ivLeft);
+                    Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
                 }
             }
             return view;
@@ -250,11 +265,31 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
     //otto接收事件
     @Subscribe
     public void onDownloadSuccess(DownloadPictureResultSuccessEvent event) {
-        //查询数据
-        pictureList = this.queryDB();
-        adapter.setBeanList(pictureList);
-        adapter.notifyDataSetChanged();
-        //停止刷新
-        listView.onRefreshComplete();
+        BaseRequestParam tmpParam = event.getRequestParam();
+        Log.d(TAG, String.format("recv Message DownloadPictureResultSuccessEvent() title1=%s title2=%s ", tmpParam.getTitle1(), tmpParam.getTitle2()));
+        Log.d(TAG, String.format("current title1=%s title2=%s", tmpParam.getTitle1(), tmpParam.getTitle2()));
+        if (tmpParam != null && tmpParam.getUrl().equals(requestParam.getUrl())) {
+            //查询数据
+            pictureList = this.queryDB();
+            if (pictureList != null) {
+                //发送加载成功消息
+                AppBus.getInstance().post(new LoadingFinishEvent());
+                //还没有加载第一页
+                if (adapter == null) {
+                    //创建适配器
+                    this.adapter = new PictureGridAdapter(getActivity(), pictureList);
+                    //设置适配器
+                    this.listView.setAdapter(adapter);
+                }
+                //已经有数据了
+                else {
+                    adapter.setBeanList(pictureList);
+                    adapter.notifyDataSetChanged();
+                }
+                //停止刷新
+                listView.onRefreshComplete();
+            }
+
+        }
     }
 }

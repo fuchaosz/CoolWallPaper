@@ -7,6 +7,7 @@ import android.view.View;
 import com.coolwallpaper.constant.AppBus;
 import com.lidroid.xutils.ViewUtils;
 
+
 import butterknife.ButterKnife;
 
 /**
@@ -15,9 +16,12 @@ import butterknife.ButterKnife;
  */
 public class BaseFragment extends Fragment {
 
+    protected String TAG;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.TAG = String.format("[%s]", this.getClass().getName());
     }
 
     @Override

@@ -110,9 +110,9 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         rightMenuView.findViewById(R.id.ly_home).setOnClickListener(this);
         rightMenuView.findViewById(R.id.ly_hot).setOnClickListener(this);
         rightMenuView.findViewById(R.id.ly_scenery).setOnClickListener(this);
-        rightMenuView.findViewById(R.id.ly_girl).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_plant).setOnClickListener(this);
         rightMenuView.findViewById(R.id.ly_star).setOnClickListener(this);
-        rightMenuView.findViewById(R.id.ly_idea).setOnClickListener(this);
+        rightMenuView.findViewById(R.id.ly_animal).setOnClickListener(this);
         rightMenuView.findViewById(R.id.ly_car).setOnClickListener(this);
         rightMenuView.findViewById(R.id.ly_film).setOnClickListener(this);
         rightMenuView.findViewById(R.id.ly_game).setOnClickListener(this);
@@ -189,14 +189,14 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
             case R.id.ly_scenery:
                 break;
             //美女
-            case R.id.ly_girl:
-                break;
+//            case R.id.ly_girl:
+//                break;
             //明星
             case R.id.ly_star:
                 break;
             //创意
-            case R.id.ly_idea:
-                break;
+//            case R.id.ly_idea:
+//                break;
             //名车
             case R.id.ly_car:
                 break;

@@ -20,6 +20,7 @@
 
         <!--标题 -->
         <LinearLayout
+            android:id="@+id/ly_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/action_bar_height"
             android:background="@color/halfTransparent"
@@ -85,7 +86,7 @@
         </LinearLayout>
 
         <!--指示器-->
-        <com.viewpagerindicator.TabPageIndicator
+        <com.viewpagerindicator.TitlePageIndicator
             android:id="@+id/tb_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

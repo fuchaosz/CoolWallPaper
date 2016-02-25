@@ -110,9 +110,9 @@
                 android:layout_columnWeight="1"
                 />
 
-            <!--美女-->
+            <!--植物-->
             <LinearLayout
-                android:id="@+id/ly_girl"
+                android:id="@+id/ly_plant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -130,7 +130,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="美女"
+                    android:text="植物"
                     android:textColor="@color/white"
                     />
             </LinearLayout>
@@ -171,9 +171,9 @@
                 android:layout_columnWeight="1"
                 />
 
-            <!--创意-->
+            <!--动物-->
             <LinearLayout
-                android:id="@+id/ly_idea"
+                android:id="@+id/ly_animal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -191,7 +191,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="创意"
+                    android:text="萌宠"
                     android:textColor="@color/white"
                     />
             </LinearLayout>

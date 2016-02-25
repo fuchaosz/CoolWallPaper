@@ -47,20 +47,20 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //直接跳转到图片列表
         //ShowPictureListActivity.startActivity(this);
         //跳转到主页
-        //HomePageActivity.startActivity(this);
+        // HomePageActivity.startActivity(this);
         HomePageActivity2.startActivity(this);
         //跳转到测试图片列表界面
         //ShowPictureListActivity2.startActivity(this);
         finish();
         //添加监听器
-        this.addListener();
-        //调整图片
-        this.image.post(new Runnable() {
-            @Override
-            public void run() {
-                //adjustPicture();
-            }
-        });
+        //        this.addListener();
+        //        //调整图片
+        //        this.image.post(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                //adjustPicture();
+        //            }
+        //        });
     }
 
     //添加监听器

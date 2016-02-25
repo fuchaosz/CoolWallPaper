@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.coolwallpaper.constant.AppBus;
 import com.lidroid.xutils.ViewUtils;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
 public class BaseActivity extends Activity {
 
     protected List<Activity> activityList = new ArrayList<>();
+    protected String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class BaseActivity extends Activity {
         activityList.add(this);
         //注册事件总线otto
         AppBus.getInstance().register(this);
+        this.TAG = String.format("[%s]", this.getClass().getName());
     }
 
     @Override
@@ -64,4 +67,7 @@ public class BaseActivity extends Activity {
         super.onDestroy();
     }
 
+    public Activity getActivity() {
+        return this;
+    }
 }
