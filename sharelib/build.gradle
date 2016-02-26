@@ -56,4 +56,6 @@ dependencies {
     compile 'com.orhanobut:logger:1.3'
     //代替toast的消息提示AppMsg
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
+    //仿ios的对话框
+    compile 'com.bigkoo:alertview:1.0.2'
 }

@@ -6,6 +6,7 @@
     <color name="transparent">#00000000</color>
     <color name="halfTransparent">#0e000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="lightBlue">#17abe3</color>
     <!--白色 -->
     <color name="ivory">#FFFFF0</color>
     <!--象牙色 -->
@@ -159,7 +160,7 @@
     <!--苍宝石绿 -->
     <color name="greenyellow">#ADFF2F</color>
     <!--黄绿色 -->
-    <color name="lightblue">#ADD8E6</color>
+    <!--<color name="lightblue">#ADD8E6</color>-->
     <!--亮蓝色 -->
     <color name="darkgray">#A9A9A9</color>
     <!--暗灰色 -->

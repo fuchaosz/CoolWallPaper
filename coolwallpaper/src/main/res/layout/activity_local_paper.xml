@@ -3,14 +3,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+    >
 
     <!--列表栏-->
     <GridView
         android:id="@+id/gv_paper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/action_bar_height"
+        android:gravity="center"
+        android:horizontalSpacing="3dp"
         android:numColumns="2"
+        android:verticalSpacing="3dp"
         android:visibility="gone"
         >
     </GridView>
@@ -20,7 +25,7 @@
         android:id="@+id/ly_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
-        android:background="@color/halfTransparent"
+        android:background="@drawable/coolwallpaper_bar_bg_2"
         >
 
         <ImageView
@@ -28,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:src="@drawable/icon_arrow_left"
+            android:src="@drawable/btn_left_arrow"
             />
 
         <TextView
@@ -40,14 +45,38 @@
             android:textSize="@dimen/action_bar_title_size"
             />
 
-        <ImageView
-            android:id="@+id/ly_del"
+        <!--右边的按钮-->
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:padding="15dp"
-            android:src="@drawable/icon_rubbish"
-            />
+            >
+
+            <!--普通状态显示-->
+            <ImageView
+                android:id="@+id/iv_del"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="15dp"
+                android:src="@drawable/btn_rubbish"
+                android:visibility="visible"
+                />
+
+            <!--进入多选模式后显示-->
+            <TextView
+                android:id="@+id/tv_del"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:text="全选"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_big_x1"
+                android:visibility="gone"
+                />
+
+        </FrameLayout>
+
     </RelativeLayout>
 
     <!--空白页-->
@@ -84,12 +113,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/skyblue"
+        android:background="@drawable/btn_blue"
         android:gravity="center"
         android:padding="20dp"
         >
 
         <TextView
+            android:id="@+id/tv_del_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="删除(11)"
