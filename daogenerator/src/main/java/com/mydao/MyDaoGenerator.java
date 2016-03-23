@@ -11,14 +11,16 @@ import de.greenrobot.daogenerator.Schema;
  */
 public class MyDaoGenerator {
 
-    public static final String TB_PICTURE = "tb_picture";
-    public static final String TB_PARAM = "tb_param";
-    public static final String TB_PARAM_PICTURE = "tb_param_picture";
+    public static final String TB_PICTURE = "tb_picture";//关于图片的网址的表
+    public static final String TB_PARAM = "tb_param";//一级二级标题的表
+    public static final String TB_LOCAL_PICTURE = "tb_local_picture";//本地壁纸的表
 
     public static void main(String[] args) throws Exception {
         Schema schema = new Schema(1, "com.coolwallpaper.model");
         //创建数据库表
         addNote(schema);
+        //创建本地壁纸表
+        addLocalPictureNote(schema);
         new DaoGenerator().generateAll(schema, "coolwallpaper/src/main/java");
     }
 
@@ -47,6 +49,16 @@ public class MyDaoGenerator {
         param.addToMany(picture, paramId);
         //接着添加picture对param的1对1关系
         picture.addToOne(param, paramId);
+    }
+
+    //创建本地壁纸表
+    private static void addLocalPictureNote(Schema schema) {
+        Entity localPicture = schema.addEntity("LocalPicture");
+        localPicture.setTableName(TB_LOCAL_PICTURE);
+        localPicture.implementsSerializable();//实现序列化接口
+        localPicture.addIdProperty().primaryKey().autoincrement();//添加主键
+        localPicture.addStringProperty("path");//本地绝对路径
+        localPicture.addBooleanProperty("isDelete");//删除标记
     }
 
 }

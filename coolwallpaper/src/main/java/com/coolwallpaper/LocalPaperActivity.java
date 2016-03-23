@@ -38,6 +38,7 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
 
     private LocalPaperAdapter localPaperAdapter;//普通状态下的适配器
     private List<String> pathList = new ArrayList<>();
+    private boolean isDeleteFile = false;//是否同时删除文件
 
     @Bind(R.id.ly_left)
     View lyLeft;
@@ -173,10 +174,16 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         }
         //弹出是否删除的对话框
         else {
-            AlertView alertView = new AlertView("注意", String.format("确定要删除%d个图片吗?", localPaperAdapter.getSelectedNum()), "取消", null, new String[]{"确定"}, this, AlertView.Style.Alert, new OnItemClickListener() {
+            final AlertView alertView = new AlertView("注意", String.format("确定要删除%d个图片吗?", localPaperAdapter.getSelectedNum()), "取消", null, new String[]{"确定"}, this, AlertView.Style.Alert, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object o, int position) {
+                    //点击了确定按钮
+                    if (position != AlertView.CANCELPOSITION) {
+                        //获取所有选中图片
+                        List<String> selctedList = localPaperAdapter.getSlectedList();
+                        //批量删除
 
+                    }
                 }
             });
             //加一个扩展框
@@ -303,8 +310,8 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         }
 
         //获取选中的图片列表
-        public String[] getSlectedList() {
-            return selectSet.toArray(new String[0]);
+        public List<String> getSlectedList() {
+            return new ArrayList<>(selectSet);
         }
 
         //设置所有都选中
@@ -337,6 +344,7 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         public void setShowRadio(boolean showRadio) {
             this.showRadio = showRadio;
         }
+
     }
 
     //底部升起删除按钮

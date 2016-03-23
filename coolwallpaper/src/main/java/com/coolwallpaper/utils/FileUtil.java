@@ -14,6 +14,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * 文件操作类
@@ -118,4 +119,34 @@ public class FileUtil {
         return result;
     }
 
+    /**
+     * 删除文件
+     *
+     * @param path 文件的绝对路径
+     * @return 是否删除成功，文件不存在也是删除成功了
+     */
+    public boolean deleteFile(String path) {
+        boolean result = true;
+        File file = new File(path);
+        //文件存在
+        if (file.exists()) {
+            result = file.delete();
+        }
+        return result;
+    }
+
+    /**
+     * 批量删除文件
+     *
+     * @param filePathList 要删除的文件的绝对路径的集合
+     */
+    public void deleteFileList(List<String> filePathList) {
+        if (filePathList == null || filePathList.size() == 0) {
+            return;
+        }
+        //遍历删除
+        for (String path : filePathList) {
+            deleteFile(path);
+        }
+    }
 }
