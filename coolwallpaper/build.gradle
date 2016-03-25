@@ -41,5 +41,8 @@ dependencies {
     //compile 'com.specyci:residemenu:1.6+'
     //facebook的Stetho，用于chrome调试app
     compile 'com.facebook.stetho:stetho:1.2.0'
+    //图片多选库
     compile project(':library-MultiImageSelector')
+    //bmob-sdk ：Bmob的android sdk包
+    compile 'cn.bmob.android:bmob-sdk:3.4.5'
 }
