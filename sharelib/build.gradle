@@ -42,6 +42,8 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     //okhttp依赖于okio
     compile 'com.squareup.okio:okio:1.5.0'
+    //okhttpUrlConnection实现了所有的HttpURLConnection的api,Picasso库依赖这个
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
     //使用安卓数据库ORM框架greenDAO
     compile 'de.greenrobot:greendao:2.0.0'
     //使用注解框架butterKnife

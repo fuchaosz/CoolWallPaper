@@ -6,6 +6,8 @@ import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
+import com.coolwallpaper.model.LocalPicture;
+import com.coolwallpaper.model.LocalPictureDao;
 import com.coolwallpaper.model.Picture;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -14,10 +16,11 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 /**
- * 文件操作类
+ * 文件操作类,只于文件有关
  * Created by fuchao on 2015/10/30.
  */
 public class FileUtil {
@@ -90,6 +93,8 @@ public class FileUtil {
         HttpHandler httpHandler = httpUtils.download(url, filePath, true, true, new RequestCallBack<File>() {
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
+                //下载成功，保存到本地数据库
+                saveLocalPicture(filePath);
                 //发送下载成功消息
                 AppBus.getInstance().post(new DownloadPictureSuccessEvent(pictureBean, filePath));
             }
@@ -149,4 +154,32 @@ public class FileUtil {
             deleteFile(path);
         }
     }
+
+
+    /**
+     * 保存本地图片到数据库,注意只有在下载成功才可以调用这个方法
+     *
+     * @param path 下载成功的图片的路径
+     */
+    public void saveLocalPicture(String path) {
+        File file = new File(path);
+        //如果文件不存在或者是个目录，则直接
+        if (!file.exists() || file.isDirectory()) {
+            return;
+        }
+        long size = file.getTotalSpace();//获取文件大小
+        String name = file.getName();//获取文件的名称
+        Date createTime = new Date(file.lastModified());//获取最后修改时间
+        //保存到数据库
+        LocalPictureDao localPictureDao = DBUtil.getInstance().getLocalPictureDao();
+        //创建bean
+        LocalPicture localPicture = new LocalPicture();
+        localPicture.setPath(path);
+        localPicture.setName(name);
+        localPicture.setSize(size);
+        localPicture.setCrateTime(createTime);
+        //保存到数据库
+        localPictureDao.insert(localPicture);
+    }
+
 }

@@ -14,9 +14,10 @@ public class MyDaoGenerator {
     public static final String TB_PICTURE = "tb_picture";//关于图片的网址的表
     public static final String TB_PARAM = "tb_param";//一级二级标题的表
     public static final String TB_LOCAL_PICTURE = "tb_local_picture";//本地壁纸的表
+    public static final int DB_VERSION = 2;//数据库版本，每次更新表结构之后，都应该更新版本
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1, "com.coolwallpaper.model");
+        Schema schema = new Schema(2, "com.coolwallpaper.model");
         //创建数据库表
         addNote(schema);
         //创建本地壁纸表
@@ -57,8 +58,10 @@ public class MyDaoGenerator {
         localPicture.setTableName(TB_LOCAL_PICTURE);
         localPicture.implementsSerializable();//实现序列化接口
         localPicture.addIdProperty().primaryKey().autoincrement();//添加主键
-        localPicture.addStringProperty("path");//本地绝对路径
-        localPicture.addBooleanProperty("isDelete");//删除标记
+        localPicture.addStringProperty("name");//文件名称
+        localPicture.addStringProperty("path").unique();//本地绝对路径,要唯一
+        localPicture.addDateProperty("crateTime");//文件创建时间
+        localPicture.addLongProperty("size");//文件大小，字节
     }
 
 }

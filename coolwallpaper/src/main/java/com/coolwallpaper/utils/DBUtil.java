@@ -6,11 +6,12 @@ import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.constant.ConstDB;
 import com.coolwallpaper.model.DaoMaster;
 import com.coolwallpaper.model.DaoSession;
+import com.coolwallpaper.model.LocalPictureDao;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.PictureDao;
 
 /**
- * 对GreenDao再做一下封装
+ * 对GreenDao再做一下封装,这个值封装最基本的数据库类
  * Created by fuchao on 2015/12/15.
  */
 public class DBUtil {
@@ -20,6 +21,7 @@ public class DBUtil {
     private DaoSession daoSession;
     private PictureDao pictureDao;//数据库实体类的操作类
     private ParamDao paramDao;//参数的操作类
+    private LocalPictureDao localPictureDao;//本地图片实体类操作类
     private SQLiteDatabase db;//实际的数据库
 
     /**
@@ -67,5 +69,17 @@ public class DBUtil {
             paramDao = daoSession.getParamDao();
         }
         return paramDao;
+    }
+
+    /**
+     * 获取LocalPictureDao，采用懒加载的方式
+     *
+     * @return
+     */
+    public synchronized LocalPictureDao getLocalPictureDao() {
+        if (localPictureDao == null) {
+            localPictureDao = daoSession.getLocalPictureDao();
+        }
+        return localPictureDao;
     }
 }

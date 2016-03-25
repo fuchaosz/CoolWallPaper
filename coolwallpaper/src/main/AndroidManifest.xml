@@ -4,8 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!--在SDCard中写数据-->
+    <!--在SDCard中读写数据-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <!--在SDCard中创建与删除文件权限-->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 
@@ -43,15 +44,20 @@
 
         <activity android:name=".ShowPictureListActivity2"/>
 
+        <!--本地壁纸-->
+        <activity android:name=".LocalPaperActivity"/>
+
+        <!--图片多选界面-->
+        <activity
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
+
         <!--下载图片信息的服务-->
         <service android:name=".service.PictureResultGetServevice">
             <intent-filter>
                 <action android:name="action_download_result_service"/>
             </intent-filter>
         </service>
-
-        <!--本地壁纸-->
-        <activity android:name=".LocalPaperActivity"/>
 
     </application>
 

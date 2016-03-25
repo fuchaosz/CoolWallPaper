@@ -41,4 +41,5 @@ dependencies {
     //compile 'com.specyci:residemenu:1.6+'
     //facebook的Stetho，用于chrome调试app
     compile 'com.facebook.stetho:stetho:1.2.0'
+    compile project(':library-MultiImageSelector')
 }

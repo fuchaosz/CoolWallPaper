@@ -18,9 +18,11 @@ import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.bumptech.glide.Glide;
 import com.coolwallpaper.activity.BaseActivity;
+import com.coolwallpaper.model.LocalPictureDao;
+import com.coolwallpaper.utils.DBUtil;
 import com.coolwallpaper.utils.FileUtil;
+import com.coolwallpaper.utils.LocalPaperUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,8 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.dao.query.QueryBuilder;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
  * 本地壁纸
@@ -36,6 +40,7 @@ import butterknife.OnClick;
  */
 public class LocalPaperActivity extends BaseActivity implements View.OnClickListener {
 
+    private static int REQUEST_IMAGE = 1;//请求多选图片
     private LocalPaperAdapter localPaperAdapter;//普通状态下的适配器
     private List<String> pathList = new ArrayList<>();
     private boolean isDeleteFile = false;//是否同时删除文件
@@ -83,10 +88,7 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
 
     private void init() {
         //获取下载的壁纸
-        File file = new File(FileUtil.getInstance().DIRECTORY_DOWNLOAD);
-        for (File f : file.listFiles()) {
-            pathList.add(f.getAbsolutePath());
-        }
+        pathList = LocalPaperUtil.getLocalPaperPathList();
         //如果没有图片
         if (pathList == null || pathList.size() == 0) {
             //显示空白页
@@ -111,7 +113,7 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         lyDelConfirm.setLayoutParams(params);
     }
 
-    @OnClick({R.id.ly_left, R.id.iv_del, R.id.tv_del, R.id.ly_del_confirm})
+    @OnClick({R.id.ly_left, R.id.iv_del, R.id.tv_del, R.id.ly_del_confirm, R.id.ly_empty})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -137,6 +139,10 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
             //确认删除
             case R.id.ly_del_confirm:
                 confirmDelPic();
+                break;
+            //添加本地壁纸
+            case R.id.ly_empty:
+                addLocalPaper();
                 break;
 
         }
@@ -181,21 +187,81 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
                     if (position != AlertView.CANCELPOSITION) {
                         //获取所有选中图片
                         List<String> selctedList = localPaperAdapter.getSlectedList();
+                        //判断数据是否为空
+                        if (selctedList == null || selctedList.size() == 0) {
+                            return;
+                        }
+                        //数据库中删除
+                        deletLocalPictureFromDB(selctedList);
                         //批量删除
-
+                        if (isDeleteFile) {
+                            FileUtil.getInstance().deleteFileList(selctedList);
+                        }
+                        //刷新界面
+                        init();
                     }
                 }
             });
             //加一个扩展框
-            ViewGroup extView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.alert_view_ext_del_confirm, null);
+            View extView = LayoutInflater.from(this).inflate(R.layout.alert_view_ext_del_confirm, null);
+            final ImageView ivCheck = (ImageView) extView.findViewById(R.id.iv_check);
             extView.setOnClickListener(new View.OnClickListener() {
+
+                boolean isChecked = false;
+
                 @Override
                 public void onClick(View v) {
-
+                    //切换图片
+                    if (isChecked) {
+                        //点击之前是选中状态
+                        ivCheck.setImageDrawable(getResources().getDrawable(R.drawable.icon_check));
+                        isChecked = false;
+                        //现在是没有选中状态
+                        isDeleteFile = false;
+                    }
+                    //之前没有被选中
+                    else {
+                        //之前没有被选中则点击之后要被选中
+                        ivCheck.setImageDrawable(getResources().getDrawable(R.drawable.icon_check_blue));
+                        isChecked = true;
+                        //点击后是选中状态
+                        isDeleteFile = true;
+                    }
                 }
             });
             alertView.addExtView(extView);
             alertView.show();
+        }
+    }
+
+    //添加本地壁纸,跳转到图片多选界面
+    private void addLocalPaper() {
+        //跳转到图片多选界面
+        Intent intent = new Intent(getApplicationContext(), MultiImageSelectorActivity.class);
+        // 是否显示调用相机拍照
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+        // 最大图片选择数量
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);
+        // 设置模式 (支持 单选/MultiImageSelectorActivity.MODE_SINGLE 或者 多选/MultiImageSelectorActivity.MODE_MULTI)
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+        // 默认选择图片,回填选项(支持String ArrayList)
+        intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, new ArrayList<String>());
+        startActivityForResult(intent, REQUEST_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取用户选择的图片
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                // 获取返回的图片列表
+                List<String> pathList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                //添加到数据库中
+                LocalPaperUtil.insertLocalPaperList(pathList);
+                //刷新界面
+                init();
+            }
         }
     }
 
@@ -381,5 +447,17 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
     //设置删除按钮的文本
     private void setDelNum(int num) {
         tvDelNum.setText("删除(" + num + ")");
+    }
+
+    //从数据库中删除本地图片
+    private void deletLocalPictureFromDB(List<String> pathList) {
+        LocalPictureDao localPictureDao = DBUtil.getInstance().getLocalPictureDao();
+        QueryBuilder qb = localPictureDao.queryBuilder();
+        //遍历
+        for (String path : pathList) {
+            qb.where(LocalPictureDao.Properties.Path.eq(path));
+            //如果数据库存在则删除
+            localPictureDao.deleteInTx(qb.list());
+        }
     }
 }
