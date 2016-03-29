@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+//加入对lambda的支持
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 21
@@ -45,4 +47,7 @@ dependencies {
     compile project(':library-MultiImageSelector')
     //bmob-sdk ：Bmob的android sdk包
     compile 'cn.bmob.android:bmob-sdk:3.4.5'
+    //加入RxAndroid的支持
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
 }
