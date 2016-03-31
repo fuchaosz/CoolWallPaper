@@ -26,7 +26,7 @@ import butterknife.Bind;
 
 /**
  * 首页
- * Created by fuchao on 2015/8/11.
+ * Created by fuchao on 2016/3/29.
  */
 public class HomePageActivity2 extends BaseActivity implements View.OnClickListener {
 

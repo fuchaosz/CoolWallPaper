@@ -11,7 +11,16 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="matrix"
+        android:visibility="gone"
         />
+
+    <!--改为左右滑动的界面-->
+    <HorizontalScrollView
+        android:id="@+id/hs_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </HorizontalScrollView>
+
 
     <!--进度条-->
     <ProgressBar
