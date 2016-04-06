@@ -4,32 +4,12 @@
              android:layout_height="match_parent"
              android:orientation="vertical">
 
-    <!--显示图片-->
-    <ImageView
-        android:id="@+id/iv_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="matrix"
-        android:visibility="gone"
-        />
-
     <!--改为左右滑动的界面-->
-    <HorizontalScrollView
-        android:id="@+id/hs_scrollview"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </HorizontalScrollView>
-
-
-    <!--进度条-->
-    <ProgressBar
-        android:id="@+id/pb_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/progress_rotate_circle"
-        />
+    </android.support.v4.view.ViewPager>
 
     <!--浮动半透明菜单-->
     <include

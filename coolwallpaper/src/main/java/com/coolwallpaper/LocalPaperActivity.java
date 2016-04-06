@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.bumptech.glide.Glide;
-import com.coolwallpaper.activity.BaseActivity;
 import com.coolwallpaper.model.LocalPictureDao;
 import com.coolwallpaper.utils.DBUtil;
 import com.coolwallpaper.utils.FileUtil;

@@ -1,4 +1,4 @@
-package com.coolwallpaper.activity;
+package com.coolwallpaper;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -11,10 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.coolwallpaper.LocalPaperActivity;
-import com.coolwallpaper.R;
 import com.coolwallpaper.event.LoadingFinishEvent;
-import com.coolwallpaper.subpage.PaperListFragment;
+import com.coolwallpaper.fragment.PaperListFragment;
 import com.special.ResideMenu.ResideMenu;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -28,7 +26,7 @@ import butterknife.Bind;
  * 首页
  * Created by fuchao on 2016/3/29.
  */
-public class HomePageActivity2 extends BaseActivity implements View.OnClickListener {
+public class HomePageActivity extends BaseActivity implements View.OnClickListener {
 
     private PaperViewPagerAdapter adapter;
     private String title1;//一级标题
@@ -64,7 +62,7 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
      * @param context
      */
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, HomePageActivity2.class);
+        Intent intent = new Intent(context, HomePageActivity.class);
         context.startActivity(intent);
     }
 
@@ -87,7 +85,7 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
         this.rightMenuView = resideMenu.getRightMenuView();
         //关闭左滑右滑开关
         this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        //测试用数据
+        //初始化的数据
         subTitles = new String[]{"雪景", "田园", "公路", "海底", "宇宙", "秋天", "日出", "沙漠", "星空", "海滩"};
         title1 = "风景";
         //设置适配器
@@ -301,7 +299,6 @@ public class HomePageActivity2 extends BaseActivity implements View.OnClickListe
             } else {
                 tvTitle.setText(title1);
             }
-
         }
     }
 

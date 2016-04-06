@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 //加入对lambda的支持
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 21
@@ -41,13 +41,8 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     //侧滑菜单ResideMenu,引入了源码
     //compile 'com.specyci:residemenu:1.6+'
-    //facebook的Stetho，用于chrome调试app
-    compile 'com.facebook.stetho:stetho:1.2.0'
     //图片多选库
     compile project(':library-MultiImageSelector')
     //bmob-sdk ：Bmob的android sdk包
     compile 'cn.bmob.android:bmob-sdk:3.4.5'
-    //加入RxAndroid的支持
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
 }

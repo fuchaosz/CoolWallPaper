@@ -68,7 +68,7 @@ public class PictureListFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //点击图片列表之后，发送消息，让被点击的图片显示出来
-                AppBus.getInstance().post(new UpdatePictureEvent(beanList.get(position)));
+                AppBus.getInstance().post(new UpdatePictureEvent(beanList, position));
             }
         });
     }

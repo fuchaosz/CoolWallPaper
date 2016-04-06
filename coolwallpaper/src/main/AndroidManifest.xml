@@ -27,22 +27,11 @@
             </intent-filter>
         </activity>
 
-        <!--显示图片-->
-        <activity android:name=".ShowPictureActivity"/>
-
-        <!--图片列表-->
-        <activity android:name=".ShowPictureListActivity"/>
-
         <!--图片详情-->
         <activity android:name=".ShowPictureDetailActivity"/>
 
         <!--主页-->
-        <activity android:name=".activity.HomePageActivity"/>
-
-        <!--主页2-->
-        <activity android:name=".activity.HomePageActivity2"/>
-
-        <activity android:name=".ShowPictureListActivity2"/>
+        <activity android:name=".HomePageActivity"/>
 
         <!--本地壁纸-->
         <activity android:name=".LocalPaperActivity"/>

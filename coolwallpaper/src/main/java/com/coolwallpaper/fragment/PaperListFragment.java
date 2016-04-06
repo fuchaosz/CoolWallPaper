@@ -1,65 +1,58 @@
 package com.coolwallpaper.fragment;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.coolwallpaper.R;
 import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.WallPaperRequetParam;
+import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
-import com.coolwallpaper.listener.AutoLoadListener;
+import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.model.PictureDao;
 import com.coolwallpaper.service.PictureResultGetServevice;
 import com.coolwallpaper.utils.DBUtil;
-import com.coolwallpaper.utils.ImageUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import butterknife.Bind;
 import de.greenrobot.dao.query.QueryBuilder;
 
 /**
- * 最底层的单个Fragement，只显示图片列表
- * Created by fuchao on 2015/11/18.
+ * SubPageFragment显示壁纸列表
+ * Created by fuchao on 2016/1/6.
  */
-public class ShowPictureListFragment extends BaseFragment {
+public class PaperListFragment extends BaseFragment implements View.OnClickListener {
 
-    private String TAG = "[ShowPictureListFragment]";
-    private ImageLoader imageLoader = ImageLoader.getInstance();
-    private DisplayImageOptions options;
     private PictureGridAdapter adapter;
     private String title1;
     private String title2;
     private List<Picture> pictureList;
     private BaseRequestParam requestParam;//访问网络的参数
 
-
-    @ViewInject(R.id.gv_pic)
-    PullToRefreshGridView gridView;
+    @Bind(R.id.lv_paper)
+    PullToRefreshListView listView;
 
     /**
      * 创建实例方法
@@ -68,8 +61,8 @@ public class ShowPictureListFragment extends BaseFragment {
      * @param title2 二级标题,例如:雪景
      * @return
      */
-    public static ShowPictureListFragment newInstance(String title1, String title2) {
-        ShowPictureListFragment fragment = new ShowPictureListFragment();
+    public static PaperListFragment newInstance(String title1, String title2) {
+        PaperListFragment fragment = new PaperListFragment();
         Bundle bundle = new Bundle();
         bundle.putString("TITLE_1", title1);
         bundle.putString("TITLE_2", title2);
@@ -80,7 +73,7 @@ public class ShowPictureListFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_pic_grid, null);
+        View view = inflater.inflate(R.layout.fragment_paper_list, null);
         return view;
     }
 
@@ -98,18 +91,13 @@ public class ShowPictureListFragment extends BaseFragment {
 
     //初始化
     private void init() {
-        this.imageLoader.init(ImageUtil.getInstance().getImageLoaderConfiguration());
-        this.options = ImageUtil.getInstance().getDisplayImageOptions();
-        this.gridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        ILoadingLayout loadLayout = gridView.getLoadingLayoutProxy();
+        this.listView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        ILoadingLayout loadLayout = listView.getLoadingLayoutProxy();
         loadLayout.setPullLabel("上拉加载");
         loadLayout.setRefreshingLabel("正在加载...");
         loadLayout.setReleaseLabel("释放加载");
         //查询数据库数据
         pictureList = this.queryDB();
-        //创建适配器
-        this.adapter = new PictureGridAdapter(getActivity(), pictureList);
-        this.gridView.setAdapter(adapter);
         //构造网络参数
         requestParam = new WallPaperRequetParam();
         requestParam.setTitle1(title1);
@@ -123,6 +111,10 @@ public class ShowPictureListFragment extends BaseFragment {
         else {
             //设置页数,从0开始,注意pn是当前的页数，如果当前有30条数据，当前就pn就是0
             requestParam.setPn(pictureList.size() - requestParam.getRn());
+            //创建适配器
+            this.adapter = new PictureGridAdapter(getActivity(), pictureList);
+            //设置适配器
+            this.listView.setAdapter(adapter);
         }
     }
 
@@ -150,25 +142,29 @@ public class ShowPictureListFragment extends BaseFragment {
 
     //添加监听器
     private void addListener() {
-        this.gridView.setOnScrollListener(new AutoLoadListener());
         //添加刷新监听
-        this.gridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
+        this.listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
-            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 requestParam.setPn(requestParam.getPn() + requestParam.getRn());
                 //访问网络获取图片
                 PictureResultGetServevice.startService(getActivity(), requestParam);
             }
         });
         //添加item监听
-        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 跳转到图片详情
-                Picture tmpBean = adapter.getBeanList().get(position);
-                ShowPictureDetailActivity.startActivity(getActivity(), tmpBean, adapter.getBeanList());
+                ShowPictureDetailActivity.startActivity(getActivity(), position, pictureList);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        }
     }
 
     //适配器
@@ -188,7 +184,7 @@ public class ShowPictureListFragment extends BaseFragment {
             if (beanList == null) {
                 return 0;
             }
-            return beanList.size();
+            return beanList.size() / 2 + 1;
         }
 
         @Override
@@ -205,54 +201,53 @@ public class ShowPictureListFragment extends BaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
             ViewHolder holder = null;
-            if (view == null) {
-                view = LayoutInflater.from(context).inflate(R.layout.picture_item, null);
-                holder = new ViewHolder(view);
-                view.setTag(holder);
+            //第一张显示大图
+            if (position == 0) {
+                view = LayoutInflater.from(context).inflate(R.layout.picture_item_2, null);
+                Picture bean = pictureList.get(position);
+                final ImageView ivItem = (ImageView) view.findViewById(R.id.iv_item);
+                Glide.with(getActivity()).load(bean.getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(new SimpleTarget<GlideDrawable>() {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        //当第一幅图片加载上去之后，就发消息加载完毕
+                        AppBus.getInstance().post(new LoadingFinishEvent());
+                        ivItem.setImageDrawable(resource);
+                    }
+                });
             }
-            holder = (ViewHolder) view.getTag();
-            Picture bean = beanList.get(position);
-            //绑定数据
-            imageLoader.displayImage(bean.getThumbUrl(), holder.ivPic, options);
-            //显示图片改用Glide
-            //Glide.with(getActivity()).load(bean.getThumbUrl()).into(holder.ivPic);
-            holder.tvDesc.setText(Html.fromHtml(bean.getDesc()));
+            //其余
+            else {
+                //注意：view不为空，但是tag是空的时候，那么
+                if (view == null || view.getTag() == null) {
+                    view = LayoutInflater.from(context).inflate(R.layout.picture_item_3, null);
+                    holder = new ViewHolder(view);
+                    view.setTag(holder);
+                }
+                holder = (ViewHolder) view.getTag();
+                int sum = (position + 1) * 2 - 1;//全部填满时候总的图片数
+                int start = 2 * position - 1;//本层的起始位置
+                //判断有没有越界
+                if (sum <= pictureList.size()) {
+                    //没有越界，可以显示两幅图
+                    Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
+                    Glide.with(getActivity()).load(pictureList.get(start + 1).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivRight);
+                }
+                //越界了，只能显示一幅图
+                else {
+                    Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
+                }
+            }
             return view;
         }
 
-        class ViewHolder implements ImageLoadingListener {
+        class ViewHolder {
 
-            public ImageView ivPic;
-            public TextView tvDesc;
-            public ProgressBar progressBar;
+            public ImageView ivLeft;
+            public ImageView ivRight;
 
             public ViewHolder(View view) {
-                ivPic = (ImageView) view.findViewById(R.id.iv_pic);
-                tvDesc = (TextView) view.findViewById(R.id.tv_desc);
-                progressBar = (ProgressBar) view.findViewById(R.id.progress);
-                //默认隐藏ProgressBar
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingStarted(String s, View view) {
-                this.ivPic.setImageDrawable(null);
-                this.progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                this.progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
+                ivLeft = (ImageView) view.findViewById(R.id.iv_item_left);
+                ivRight = (ImageView) view.findViewById(R.id.iv_item_right);
             }
         }
 
@@ -268,11 +263,31 @@ public class ShowPictureListFragment extends BaseFragment {
     //otto接收事件
     @Subscribe
     public void onDownloadSuccess(DownloadPictureResultSuccessEvent event) {
-        //查询数据
-        pictureList = this.queryDB();
-        adapter.setBeanList(pictureList);
-        adapter.notifyDataSetChanged();
-        //停止刷新
-        gridView.onRefreshComplete();
+        BaseRequestParam tmpParam = event.getRequestParam();
+        Log.d(TAG, String.format("recv Message DownloadPictureResultSuccessEvent() title1=%s title2=%s ", tmpParam.getTitle1(), tmpParam.getTitle2()));
+        Log.d(TAG, String.format("current title1=%s title2=%s", tmpParam.getTitle1(), tmpParam.getTitle2()));
+        if (tmpParam != null && tmpParam.getUrl().equals(requestParam.getUrl())) {
+            //查询数据
+            pictureList = this.queryDB();
+            if (pictureList != null) {
+                //发送加载成功消息
+                AppBus.getInstance().post(new LoadingFinishEvent());
+                //还没有加载第一页
+                if (adapter == null) {
+                    //创建适配器
+                    this.adapter = new PictureGridAdapter(getActivity(), pictureList);
+                    //设置适配器
+                    this.listView.setAdapter(adapter);
+                }
+                //已经有数据了
+                else {
+                    adapter.setBeanList(pictureList);
+                    adapter.notifyDataSetChanged();
+                }
+                //停止刷新
+                listView.onRefreshComplete();
+            }
+
+        }
     }
 }

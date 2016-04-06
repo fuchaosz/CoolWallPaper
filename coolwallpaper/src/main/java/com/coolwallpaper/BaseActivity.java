@@ -1,4 +1,4 @@
-package com.coolwallpaper.activity;
+package com.coolwallpaper;
 
 import android.app.Activity;
 import android.os.Bundle;
