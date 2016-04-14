@@ -19,11 +19,6 @@ import com.coolwallpaper.model.PictureDao;
 import com.coolwallpaper.utils.ConvertUtil;
 import com.coolwallpaper.utils.DBUtil;
 import com.coolwallpaper.utils.PictureParseUtil;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +27,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import de.greenrobot.dao.query.QueryBuilder;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * 从网络获取PictureResult图片的服务
@@ -99,15 +99,14 @@ public class PictureResultGetServevice extends BaseService {
             final Request request = new Request.Builder().url(requestParam.getUrl()).build();
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
-
                 @Override
-                public void onFailure(Request request, IOException e) {
+                public void onFailure(Call call, IOException e) {
                     //发送失败消息
                     AppBus.getInstance().post(new DownloadPictureResultFailureEvent(e.toString()));
                 }
 
                 @Override
-                public void onResponse(Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     String jsonStr = response.body().string();
                     //解析数据
                     list = PictureParseUtil.parse(jsonStr);

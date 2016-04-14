@@ -1,8 +1,7 @@
 package com.coolwallpaper.event;
 
 import com.coolwallpaper.model.Picture;
-
-import cn.trinea.android.common.util.FileUtils;
+import com.coolwallpaper.utils.FileUtil;
 
 /**
  * 图片文件下载成功消息
@@ -27,6 +26,6 @@ public class DownloadPictureSuccessEvent extends BaseEvent {
     }
 
     public String getFileName() {
-        return FileUtils.getFileName(savePath);
+        return FileUtil.getFileName(savePath);
     }
 }

@@ -11,14 +11,15 @@ import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.DownloadPictureResultFailureEvent;
 import com.coolwallpaper.event.NetworkConnectionTimeOutEvent;
 import com.coolwallpaper.utils.PictureParseUtil;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * PictureBean下载服务.注意：是下载的图片URL地址，而不是图片文件
@@ -71,12 +72,12 @@ public class PictureBeanDownloadService extends BaseService {
         call.enqueue(new Callback() {
 
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 downloadFailure(e.toString());
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 //请求成功
                 if (response.isSuccessful()) {
                     //解析数据
@@ -93,7 +94,6 @@ public class PictureBeanDownloadService extends BaseService {
                 }
             }
         });
-
     }
 
     //下载成功

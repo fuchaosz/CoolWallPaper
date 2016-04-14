@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:custom="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:orientation="vertical">
@@ -15,12 +16,11 @@
         />
 
     <!--进度条-->
-    <ProgressBar
+    <com.github.lzyzsd.circleprogress.DonutProgress
         android:id="@+id/pb_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/progress_rotate_circle"
-        />
+        android:layout_marginLeft="50dp"
+        custom:donut_progress="30"/>
 
 </FrameLayout>

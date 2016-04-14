@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.coolwallpaper.R;
 import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.utils.ImageUtil;
+import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -40,7 +40,7 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
 
     //进度条
     @Bind(R.id.pb_progress)
-    ProgressBar progressBar;
+    DonutProgress progressBar;
 
     /**
      * 创建PictureDetailFragment的方法

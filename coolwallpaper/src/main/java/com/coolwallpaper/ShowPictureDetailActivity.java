@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import cn.trinea.android.common.util.ToastUtils;
 
 /**
  * 显示图片详情
@@ -238,13 +238,13 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     //订阅下载文件成功的事件
     @Subscribe
     public void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
-        ToastUtils.show(this, "图片成功收藏到本地" + event.getSavePath());
+        Toast.makeText(this, "图片成功收藏到本地" + event.getSavePath(), Toast.LENGTH_SHORT).show();
     }
 
     //订阅下载文件失败的事件
     @Subscribe
     public void downloadFailuerEvent(DownloadPictureFailureEvent event) {
-        ToastUtils.show(this, "图片 " + event.getPictureBean().getDesc() + " 收藏失败");
+        Toast.makeText(this, "图片 " + event.getPictureBean().getDesc() + " 收藏失败", Toast.LENGTH_SHORT).show();
         //设置按钮为未收藏的状态
         this.ivFavorite.setImageDrawable(favoriteAddDrawable);
     }
@@ -264,7 +264,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             this.ivFavorite.setImageDrawable(favoriteAddDrawable);
             //删除收藏的图片
             FileUtil.getInstance().deleteDownloadPictureFile(FileUtil.getFileName(pictureBean.getDownloadUrl()));
-            ToastUtils.show(this, "取消收藏成功");
+            Toast.makeText(this, "取消收藏成功", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -321,6 +321,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     public void showMaskMenu() {
         //弹出浮动层菜单
         lyPictureDetailMenu.setVisibility(View.VISIBLE);
-        ToastUtils.show(this, "点击了图片");
+        Toast.makeText(this, "点击了图片", Toast.LENGTH_SHORT).show();
     }
 }

@@ -20,42 +20,33 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':library-xUtils')
-    compile project(':android-common')
-    compile project(':library-PullToRefresh')
-    compile project(':library-SlidingMenu')
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.android.support:recyclerview-v7:21.+'
-    compile 'com.loopj.android:android-async-http:1.4.9'
-    //主流的通用刷新开源库
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
-    //使用Square的事件总线otto
-    compile 'com.squareup:otto:1.3.8'
-    //ViewPagerIndicator库
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    //用更高版本的support
     compile 'com.android.support:support-v13:+'
-    //使用square开源的网络访问框架okhttp
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
-    //okhttp依赖于okio
-    compile 'com.squareup.okio:okio:1.5.0'
-    //okhttpUrlConnection实现了所有的HttpURLConnection的api,Picasso库依赖这个
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-    //使用安卓数据库ORM框架greenDAO
-    compile 'de.greenrobot:greendao:2.0.0'
-    //使用注解框架butterKnife
-    compile 'com.jakewharton:butterknife:7.0.1'
-    //facebook的图片加载库Fresco
-    //compile 'com.facebook.fresco:fresco:0.6.0+'
-    //google推荐的图片库glide
-    compile 'com.github.bumptech.glide:glide:3.6.1'
-    //gif显示库android-gif-drawable
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
-    //日志框架Logger
-    compile 'com.orhanobut:logger:1.3'
-    //代替toast的消息提示AppMsg
-    compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
-    //仿ios的对话框
-    compile 'com.bigkoo:alertview:1.0.2'
+    compile 'com.android.support:recyclerview-v7:21.+'
+    //compile 'com.android.support:cardview-v7:21.+'
+    //改用jar文件
+    //compile 'com.google.code.gson:gson:2.4'
+    //compile 'com.loopj.android:android-async-http:1.4.9'
+    //使用Square的事件总线otto,改用jar文件
+    //compile 'com.squareup:otto:1.3.8'
+    //ViewPagerIndicator库,直接引用源码
+    //compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    //使用square开源的网络访问框架okhttp,改用jar文件
+    //compile 'com.squareup.okhttp:okhttp:2.5.0'
+    //okhttp依赖于okio,改用jar文件
+    //compile 'com.squareup.okio:okio:1.5.0'
+    //使用注解框架butterKnife,改用jar文件
+    //compile 'com.jakewharton:butterknife:7.0.1'
+    //google推荐的图片库glide,改用jar文件
+    //compile 'com.github.bumptech.glide:glide:3.6.1'
+    //gif显示库android-gif-drawable，改为引用aar文件
+    //compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    //日志框架Logger,改用aar文件
+    //compile 'com.orhanobut:logger:1.3'
+    //仿ios的对话框，引入源码
+    //compile 'com.bigkoo:alertview:1.0.2'
+    //使用安卓数据库ORM框架greenDAO,改用jar
+    //compile 'de.greenrobot:greendao:2.0.0'
+    //bmob-sdk ：Bmob的android sdk包，改用jar实现
+    //compile 'cn.bmob.android:bmob-sdk:3.4.5'
 }
