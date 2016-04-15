@@ -1,23 +1,26 @@
 package com.coolwallpaper.fragment;
 
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.coolwallpaper.R;
 import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.model.Picture;
-import com.coolwallpaper.utils.ImageUtil;
-import com.github.lzyzsd.circleprogress.DonutProgress;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.orhanobut.logger.Logger;
 
 import butterknife.Bind;
 
@@ -29,10 +32,9 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
 
     private Picture picture;
     private Matrix matrix;
+    private int currentProgress = 50;
     private float maxMoveLength;//最大可以移动的距离
-    private int currentProgress = 50;//当前进度
     private ShowPictureDetailActivity activity;
-    private ImageLoader imageLoader = ImageLoader.getInstance();
 
     //图片控件
     @Bind(R.id.iv_image)
@@ -40,7 +42,15 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
 
     //进度条
     @Bind(R.id.pb_progress)
-    DonutProgress progressBar;
+    ProgressBar progressBar;
+
+    //空白页面
+    @Bind(R.id.ly_empty)
+    View lyEmpty;
+
+    //空白页面上的刷新按钮
+    @Bind(R.id.btn_refresh)
+    Button btnRefresh;
 
     /**
      * 创建PictureDetailFragment的方法
@@ -78,9 +88,11 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
 
     //初始化
     private void init() {
-        this.imageLoader.init(ImageUtil.getInstance().getImageLoaderConfiguration());
+        //隐藏空白页面
+        this.lyEmpty.setVisibility(View.GONE);
     }
 
+    @OnClick({R.id.btn_refresh, R.id.iv_image})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -89,142 +101,85 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
                 //显示覆盖的界面
                 activity.showMaskMenu();
                 break;
+            //空白页面上的刷新按钮
+            case R.id.btn_refresh:
+                //再次显示图片
+                showPicture(picture);
+                break;
         }
     }
 
     //显示大图
     private void showPicture(final Picture picture) {
-        //使用ImageLoader加载小图片
-        this.imageLoader.displayImage(picture.getThumbUrl(), ivImage, ImageUtil.getInstance().getDisplayImageOptions(), new ImageLoadingListener() {
+        Glide.with(getActivity()).load(picture.getDownloadUrl()).override(200, 200).into(new SimpleTarget<GlideDrawable>() {
 
             @Override
-            public void onLoadingStarted(String s, View view) {
-
+            public void onLoadStarted(Drawable placeholder) {
+                super.onLoadStarted(placeholder);
+                //显示进度条
+                progressBar.setVisibility(View.VISIBLE);
+                //隐藏seekBar
+                ((ShowPictureDetailActivity) getActivity()).hideSeekBar();
             }
 
             @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
+            public void onResourceReady(GlideDrawable glideDrawable, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                //显示图片
+                ivImage.setImageDrawable(glideDrawable);
+                //第一次加载的话要放大图片
+                scalePictureToScreenHeight();
+                //显示seekBar
+                ((ShowPictureDetailActivity) getActivity()).showSeekBar();
+                //隐藏进度条
+                progressBar.setVisibility(View.GONE);
+                //隐藏空白页
+                lyEmpty.setVisibility(View.GONE);
             }
 
             @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        }, new ImageLoadingProgressListener() {
-            @Override
-            public void onProgressUpdate(String s, View view, int i, int i1) {
-
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                super.onLoadFailed(e, errorDrawable);
+                Logger.d("大图加载失败,去加载小图,url = " + picture.getThumbUrl());
+                //如果大图加载失败了，那么必须加载小图
+                showThumbnail(picture);
             }
         });
-
-        //        Glide.with(this).load(picture.getDownloadUrl()).into(new SimpleTarget<GlideDrawable>() {
-        //            @Override
-        //            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-        //                Logger.d("onResourceReady()");
-        //                //显示图片
-        //                ivImage.setImageDrawable(resource);
-        //                //第一次加载的话要放大图片
-        //                scalePictureToScreenHeight();
-        //                //显示seekBar
-        //                ((ShowPictureDetailActivity) getActivity()).showSeekBar();
-        //                //隐藏进度条
-        //                progressBar.setVisibility(View.GONE);
-        //            }
-        //
-        //            @Override
-        //            public void onLoadStarted(Drawable placeholder) {
-        //                super.onLoadStarted(placeholder);
-        //                Logger.d("onLoadStarted()");
-        //                //显示进度条
-        //                progressBar.setVisibility(View.VISIBLE);
-        //                //隐藏seekBar
-        //                ((ShowPictureDetailActivity) getActivity()).hideSeekBar();
-        //            }
-        //
-        //            //加载失败
-        //            @Override
-        //            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-        //                super.onLoadFailed(e, errorDrawable);
-        //                Logger.d("onLoadFailed()");
-        //                Logger.d("图片加载失败了,url = " + picture.getDownloadUrl());
-        //                AppMsg.makeText(getActivity(), "图片加载失败了", AppMsg.STYLE_ALERT);
-        //                //如果大图加载失败了，那么必须加载小图
-        //                showThumbnail();
-        //            }
-        //        });
     }
 
     //显示小图,大图加载失败的时候要显示小图
-    private void showThumbnail() {
-        //使用ImageLoader加载小图片
-        this.imageLoader.displayImage(picture.getThumbUrl(), ivImage, ImageUtil.getInstance().getDisplayImageOptions(), new ImageLoadingListener() {
+    private void showThumbnail(final Picture picture) {
+        Glide.with(getActivity()).load(picture.getThumbUrl()).into(new SimpleTarget<GlideDrawable>() {
 
             @Override
-            public void onLoadingStarted(String s, View view) {
-
+            public void onLoadStarted(Drawable placeholder) {
+                super.onLoadStarted(placeholder);
+                //显示进度条
+                progressBar.setVisibility(View.VISIBLE);
+                //隐藏seekBar
+                ((ShowPictureDetailActivity) getActivity()).hideSeekBar();
             }
 
             @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
+            public void onResourceReady(GlideDrawable glideDrawable, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                //显示图片
+                ivImage.setImageDrawable(glideDrawable);
+                //第一次加载的话要放大图片
+                scalePictureToScreenHeight();
+                //显示seekBar
+                ((ShowPictureDetailActivity) getActivity()).showSeekBar();
+                //隐藏进度条
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        }, new ImageLoadingProgressListener() {
-            @Override
-            public void onProgressUpdate(String s, View view, int i, int i1) {
-
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                super.onLoadFailed(e, errorDrawable);
+                Logger.d("小图也加载失败了,url = " + picture.getThumbUrl());
+                Toast.makeText(getActivity(), "图片加载失败了", Toast.LENGTH_SHORT).show();
+                //显示空白页
+                lyEmpty.setVisibility(View.VISIBLE);
             }
         });
-
-        //        Glide.with(this).load(picture.getThumbUrl()).into(new SimpleTarget<GlideDrawable>() {
-        //            @Override
-        //            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-        //                Logger.d("onResourceReady()");
-        //                //显示图片
-        //                ivImage.setImageDrawable(resource);
-        //                //第一次加载的话要放大图片
-        //                scalePictureToScreenHeight();
-        //                //显示seekBar
-        //                ((ShowPictureDetailActivity) getActivity()).showSeekBar();
-        //                //隐藏进度条
-        //                progressBar.setVisibility(View.GONE);
-        //            }
-        //
-        //            @Override
-        //            public void onLoadStarted(Drawable placeholder) {
-        //                super.onLoadStarted(placeholder);
-        //                Logger.d("onLoadStarted()");
-        //                //显示进度条
-        //                progressBar.setVisibility(View.VISIBLE);
-        //                //隐藏seekBar
-        //                ((ShowPictureDetailActivity) getActivity()).hideSeekBar();
-        //            }
-        //
-        //            //加载失败
-        //            @Override
-        //            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-        //                super.onLoadFailed(e, errorDrawable);
-        //                Logger.d("onLoadFailed()");
-        //                Logger.d("图片加载失败了,url = " + picture.getDownloadUrl());
-        //                AppMsg.makeText(getActivity(), "图片加载失败了", AppMsg.STYLE_ALERT);
-        //            }
-        //
-        //        });
     }
 
     //放大图片

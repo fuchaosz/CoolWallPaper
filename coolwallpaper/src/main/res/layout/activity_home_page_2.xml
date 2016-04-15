@@ -3,7 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@color/halfTransparent"
+             android:background="@drawable/coolwallpaper_home_bg"
              android:orientation="vertical"
     >
 
@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:visibility="gone"
         >
 
         <!--进度条图片-->
@@ -45,6 +46,7 @@
 
     <!--上面部分-->
     <LinearLayout
+        android:id="@+id/ly_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

@@ -142,15 +142,34 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
             }
         });
-        //给viewpgaer添加点击监听
-        viewPager.setOnClickListener(new View.OnClickListener() {
+        //给viewpgaer添加滚动监听监听
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            boolean isScrolled = false;
+
             @Override
-            public void onClick(View v) {
-                //如果浮层不可见
-                if (lyPictureDetailMenu.getVisibility() != View.VISIBLE) {
-                    //显示浮层
-                    showMaskMenu();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position > 0) {
+                    isScrolled = true;
                 }
+                // 第一页
+                if (position == 0 && isScrolled) {
+                    Toast.makeText(getActivity(), "已经到第一页了", Toast.LENGTH_SHORT).show();
+                }
+                //最后一页
+                if (position == beanList.size() - 1) {
+                    Toast.makeText(getActivity(), "已经到最后一页了", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -319,8 +338,11 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     //显示浮层
     public void showMaskMenu() {
-        //弹出浮动层菜单
-        lyPictureDetailMenu.setVisibility(View.VISIBLE);
-        Toast.makeText(this, "点击了图片", Toast.LENGTH_SHORT).show();
+        //如果浮层不可见
+        if (lyPictureDetailMenu.getVisibility() != View.VISIBLE) {
+            //弹出浮动层菜单
+            lyPictureDetailMenu.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "点击了图片", Toast.LENGTH_SHORT).show();
+        }
     }
 }

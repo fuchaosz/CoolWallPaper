@@ -9,10 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.fragment.PaperListFragment;
+import com.orhanobut.logger.Logger;
 import com.special.ResideMenu.ResideMenu;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -36,6 +40,8 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     private View rightMenuView;//右边菜单
     private RightMenuListener rightMenuListener;//右边菜单按钮监听
     private LeftMenuListener leftMenuListener;//左边菜单按钮监听
+    private float startY;//按下的时候y坐标
+    private int DISTANCE = 100;//上滑的距离
 
     //标题栏
     @Bind(R.id.ly_title)
@@ -55,6 +61,10 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     //进度页面
     @Bind(R.id.rl_loading)
     View rlLoading;
+
+    //标题栏+指示器
+    @Bind(R.id.ly_action_bar)
+    View lyActionBar;
 
     /**
      * 启动方法
@@ -147,7 +157,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                     resideMenu.addIgnoredView(viewPager);
                 }
                 //显示正在加载
-                rlLoading.setVisibility(View.VISIBLE);
+                //rlLoading.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -180,9 +190,29 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Logger.d("startY = " + startY + " event.getY() = " + event.getY() + " DISTANCE = " + DISTANCE + " startY-event.getY()=" + (startY - event.getY()));
+                //上滑超过一定距离
+                if (startY - event.getY() > DISTANCE && lyTitle.getTop() >= 0) {
+                    //标题栏上滑的动画
+                    hideTitle();
+                }
+                //下滑超过一定距离
+                else if (event.getY() - startY > DISTANCE && lyTitle.getBottom() <= 0) {
+                    //标题栏下滑
+                    showTitle();
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
         //使用滑动开启/关闭菜单
-        return resideMenu.dispatchTouchEvent(ev);
+        return resideMenu.dispatchTouchEvent(event);
     }
 
 
@@ -278,7 +308,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                     break;
             }
             //设置加载中
-            rlLoading.setVisibility(View.VISIBLE);
+            //rlLoading.setVisibility(View.VISIBLE);
             //创建新的adapter
             adapter = new PaperViewPagerAdapter(getActivity(), title1, subTitles);
             viewPager.setAdapter(adapter);
@@ -339,4 +369,61 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         rlLoading.setVisibility(View.GONE);
         Log.d(TAG, "收到加载完毕消息，隐藏加载界面");
     }
+
+    //隐藏标题
+    public void hideTitle() {
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, -lyTitle.getHeight());
+        animation.setDuration(500);
+        animation.setFillAfter(false);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //动画完成后调整布局
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lyTitle.getLayoutParams();
+                params.topMargin = -lyTitle.getHeight();
+                lyTitle.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        lyActionBar.startAnimation(animation);
+    }
+
+    //显示标题
+    public void showTitle() {
+        lyActionBar.clearAnimation();
+        TranslateAnimation animation = new TranslateAnimation(0, 0, -lyTitle.getHeight(), 0);
+        animation.setDuration(500);
+        animation.setFillAfter(false);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //动画完成后调整布局
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) lyTitle.getLayoutParams();
+                params.topMargin = 0;
+                params.bottomMargin = 0;
+                lyTitle.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        lyActionBar.startAnimation(animation);
+    }
+
 }

@@ -40,5 +40,6 @@ dependencies {
     compile project(':library-CircleProgress') //圆形进度条CircleProgress
     compile(name: 'android-gif-drawable-1.1.15', ext: 'aar') //gif显示库android-gif-drawable引用本地aar文件
     compile(name: 'logger-release', ext: 'aar') //日志框架Loggers
+    compile(name: 'fresco-0.9.0', ext: 'aar') //facebook的图片加载框架fresco
 
 }

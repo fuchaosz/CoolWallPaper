@@ -32,6 +32,7 @@ import com.coolwallpaper.utils.DBUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.orhanobut.logger.Logger;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -231,10 +232,13 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
                     //没有越界，可以显示两幅图
                     Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
                     Glide.with(getActivity()).load(pictureList.get(start + 1).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivRight);
+                    Logger.d("url = " + pictureList.get(start).getThumbUrl());
+                    Logger.d("url = " + pictureList.get(start + 1).getThumbUrl());
                 }
                 //越界了，只能显示一幅图
                 else {
                     Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
+                    Logger.d("url = " + pictureList.get(start).getThumbUrl());
                 }
             }
             return view;
