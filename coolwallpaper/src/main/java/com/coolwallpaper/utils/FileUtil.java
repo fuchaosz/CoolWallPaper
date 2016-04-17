@@ -14,10 +14,20 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.squareup.picasso.OkHttpDownloader;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * 文件操作类,只于文件有关
@@ -26,8 +36,8 @@ import java.util.List;
 public class FileUtil {
 
     private static FileUtil fileUtil;
-    public String DIRECTORY_DOWNLOAD = "/mnt/sdcard/coolwallpaper/download";//下载文件的保存目录
-    public String DIRECTORY_FAVORITE = "/mnt/sdcard/coolwallpaper/favorite";//收藏文件的保存目录
+    public static String DIRECTORY_DOWNLOAD = "/mnt/sdcard/coolwallpaper/download";//下载文件的保存目录
+    public static String DIRECTORY_FAVORITE = "/mnt/sdcard/coolwallpaper/favorite";//收藏文件的保存目录
     private HttpUtils httpUtils;
 
     //获取单例
@@ -108,6 +118,97 @@ public class FileUtil {
     }
 
     /**
+     * 下载文件.之所以提出一个方法来，是为了以后可以更换下载框架
+     *
+     * @param url      文件地址
+     * @param dir      文件存储目录
+     * @param callback 下载完成后的回调接口
+     */
+    public void downloadFile(final String url, final String dir, final DownloadCallback callback) {
+        //判断参数是否为空
+        if (url == null || "".equals(url)) {
+            if (callback != null) {
+                callback.onError("url为空");
+            }
+            return;
+        }
+        //判断存储目录是否为空
+        if (dir == null || "".equals(dir)) {
+            if (callback != null) {
+                callback.onError("存储目录为空");
+            }
+            return;
+        }
+        //判断存储目录是否存在
+        else {
+            File file = new File(dir);
+            //如果目录不存在
+            if (!file.exists()) {
+                //创建目录
+                file.mkdir();
+            }
+            //路径存在，但不是目录
+            else if (!file.isDirectory()) {
+                callback.onError(dir + " 不是目录");
+                return;
+            }
+        }
+        //下载文件
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //下载文件失败
+                if (callback != null) {
+                    callback.onError("下载文件失败");
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //下载文件成功
+                InputStream is = null;
+                byte[] buf = new byte[2048];
+                int len = 0;
+                FileOutputStream fos = null;
+                try {
+                    //读取文件
+                    is = response.body().byteStream();
+                    File file = new File(dir, getFileName(url));
+                    fos = new FileOutputStream(file);
+                    //写入文件
+                    while ((len = is.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                    fos.flush();
+                    //文件下载成功之后回调
+                    if (callback != null) {
+                        callback.onSuccess(file.getAbsolutePath());
+                    }
+                } catch (Exception e) {
+                    //文件写入失败
+                    if (callback != null) {
+                        callback.onError("写入文件时发生错误");
+                    }
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (is != null) {
+                            is.close();
+                        }
+                        if (fos != null) {
+                            fos.close();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        });
+    }
+
+
+    /**
      * 删除下载的图片
      *
      * @param fileName 要删除的文件名
@@ -180,6 +281,15 @@ public class FileUtil {
         localPicture.setCrateTime(createTime);
         //保存到数据库
         localPictureDao.insert(localPicture);
+    }
+
+    //下载监听器
+    public static interface DownloadCallback {
+
+        public void onSuccess(String filePath);
+
+        public void onError(String reason);
+
     }
 
 }

@@ -2,14 +2,19 @@ package com.coolwallpaper;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -24,8 +29,10 @@ import com.coolwallpaper.fragment.PictureListFragment;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.utils.FileUtil;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +55,33 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     private Drawable favoriteAddDrawable;//没有收藏的时候显示的drawable
     private Drawable favoriteRemoveDrawable;//收藏了之后显示的drawable
     private MyAdapter adapter;
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                //下载成功的消息
+                case 0:
+                    String filePath = (String) msg.obj;
+                    //设置壁纸
+                    Bitmap bitmap = android.graphics.BitmapFactory.decodeFile(filePath);
+                    try {
+                        getActivity().setWallpaper(bitmap);
+                        Toast.makeText(getActivity(), "设置壁纸成功", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(getActivity(), "设置壁纸失败", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                    break;
+                //下载失败的消息
+                case 1:
+                    String reason = (String) msg.obj;
+                    Toast.makeText(getActivity(), "设置壁纸失败:" + reason, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 
     //浮动层菜单
     @ViewInject(R.id.ly_picture_detail_menu)
@@ -121,6 +155,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.ly_similar_pic).setOnClickListener(this);
         findViewById(R.id.ly_title).setOnClickListener(this);
         findViewById(R.id.ly_favorite_pic).setOnClickListener(this);
+        findViewById(R.id.ly_set_wallpaper).setOnClickListener(this);
         //进度条
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -198,6 +233,10 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             //收藏图片
             case R.id.ly_favorite_pic:
                 doFavorite();
+                break;
+            //设置壁纸
+            case R.id.ly_set_wallpaper:
+                setPaper();
                 break;
         }
     }
@@ -324,6 +363,19 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             }
             return fragment;
         }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            //销毁图片
+            fragmentList.get(position).recycleBitmap();
+            super.destroyItem(container, position, object);
+        }
+
+        //获取Fragment列表
+        public List<PictureDetailFragment> getFragmentList() {
+            return fragmentList;
+        }
+
     }
 
     //显示seekBar
@@ -344,5 +396,34 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             lyPictureDetailMenu.setVisibility(View.VISIBLE);
             Toast.makeText(this, "点击了图片", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //设置壁纸
+    private void setPaper() {
+        //获取当前的Fragment
+        PictureDetailFragment fragment = adapter.getFragmentList().get(viewPager.getCurrentItem());
+        //获取当前显示的图片
+        String url = fragment.getFileUrl();
+        //下载图片
+        FileUtil.getInstance().downloadFile(url, FileUtil.DIRECTORY_DOWNLOAD, new FileUtil.DownloadCallback() {
+
+            @Override
+            public void onSuccess(String filePath) {
+                //发送设置壁纸的消息
+                Message msg = Message.obtain();
+                msg.what = 0;
+                msg.obj = filePath;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(String reason) {
+                //发送下载壁纸失败的消息
+                Message msg = Message.obtain();
+                msg.what = 1;
+                msg.obj = reason;
+                handler.sendMessage(msg);
+            }
+        });
     }
 }
