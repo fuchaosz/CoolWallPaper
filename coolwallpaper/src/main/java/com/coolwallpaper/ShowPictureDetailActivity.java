@@ -2,12 +2,12 @@ package com.coolwallpaper;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,9 +29,11 @@ import com.coolwallpaper.fragment.PictureListFragment;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.utils.FileUtil;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.orhanobut.logger.Logger;
 import com.squareup.otto.Subscribe;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -156,6 +158,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.ly_title).setOnClickListener(this);
         findViewById(R.id.ly_favorite_pic).setOnClickListener(this);
         findViewById(R.id.ly_set_wallpaper).setOnClickListener(this);
+        findViewById(R.id.ly_cut_pic).setOnClickListener(this);
         //进度条
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -178,35 +181,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             }
         });
         //给viewpgaer添加滚动监听监听
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            boolean isScrolled = false;
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position > 0) {
-                    isScrolled = true;
-                }
-                // 第一页
-                if (position == 0 && isScrolled) {
-                    Toast.makeText(getActivity(), "已经到第一页了", Toast.LENGTH_SHORT).show();
-                }
-                //最后一页
-                if (position == beanList.size() - 1) {
-                    Toast.makeText(getActivity(), "已经到最后一页了", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        viewPager.addOnPageChangeListener(adapter);
     }
 
     //查询下载量和收藏量
@@ -237,6 +212,10 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             //设置壁纸
             case R.id.ly_set_wallpaper:
                 setPaper();
+                break;
+            //剪切
+            case R.id.ly_cut_pic:
+                crop();
                 break;
         }
     }
@@ -287,9 +266,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     public void updatePicture(UpdatePictureEvent event) {
         this.beanList = event.getBeanList();
         this.position = event.getPosition();
-        //重新设置adapter
-        adapter = new MyAdapter(this, beanList);
-        viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
     }
 
@@ -327,11 +303,14 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     }
 
     //适配器
-    class MyAdapter extends FragmentPagerAdapter {
+    class MyAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
 
         Context context;
         List<PictureDetailFragment> fragmentList = new ArrayList<>();
         List<Picture> pictureList;
+        int currentPage;//当前显示的页面
+        boolean isScrolled = false;//是否滚动过了
+        boolean isPageChange = false;//是否换了一页
 
         public MyAdapter(Context context, List<Picture> pictureList) {
             super(getFragmentManager());
@@ -366,8 +345,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            //销毁图片
-            fragmentList.get(position).recycleBitmap();
             super.destroyItem(container, position, object);
         }
 
@@ -376,11 +353,56 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             return fragmentList;
         }
 
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Logger.d("onPageSelected() position = " + position);
+            currentPage = position;
+            if (position > 0) {
+                isScrolled = true;
+            }
+            // 第一页
+            if (position == 0 && isScrolled) {
+                Toast.makeText(getActivity(), "已经到第一页了", Toast.LENGTH_SHORT).show();
+            }
+            //最后一页
+            if (position == beanList.size() - 1) {
+                Toast.makeText(getActivity(), "已经到最后一页了", Toast.LENGTH_SHORT).show();
+            }
+            isPageChange = true;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            Logger.d("onPageScrollStateChanged() = " + state);
+            //viewpager停止滑动
+            if (state == ViewPager.SCROLL_STATE_IDLE && isPageChange) {
+                //取消自动加载
+                fragmentList.get(currentPage).setAutoLoad(false);
+                //加载图片
+                fragmentList.get(currentPage).startLoadingPicture();
+                isPageChange = false;
+            }
+            //正在惯性移动中
+            else if (state == ViewPager.SCROLL_STATE_SETTLING && isPageChange) {
+                //取消上一个图片加载
+                fragmentList.get(currentPage).cancelLoadingPicture();
+                //取消自动加载
+                fragmentList.get(currentPage).setAutoLoad(false);
+            }
+        }
     }
 
     //显示seekBar
     public void showSeekBar() {
         seekBar.setVisibility(View.VISIBLE);
+    }
+
+    public SeekBar getSeekBar() {
+        return seekBar;
     }
 
     //隐藏seekBar
@@ -403,7 +425,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         //获取当前的Fragment
         PictureDetailFragment fragment = adapter.getFragmentList().get(viewPager.getCurrentItem());
         //获取当前显示的图片
-        String url = fragment.getFileUrl();
+        String url = fragment.getPictureUrl();
         //下载图片
         FileUtil.getInstance().downloadFile(url, FileUtil.DIRECTORY_DOWNLOAD, new FileUtil.DownloadCallback() {
 
@@ -425,5 +447,26 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 handler.sendMessage(msg);
             }
         });
+    }
+
+    //剪切
+    private void crop() {
+        //获取当前的url
+        String url = adapter.getFragment(viewPager.getCurrentItem()).getPictureUrl();
+        Picture picture = beanList.get(viewPager.getCurrentItem());
+        if (url == null || "".equals(url)) {
+            Toast.makeText(this, "error:图片url为空", Toast.LENGTH_SHORT).show();
+        } else {
+            Uri sourceUri = Uri.parse(url);
+            Uri destinationUri = Uri.fromFile(new File(FileUtil.getInstance().DIRECTORY_DOWNLOAD));
+            UCrop.of(sourceUri, destinationUri).withAspectRatio(16, 9).withMaxResultSize(picture.getWidth(), picture.getHeight()).start(this);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+        }
     }
 }

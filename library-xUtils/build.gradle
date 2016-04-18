@@ -1,12 +1,12 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+    buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 18
+        minSdkVersion Integer.parseInt(project.MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     }
 
     sourceSets {
@@ -19,4 +19,8 @@ android {
             res.srcDirs = ['res']
         }
     }
+}
+
+dependencies {
+    provided fileTree(dir: 'libs', include: ['*.jar'])
 }

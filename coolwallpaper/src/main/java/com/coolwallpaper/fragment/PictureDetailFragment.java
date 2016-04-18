@@ -2,7 +2,6 @@ package com.coolwallpaper.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +21,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.coolwallpaper.R;
 import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.model.Picture;
-import com.lidroid.xutils.bitmap.core.BitmapCache;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.orhanobut.logger.Logger;
 
@@ -40,6 +38,8 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
     private float maxMoveLength;//最大可以移动的距离
     private ShowPictureDetailActivity activity;
     private String fileUrl;//实际显示的图片，有时候大图可能会显示失败
+    private boolean isFirstLoad = true;//是否第一次加载
+    private boolean isAutoLoad = true;//是否自动加载
 
     //图片控件
     @Bind(R.id.iv_image)
@@ -88,7 +88,10 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
         //初始化
         this.init();
         //显示图片
-        this.showPicture(picture);
+        if (isAutoLoad) {
+            Logger.d("自动加载图片");
+            this.showPicture(picture);
+        }
     }
 
     //初始化
@@ -114,6 +117,12 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        isFirstLoad = true;
+    }
+
     //显示大图
     private void showPicture(final Picture picture) {
         this.fileUrl = picture.getDownloadUrl();
@@ -134,9 +143,14 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
                     //显示图片
                     ivImage.setImageDrawable(glideDrawable);
                     //第一次加载的话要放大图片
-                    scalePictureToScreenHeight();
+                    if (isFirstLoad) {
+                        scalePictureToScreenHeight();
+                        isFirstLoad = false;
+                    }
                     //显示seekBar
                     ((ShowPictureDetailActivity) getActivity()).showSeekBar();
+                    //设置seekbar进度
+                    ((ShowPictureDetailActivity) getActivity()).getSeekBar().setProgress(50);
                     //隐藏进度条
                     progressBar.setVisibility(View.GONE);
                     //隐藏空白页
@@ -177,7 +191,10 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
                 //显示图片
                 ivImage.setImageDrawable(glideDrawable);
                 //第一次加载的话要放大图片
-                scalePictureToScreenHeight();
+                if (isFirstLoad) {
+                    scalePictureToScreenHeight();
+                    isFirstLoad = false;
+                }
                 //显示seekBar
                 ((ShowPictureDetailActivity) getActivity()).showSeekBar();
                 //隐藏进度条
@@ -242,8 +259,28 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
     }
 
     //获取实际显示图片的url，可能是大图也可能是小图
-    public String getFileUrl() {
+    public String getPictureUrl() {
         return fileUrl;
+    }
+
+    //取消加载当前图片
+    public void cancelLoadingPicture() {
+        if (ivImage != null) {
+            Glide.clear(ivImage);
+        }
+    }
+
+    //开始加载图片
+    public void startLoadingPicture() {
+        Logger.d("手动加载图片");
+        if (picture != null) {
+            showPicture(picture);
+        }
+    }
+
+    //设置自动加载
+    public void setAutoLoad(boolean isAutoLoad) {
+        this.isAutoLoad = isAutoLoad;
     }
 
 }
