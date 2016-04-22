@@ -176,6 +176,8 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                 break;
             //顶部右边的搜索按钮
             case R.id.iv_search:
+                //跳转到搜索界面
+                SearchActivity.startActivity(this);
                 break;
             //顶部右边的菜单按钮
             case R.id.iv_menu:

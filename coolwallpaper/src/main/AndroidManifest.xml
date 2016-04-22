@@ -48,6 +48,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <!--搜索-->
+        <activity android:name=".SearchActivity"/>
+
         <!--下载图片信息的服务-->
         <service android:name=".service.PictureResultGetServevice">
             <intent-filter>

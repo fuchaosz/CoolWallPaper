@@ -34,9 +34,13 @@ import com.squareup.otto.Subscribe;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -47,6 +51,7 @@ import butterknife.Bind;
  */
 public class ShowPictureDetailActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpeg";//调用uCrop之前必须给图片一个名字
     private Picture pictureBean;
     private int position;
     private Matrix matrix;
@@ -458,7 +463,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             Toast.makeText(this, "error:图片url为空", Toast.LENGTH_SHORT).show();
         } else {
             Uri sourceUri = Uri.parse(url);
-            Uri destinationUri = Uri.fromFile(new File(FileUtil.getInstance().DIRECTORY_DOWNLOAD));
+            Uri destinationUri = Uri.fromFile(new File(FileUtil.getInstance().DIRECTORY_DOWNLOAD, SAMPLE_CROPPED_IMAGE_NAME));
             UCrop.of(sourceUri, destinationUri).withAspectRatio(16, 9).withMaxResultSize(picture.getWidth(), picture.getHeight()).start(this);
         }
     }
@@ -466,7 +471,53 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
+            //剪切成功
+            if (requestCode == UCrop.REQUEST_CROP) {
+                //保存剪切的文件
+                FileInputStream fin = null;
+                FileOutputStream fou = null;
+                FileChannel inChanel = null;
+                FileChannel outChanel = null;
+                try {
+                    //保存文件
+                    Uri uri = UCrop.getOutput(data);
+                    fin = new FileInputStream(new File(uri.getPath()));
+                    String filename = String.format("%d_%s", Calendar.getInstance().getTimeInMillis(), uri.getLastPathSegment());
+                    File saveFile = new File(FileUtil.getInstance().DIRECTORY_DOWNLOAD, filename);
+                    fou = new FileOutputStream(saveFile);
+                    inChanel = fin.getChannel();
+                    outChanel = fou.getChannel();
+                    inChanel.transferTo(0, inChanel.size(), outChanel);
+                    //保存文件成功后，存储到本地壁纸数据库
+                    FileUtil.getInstance().saveLocalPicture(saveFile.getAbsolutePath());
+                    Toast.makeText(getActivity(), "壁纸剪切成功，请在'我的壁纸'中查看", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "error:壁纸剪切失败", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (outChanel != null) {
+                            outChanel.close();
+                        }
+                        if (inChanel != null) {
+                            inChanel.close();
+                        }
+                        if (fou != null) {
+                            fou.close();
+                        }
+                        if (fin != null) {
+                            fin.close();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        //剪切图片失败
+        if (resultCode == UCrop.RESULT_ERROR) {
+            Toast.makeText(getActivity(), "图片裁切失败", Toast.LENGTH_SHORT).show();
         }
     }
 }

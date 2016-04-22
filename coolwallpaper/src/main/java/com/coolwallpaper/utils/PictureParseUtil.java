@@ -1,6 +1,9 @@
 package com.coolwallpaper.utils;
 
+import android.support.annotation.NonNull;
+
 import com.coolwallpaper.bean.PictureResult;
+import com.coolwallpaper.bean.SearchResult;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -16,7 +19,7 @@ import java.util.List;
 public class PictureParseUtil {
 
     /**
-     * 解析从网络上下载的壁纸的Json数据
+     * 解析从百度上下载的壁纸的Json数据
      *
      * @param jsonArrayStr json字符串
      * @return
@@ -43,4 +46,34 @@ public class PictureParseUtil {
         return beanList;
     }
 
+    /**
+     * 解析从搜狗图片搜索后的结果
+     *
+     * @param jsonObjectStr 搜狗图片搜索返回的原始JSON数据
+     * @return
+     */
+    public static List<SearchResult> parseSearchResult(@NonNull String jsonObjectStr) {
+        List<SearchResult> beanList = new ArrayList<>();
+        try {
+            JSONObject jo = new JSONObject(jsonObjectStr);
+            if (jo == null) {
+                return beanList;
+            }
+            //图片数组在items中
+            JSONArray jsonArray = jo.getJSONArray("items");
+            if (jsonArray == null) {
+                return beanList;
+            }
+            Gson gson = new Gson();
+            //遍历
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject joTmp = jsonArray.getJSONObject(i);
+                SearchResult bean = gson.fromJson(joTmp.toString(), SearchResult.class);
+                beanList.add(bean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return beanList;
+    }
 }
