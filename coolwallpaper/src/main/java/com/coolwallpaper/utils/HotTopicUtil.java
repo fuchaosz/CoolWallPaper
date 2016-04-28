@@ -35,6 +35,7 @@ public class HotTopicUtil {
         return result;
     }
 
+    //获取所热词
     public List<String> getTopic() {
         List<String> result = new ArrayList<String>();
         result.addAll(getTopicByUrl(urlMan));
@@ -42,4 +43,26 @@ public class HotTopicUtil {
         result.addAll(getTopicByUrl(urlMove));
         return result;
     }
+
+    //获取男神
+    public List<String> getTopicMan() {
+        List<String> result = new ArrayList<String>();
+        result.addAll(getTopicByUrl(urlMan));
+        return result;
+    }
+
+    //获取热门Girl
+    public List<String> getTopicGirl() {
+        List<String> result = new ArrayList<String>();
+        result.addAll(getTopicByUrl(urlGirl));
+        return result;
+    }
+
+    //获取热门影视
+    public List<String> getTopicMove() {
+        List<String> result = new ArrayList<String>();
+        result.addAll(getTopicByUrl(urlMove));
+        return result;
+    }
+
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/coolwallpaper_search_bg"
+             android:orientation="vertical"
+    >
+
+    <!--标题栏-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:background="@color/halfTransparent"
+        >
+
+        <!--左边的箭头-->
+        <ImageView
+            android:id="@+id/ly_left"
+            style="@style/action_bar_arrow"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/action_bar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="搜索结果"
+            />
+
+    </LinearLayout>
+
+    <!--图片列表-->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lv_paper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        >
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+</FrameLayout>

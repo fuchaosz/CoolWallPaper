@@ -17,7 +17,11 @@ public class SearchRequestParam extends SogouBaseRequestParam {
     protected String reqType = "ajax";
     protected int tn = 0;//默认为0
 
-    //默认构造函数,必须调用
+    /**
+     * 构造函数
+     *
+     * @param query 查询关键字
+     */
     public SearchRequestParam(String query) {
         this.query = query;
         //搜索时用的url和一般的不同
@@ -28,7 +32,9 @@ public class SearchRequestParam extends SogouBaseRequestParam {
     public String getUrl() {
         StringBuilder builder = new StringBuilder();
         try {
-            builder.append("?query=" + URLEncoder.encode(query.trim(), "GBK"));
+            builder.append(baseUrl);
+            //单纯的搜关键字出来的图片不好看，所以后面手动加上“壁纸”两个字
+            builder.append("?query=" + URLEncoder.encode(query.trim() + " 壁纸", "GBK"));
             builder.append("&mood=" + mood);
             builder.append("&picformat=" + picformat);
             builder.append("&mode=" + mode);

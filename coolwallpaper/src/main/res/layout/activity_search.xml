@@ -13,31 +13,167 @@
         android:orientation="horizontal"
         >
 
+        <!--左边的箭头-->
+        <LinearLayout
+            android:id="@+id/ly_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            >
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/icon_arrow_left_blue"
+                />
+        </LinearLayout>
+
+
         <!--搜索框-->
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
+            android:id="@+id/ed_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:drawableLeft="@drawable/search_button_selector"
+            android:drawablePadding="10dp"
             android:hint="关键字"
-            app:met_baseColor="#0056d3"
-            app:met_clearButton="true"
-            app:met_primaryColor="#982360"
             />
 
         <!--按钮-->
-        <ImageView
+        <TextView
+            android:id="@+id/btn_search"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/rectange_round_blue_shape"
             android:padding="10dp"
-            android:src="@drawable/search_button_selector"
+            android:text="搜索"
+            android:textColor="@color/lightBlue"
             />
 
     </LinearLayout>
 
     <!--流式布局-->
-    <me.gujun.android.taggroup.TagGroup
-        android:id="@+id/tag_group"
-        style="@style/TagGroup"
-        app:atg_isAppendMode="false"/>
+    <LinearLayout
+        android:id="@+id/ly_tag_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:background="@color/lightBlue"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男神"
+                android:textColor="@color/darkorange"
+                android:textSize="@dimen/text_size_big"
+                />
+
+        </LinearLayout>
+
+        <me.gujun.android.taggroup.TagGroup
+            android:id="@+id/tag_group_1"
+            style="@style/TagGroup"
+            app:atg_isAppendMode="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_tag_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:background="@color/pink"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女神"
+                android:textColor="@color/deeppink"
+                android:textSize="@dimen/text_size_big"
+                />
+
+        </LinearLayout>
+
+        <me.gujun.android.taggroup.TagGroup
+            android:id="@+id/tag_group_2"
+            style="@style/TagGroup"
+            app:atg_isAppendMode="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_tag_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:background="@color/chocolate"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="影视"
+                android:textColor="@color/mediumorchid"
+                android:textSize="@dimen/text_size_big"
+                />
+
+        </LinearLayout>
+
+        <me.gujun.android.taggroup.TagGroup
+            android:id="@+id/tag_group_3"
+            style="@style/TagGroup"
+            app:atg_isAppendMode="false"/>
+
+    </LinearLayout>
 
 </LinearLayout>

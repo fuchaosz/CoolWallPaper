@@ -38,8 +38,8 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
     private float maxMoveLength;//最大可以移动的距离
     private ShowPictureDetailActivity activity;
     private String fileUrl;//实际显示的图片，有时候大图可能会显示失败
-    private boolean isFirstLoad = true;//是否第一次加载
-    private boolean isAutoLoad = true;//是否自动加载
+    private boolean isFirstLoad = true;//是否第一次加载，如果只是滑动一下，并不切换界面，那么调用顺序是1，2,0，这个时候viewpager监听器又会去自动加载图片，这样就会再放大一次，所以必须等到图片完全看不见了，再次加载才能放大
+    private boolean isAutoLoad = true;//是否自动加载,第一次点进来，必须自动加载，之后滑动在viewpager的监听器里手动加载
 
     //图片控件
     @Bind(R.id.iv_image)

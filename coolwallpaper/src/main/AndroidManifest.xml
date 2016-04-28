@@ -51,6 +51,9 @@
         <!--搜索-->
         <activity android:name=".SearchActivity"/>
 
+        <!--搜索结果显示页面-->
+        <activity android:name=".ShowSearchListActivity"/>
+
         <!--下载图片信息的服务-->
         <service android:name=".service.PictureResultGetServevice">
             <intent-filter>

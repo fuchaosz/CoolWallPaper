@@ -48,6 +48,5 @@ dependencies {
     compile(name: 'logger-release', ext: 'aar') //日志框架Loggers
     compile(name: 'fresco-0.9.0', ext: 'aar') //facebook的图片加载框架fresco
     compile(name: 'ucrop-1.4.1', ext: 'aar') //图片裁剪框架
-    compile(name: 'MaterialEditText-2.1.4', ext: 'aar')//Material的编辑框
     compile(name: 'rxandroid-1.1.0', ext: 'aar') //RxAndroid框架
 }
