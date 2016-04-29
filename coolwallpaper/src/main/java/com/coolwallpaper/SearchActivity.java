@@ -46,7 +46,6 @@ public class SearchActivity extends BaseActivity {
     @Bind(R.id.ed_search)
     EditText edSearch;
 
-
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, SearchActivity.class);
         context.startActivity(intent);

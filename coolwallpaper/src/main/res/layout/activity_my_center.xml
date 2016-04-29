@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--个人中心-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/coolwallpaper_center_bg"
+              android:orientation="vertical"
+    >
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:background="@color/halfTransparent"
+        >
+
+        <ImageView
+            android:id="@+id/ly_left_arrow"
+            style="@style/action_bar_arrow"
+            />
+
+        <TextView
+            style="@style/action_bar_title"
+            android:layout_centerInParent="true"
+            android:text="个人中心"
+            />
+    </RelativeLayout>
+
+    <!--头像-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp"
+        >
+
+        <com.joooonho.SelectableRoundedImageView
+            android:id="@+id/iv_face"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/example"
+            />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="立即登录"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_big_x1"
+            />
+
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="登录可关注跟多潮流热点"
+            android:textColor="@color/white"
+            />
+
+    </LinearLayout>
+
+    <!--操作按钮-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@color/halfTransparent"
+        android:orientation="vertical"
+        >
+
+        <!--第一排-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <!--左边部分-->
+            <LinearLayout
+                android:id="@+id/ly_my_wallpaper"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_wallpaper_selector"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="我的壁纸"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_big"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/lightGray"
+                />
+
+            <!--右边部分-->
+            <LinearLayout
+                android:id="@+id/ly_my_favour"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_favour_selector"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="我的收藏"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_big"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightGray"
+            />
+
+        <!--第二排-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <!--左边部分-->
+            <LinearLayout
+                android:id="@+id/ly_my_download"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_download_selector"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="我的下载"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_big"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/lightGray"
+                />
+
+            <!--右边部分-->
+            <LinearLayout
+                android:id="@+id/ly_my_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_upload_selector"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="我的上传"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_big"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

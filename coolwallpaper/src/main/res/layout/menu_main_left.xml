@@ -6,8 +6,36 @@
     android:layout_height="fill_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="40dp"
     >
+
+
+    <!--个人中心-->
+    <LinearLayout
+        android:id="@+id/ly_my_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp"
+        >
+
+        <com.joooonho.SelectableRoundedImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_face"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="个人中心"
+            android:textColor="@color/wheat"
+            />
+    </LinearLayout>
 
     <!--我的壁纸-->
     <LinearLayout

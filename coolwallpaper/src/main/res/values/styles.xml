@@ -16,6 +16,8 @@
 
     <!--ActionBar上的标题-->
     <style name="action_bar_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/action_bar_title_size</item>
     </style>
@@ -26,5 +28,11 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">10dp</item>
         <item name="android:src">@drawable/btn_left_arrow</item>
+    </style>
+
+    <!--PopupWindow进出场动画-->
+    <style name="popup_window_anim_style">
+        <item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_bottom</item>
     </style>
 </resources>

@@ -1,4 +1,4 @@
-include ':coolwallpaper', ':library-xUtils', ':sharelib', ':daogenerator', ':library-ResideMenu', ':library-MultiImageSelector', ':library-CircleProgress', ':library-Alertview', ':library-AndroidTagGroup'
+include ':coolwallpaper', ':library-xUtils', ':sharelib', ':daogenerator', ':library-ResideMenu', ':library-MultiImageSelector', ':library-CircleProgress', ':library-Alertview', ':library-AndroidTagGroup', ':library-UmengSocialSdk'
 include ':library-PullToRefresh'
 include ':library-SelectableRoundedImageViewLib'
 include ':library-ViewPagerIndicator'

@@ -116,6 +116,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         leftMenuView.findViewById(R.id.ly_provide_paper).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_check_update).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_more_set).setOnClickListener(leftMenuListener);
+        leftMenuView.findViewById(R.id.ly_my_center).setOnClickListener(leftMenuListener);
         //右边的menu
         rightMenuView.findViewById(R.id.ly_home).setOnClickListener(rightMenuListener);
         rightMenuView.findViewById(R.id.ly_hot).setOnClickListener(rightMenuListener);
@@ -359,6 +360,10 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                     break;
                 //更多设置
                 case R.id.ly_more_set:
+                    break;
+                //个人中心
+                case R.id.ly_my_center:
+                    MyCenterActivity.startActivity(getActivity());
                     break;
             }
         }
