@@ -83,12 +83,6 @@
         <!--个人中心-->
         <activity android:name=".MyCenterActivity"/>
 
-        <!--友盟Activity-->
-        <activity
-            android:name="com.umeng.socialize.editorpage.ShareActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault"/>
-
     </application>
 
 </manifest>

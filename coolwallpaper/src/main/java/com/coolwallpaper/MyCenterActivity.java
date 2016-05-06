@@ -3,12 +3,8 @@ package com.coolwallpaper;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -20,6 +16,8 @@ import butterknife.OnClick;
  */
 public class MyCenterActivity extends BaseActivity {
 
+    private LoginPopupWindow popupWindow;
+
     @Bind(R.id.iv_face)
     ImageView ivFace;
 
@@ -29,6 +27,11 @@ public class MyCenterActivity extends BaseActivity {
     @Bind(R.id.tv_tip)
     TextView tvTip;
 
+    /**
+     * 启动方法
+     *
+     * @param context
+     */
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, MyCenterActivity.class);
         context.startActivity(intent);
@@ -72,12 +75,9 @@ public class MyCenterActivity extends BaseActivity {
 
     //弹出登录窗口
     private void showLoginWindow() {
-        View view = LayoutInflater.from(this).inflate(R.layout.popup_window_login, null);
-        PopupWindow window = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setFocusable(true);
-        //指定动画
-        window.setAnimationStyle(R.style.popup_window_anim_style);
-        //在底部显示
-        window.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+        if (popupWindow == null) {
+            popupWindow = new LoginPopupWindow(this);
+        }
+        popupWindow.showBottomDilog(getWindow().getDecorView());
     }
 }

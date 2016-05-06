@@ -10,7 +10,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.7"
         android:background="@drawable/img_example_1"
         />
 
@@ -65,6 +64,7 @@
 
             <!--qq-->
             <LinearLayout
+                android:id="@+id/ly_qq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -91,6 +91,7 @@
 
             <!--微信-->
             <LinearLayout
+                android:id="@+id/ly_wechat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -117,6 +118,7 @@
 
             <!--新浪-->
             <LinearLayout
+                android:id="@+id/ly_sina"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -155,6 +157,7 @@
         >
 
         <ImageView
+            android:id="@+id/iv_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_close_selector"
