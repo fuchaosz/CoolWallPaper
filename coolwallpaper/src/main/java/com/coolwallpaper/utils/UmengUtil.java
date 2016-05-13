@@ -66,7 +66,7 @@ public class UmengUtil {
      * @param callback
      */
     public void qqLogin(Activity activity, Callback callback) {
-        login(activity, SHARE_MEDIA.RENREN, callback);
+        login(activity, SHARE_MEDIA.QQ, callback);
     }
 
     /**
