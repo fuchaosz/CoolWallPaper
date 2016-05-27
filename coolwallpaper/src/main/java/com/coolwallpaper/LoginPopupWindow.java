@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
-import android.widget.Toast;
-
-import com.coolwallpaper.utils.UmengUtil;
 
 /**
  * 第三方登录的弹窗
@@ -16,8 +13,15 @@ import com.coolwallpaper.utils.UmengUtil;
  */
 public class LoginPopupWindow extends PopupWindow implements View.OnClickListener {
 
+    public final String TAG = "[fuchao][LoginPopupWindow]";
     private View contentView;
     private Activity context;
+    private OnLoginListener onLoginListener;
+
+    //登录类型常量
+    public static final int LOGIN_TYPE_QQ = 1;
+    public static final int LOGIN_TYPE_SINA = 2;
+    public static final int LOGIN_TYPE_WECHAT = 3;
 
     public LoginPopupWindow(Activity context) {
         this.context = context;
@@ -48,10 +52,23 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //qq login
             case R.id.ly_qq:
+                if (onLoginListener != null) {
+                    onLoginListener.onLoginClick(LOGIN_TYPE_QQ);
+                }
+                break;
+            // wechat login
             case R.id.ly_wechat:
+                if (onLoginListener != null) {
+                    onLoginListener.onLoginClick(LOGIN_TYPE_WECHAT);
+                }
+                break;
+            //sina login
             case R.id.ly_sina:
-                qqLogin();
+                if (onLoginListener != null) {
+                    onLoginListener.onLoginClick(LOGIN_TYPE_SINA);
+                }
                 break;
             //关闭弹窗
             case R.id.iv_close:
@@ -66,18 +83,22 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         this.showAtLocation(view, Gravity.BOTTOM, 0, 0);
     }
 
-    //QQ登录
-    public void qqLogin() {
-        UmengUtil.getInstence().qqLogin(context, new UmengUtil.Callback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(context, "qq login success", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                Toast.makeText(context, "qq login failure", Toast.LENGTH_SHORT).show();
-            }
-        });
+    //设置点击监听
+    public void setOnLoginListener(OnLoginListener onLoginListener) {
+        this.onLoginListener = onLoginListener;
     }
+
+    /**
+     * 登录监听
+     */
+    public static interface OnLoginListener {
+
+        /**
+         * 登录按钮点击
+         *
+         * @param loginType 登录类型,详见本类常量字段LOGIN_TYPE
+         */
+        public void onLoginClick(int loginType);
+    }
+
 }

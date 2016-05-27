@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.utils.UmengUtil;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -48,6 +52,18 @@ public class MyCenterActivity extends BaseActivity {
 
     }
 
+    //刷新
+    public void refresh(IUserInfo userInfo){
+        //null judge
+        if(userInfo == null){
+            return;
+        }
+        //show name
+        tvName.setText(userInfo.getName());
+        //show img
+        //Glide.with(this).
+    }
+
     @OnClick({R.id.ly_left_arrow, R.id.iv_face, R.id.ly_my_wallpaper, R.id.ly_my_favour, R.id.ly_my_download, R.id.ly_my_upload})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -78,6 +94,76 @@ public class MyCenterActivity extends BaseActivity {
         if (popupWindow == null) {
             popupWindow = new LoginPopupWindow(this);
         }
+        popupWindow.setOnLoginListener(new LoginPopupWindow.OnLoginListener() {
+            @Override
+            public void onLoginClick(int loginType) {
+                switch (loginType) {
+                    //qq login
+                    case LoginPopupWindow.LOGIN_TYPE_QQ:
+                        qqLogin();
+                        break;
+                    //sina login
+                    case LoginPopupWindow.LOGIN_TYPE_SINA:
+                        sinaLogin();
+                        break;
+                }
+            }
+        });
         popupWindow.showBottomDilog(getWindow().getDecorView());
     }
+
+    //QQ登录
+    public void qqLogin() {
+        UmengUtil.getInstence().qqLogin(this, new UmengUtil.Callback() {
+
+            @Override
+            public void onSuccess() {
+                //get user info after login success
+                getQQUserInfo();
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                Toast.makeText(getApplicationContext(), "登录失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //Get qq user info
+    public void getQQUserInfo() {
+        UmengUtil.getInstence().getQQUserInfo(this, new UmengUtil.InfoCallBack() {
+            @Override
+            public void getUserInfo(IUserInfo userInfo) {
+                // null judge
+                if (userInfo == null) {
+                    //get user info failure
+                    Toast.makeText(getApplicationContext(), "获取用户信息失败", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // get user info success
+
+            }
+        });
+    }
+
+    //新浪登录
+    private void sinaLogin() {
+        UmengUtil.getInstence().sinaLogin(this, new UmengUtil.Callback() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure(String reason) {
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //must rewrite this method and add next code for the third login
+        UmengUtil.getInstence().setActivityResult(requestCode, resultCode, data);
+    }
+
 }

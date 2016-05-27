@@ -1,8 +1,10 @@
 package com.coolwallpaper.utils;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.coolwallpaper.MyApplication;
+import com.coolwallpaper.bean.IUserInfo;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -18,12 +20,10 @@ public class UmengUtil {
 
     private static UmengUtil util;
     private UMShareAPI mShareAPI;
-    private MyUMAuthListener myUMAuthListener;
 
     //私有构造函数
     private UmengUtil() {
         this.mShareAPI = UMShareAPI.get(MyApplication.getInstance());
-        this.myUMAuthListener = new MyUMAuthListener();
         this.initPlatform();
     }
 
@@ -60,6 +60,17 @@ public class UmengUtil {
     }
 
     /**
+     * 要获得授权后的数据，必须要在Activity的onActivityResult中调用该方法
+     *
+     * @param requestCode 和onActivityResult中调用该方法的参数一样
+     * @param resultCode
+     * @param data
+     */
+    public void setActivityResult(int requestCode, int resultCode, Intent data) {
+        mShareAPI.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
      * QQ登录
      *
      * @param activity
@@ -70,9 +81,30 @@ public class UmengUtil {
     }
 
     /**
+     * 新浪微博登录
+     *
+     * @param activity
+     * @param callBack
+     */
+    public void sinaLogin(Activity activity, Callback callBack) {
+        login(activity, SHARE_MEDIA.SINA, callBack);
+    }
+
+    /**
+     * Get user info who login with qq
+     *
+     * @param activity
+     * @param callBack callback method to get user info
+     */
+    public void getQQUserInfo(Activity activity, InfoCallBack callBack) {
+        getUserInfo(activity, SHARE_MEDIA.QQ, callBack);
+    }
+
+    /**
      * 第三方登录
      *
      * @param shareMedia 常量，用于表示哪个第三方,例如：qq, 新浪微博
+     * @param callback   登录是否成功的回调接口
      */
     private void login(Activity activity, SHARE_MEDIA shareMedia, Callback callback) {
         mShareAPI.doOauthVerify(activity, shareMedia, new UMAuthListener() {
@@ -100,27 +132,36 @@ public class UmengUtil {
     }
 
     /**
-     * umeng的授权回调接口
+     * 获取用户信息
+     *
+     * @param activity
+     * @param platform 平台表示，SHARE_MEDIA类型
+     * @param callBack 用户信息回调接口
      */
-    private class MyUMAuthListener implements UMAuthListener {
+    private void getUserInfo(Activity activity, SHARE_MEDIA platform, InfoCallBack callBack) {
+        mShareAPI.getPlatformInfo(activity, SHARE_MEDIA.QQ, new UMAuthListener() {
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                int a = 0;
+            }
 
-        @Override
-        public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+            @Override
+            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                if (callBack != null) {
+                    callBack.getUserInfo(null);
+                }
+            }
 
-        }
-
-        @Override
-        public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA share_media, int i) {
-
-        }
+            @Override
+            public void onCancel(SHARE_MEDIA share_media, int i) {
+                if (callBack != null) {
+                    callBack.getUserInfo(null);
+                }
+            }
+        });
     }
 
-    //接口回调
+    //登录接口回调
     public static interface Callback {
 
         /**
@@ -132,5 +173,16 @@ public class UmengUtil {
          * 登录失败
          */
         public void onFailure(String reason);
+    }
+
+    //用户信息获取接口
+    public static interface InfoCallBack {
+
+        /**
+         * 用户信息回调接口
+         *
+         * @param userInfo 用户信息，获取失败则返回null
+         */
+        public void getUserInfo(IUserInfo userInfo);
     }
 }
