@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.utils.UmengUtil;
 
@@ -53,15 +54,15 @@ public class MyCenterActivity extends BaseActivity {
     }
 
     //刷新
-    public void refresh(IUserInfo userInfo){
+    public void refresh(IUserInfo userInfo) {
         //null judge
-        if(userInfo == null){
+        if (userInfo == null) {
             return;
         }
         //show name
         tvName.setText(userInfo.getName());
         //show img
-        //Glide.with(this).
+        Glide.with(this).load(userInfo.getImg()).into(ivFace);
     }
 
     @OnClick({R.id.ly_left_arrow, R.id.iv_face, R.id.ly_my_wallpaper, R.id.ly_my_favour, R.id.ly_my_download, R.id.ly_my_upload})
@@ -141,7 +142,7 @@ public class MyCenterActivity extends BaseActivity {
                     return;
                 }
                 // get user info success
-
+                refresh(userInfo);
             }
         });
     }

@@ -17,11 +17,6 @@ public class SinaUserInfo implements IUserInfo {
     }
 
     @Override
-    public String getAge() {
-        return null;
-    }
-
-    @Override
     public String getImg() {
         return null;
     }

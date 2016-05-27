@@ -11,6 +11,10 @@ public interface IUserInfo {
     public int USER_TYPE_SINA = 1;
     public int USER_TYPE_WECHAT = 2;
 
+    //性别
+    public int SEX_MAN = 0;
+    public int SEX_GIRL = 1;
+
     /**
      * 获取用户登录账号
      *
@@ -24,13 +28,6 @@ public interface IUserInfo {
      * @return
      */
     public String getName();
-
-    /**
-     * 年龄
-     *
-     * @return
-     */
-    public String getAge();
 
     /**
      * 头像图片

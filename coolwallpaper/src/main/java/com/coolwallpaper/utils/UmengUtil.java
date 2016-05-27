@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.bean.QQUserInfo;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -139,10 +140,20 @@ public class UmengUtil {
      * @param callBack 用户信息回调接口
      */
     private void getUserInfo(Activity activity, SHARE_MEDIA platform, InfoCallBack callBack) {
-        mShareAPI.getPlatformInfo(activity, SHARE_MEDIA.QQ, new UMAuthListener() {
+        mShareAPI.getPlatformInfo(activity, platform, new UMAuthListener() {
             @Override
             public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                int a = 0;
+                IUserInfo userInfo = null;
+                //PARES THE INFO FROM QQ PLATFORM
+                switch (share_media) {
+                    case QQ:
+                        userInfo = new QQUserInfo(map);
+                        break;
+                }
+                //call back to method caller
+                if (callBack != null) {
+                    callBack.getUserInfo(userInfo);
+                }
             }
 
             @Override
