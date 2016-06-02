@@ -6,15 +6,6 @@ package com.coolwallpaper.bean;
  */
 public interface IUserInfo {
 
-    //用户登录的类型
-    public int USER_TYPE_QQ = 0;
-    public int USER_TYPE_SINA = 1;
-    public int USER_TYPE_WECHAT = 2;
-
-    //性别
-    public int SEX_MAN = 0;
-    public int SEX_GIRL = 1;
-
     /**
      * 获取用户登录账号
      *
@@ -46,7 +37,7 @@ public interface IUserInfo {
     /**
      * 用户登录的类别
      *
-     * @return 详细见USER_TYPE常量
+     * @return 详细见Constant.USER_TYPE常量
      */
     public int getUserType();
 }

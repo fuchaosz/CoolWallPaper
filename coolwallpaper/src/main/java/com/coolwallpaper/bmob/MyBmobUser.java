@@ -9,9 +9,14 @@ import cn.bmob.v3.BmobUser;
 public class MyBmobUser extends BmobUser {
 
     /**
-     * 用户性别，true为女，false为男
+     * 账号，用户唯一标识
      */
-    private Boolean sex;
+    private String account;
+
+    /**
+     * 用户性别，0为男，1位女
+     */
+    private Integer sex;
 
     /**
      * 年龄
@@ -28,11 +33,11 @@ public class MyBmobUser extends BmobUser {
         this.setTableName(BmobConst.TB_USER);
     }
 
-    public Boolean getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Boolean sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -50,5 +55,13 @@ public class MyBmobUser extends BmobUser {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

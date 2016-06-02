@@ -1,5 +1,7 @@
 package com.coolwallpaper.bean;
 
+import com.coolwallpaper.constant.Constant;
+
 import java.util.Map;
 
 /**
@@ -47,15 +49,15 @@ public class QQUserInfo implements IUserInfo {
     @Override
     public int getSex() {
         if ("男".equals(gender)) {
-            return SEX_MAN;
+            return Constant.SEX_MAN;
         } else {
-            return SEX_GIRL;
+            return Constant.SEX_GIRL;
         }
     }
 
     @Override
     public int getUserType() {
-        return USER_TYPE_QQ;
+        return Constant.USER_TYPE_QQ;
     }
 
     public String getOpenId() {

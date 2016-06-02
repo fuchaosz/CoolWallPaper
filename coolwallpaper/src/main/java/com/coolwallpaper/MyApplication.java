@@ -2,7 +2,10 @@ package com.coolwallpaper;
 
 import android.app.Application;
 
+import com.coolwallpaper.constant.Constant;
 import com.orhanobut.logger.Logger;
+
+import cn.bmob.v3.Bmob;
 
 /**
  * Created by fuchao on 2015/10/30.
@@ -18,6 +21,8 @@ public class MyApplication extends Application {
         myApplication = this;
         //设置一下日志的TAG
         Logger.init(TAG);
+        //初始化Bmob
+        Bmob.initialize(this, Constant.BMOB_APPID);
     }
 
     /**

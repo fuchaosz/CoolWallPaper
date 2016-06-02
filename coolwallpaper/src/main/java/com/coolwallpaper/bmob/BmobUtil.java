@@ -1,5 +1,7 @@
 package com.coolwallpaper.bmob;
 
+import com.coolwallpaper.MyFavouritePaper;
+
 import cn.bmob.v3.BmobQuery;
 
 /**
@@ -25,5 +27,24 @@ public class BmobUtil {
     public static BmobQuery<MyBmobPicture> getMyPictureQuery() {
         return new BmobQuery<MyBmobPicture>(BmobConst.TB_PICTURE);
     }
+
+    /**
+     * 获取收藏表查询对象
+     *
+     * @return BmobQuery对象
+     */
+    public static BmobQuery<MyBmobFavourite> getMyFavouriteQuery() {
+        return new BmobQuery<MyBmobFavourite>(BmobConst.TB_FAVORITE);
+    }
+
+    /**
+     * 获取登录表查询对象
+     *
+     * @return BmobQuery对象
+     */
+    public static BmobQuery<MyBmobLogin> getMyLoginQuery() {
+        return new BmobQuery<MyBmobLogin>(BmobConst.TB_LOGIN);
+    }
+
 
 }

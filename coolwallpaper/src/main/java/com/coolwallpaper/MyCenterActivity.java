@@ -10,10 +10,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.bmob.BmobUtil;
+import com.coolwallpaper.bmob.MyBmobLogin;
+import com.coolwallpaper.bmob.MyBmobUser;
 import com.coolwallpaper.utils.UmengUtil;
+
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * 个人中心
@@ -22,6 +30,7 @@ import butterknife.OnClick;
 public class MyCenterActivity extends BaseActivity {
 
     private LoginPopupWindow popupWindow;
+    private MyBmobUser user;
 
     @Bind(R.id.iv_face)
     ImageView ivFace;
@@ -70,6 +79,7 @@ public class MyCenterActivity extends BaseActivity {
         switch (v.getId()) {
             //标题栏上返回键
             case R.id.ly_left_arrow:
+                finish();
                 break;
             //我的头像
             case R.id.iv_face:
@@ -141,8 +151,10 @@ public class MyCenterActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "获取用户信息失败", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // get user info success
+                // get user info success,refresh view
                 refresh(userInfo);
+                //登录成功后要做一些业务处理
+                dealLoginSuccess(userInfo);
             }
         });
     }
@@ -165,6 +177,43 @@ public class MyCenterActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //must rewrite this method and add next code for the third login
         UmengUtil.getInstence().setActivityResult(requestCode, resultCode, data);
+    }
+
+    //登录成功后处理一下后续逻辑
+    private void dealLoginSuccess(IUserInfo userInfo) {
+        //查询是否存在这个用户
+        BmobQuery userQuery = BmobUtil.getMyUserQuery();
+        userQuery.addWhereEqualTo("account", userInfo.getAccount());
+        userQuery.findObjects(this, new FindListener() {
+            @Override
+            public void onSuccess(List list) {
+                //不存在这个用户
+                if (list == null || list.size() == 0) {
+                    //添加这个用户
+                    user = new MyBmobUser();
+                    user.setImgUrl(userInfo.getImg());
+                    user.setSex(userInfo.getSex());
+                    user.setUsername(userInfo.getName());
+                    user.setAccount(userInfo.getAccount());
+                    user.save(MyApplication.getInstance());
+                }
+                //存在这个用户
+                else {
+                    user = (MyBmobUser) list.get(0);
+                }
+                //写入登录记录
+                MyBmobLogin myBmobLogin = new MyBmobLogin();
+                myBmobLogin.setTime(new Date());
+                myBmobLogin.setType(userInfo.getUserType());
+                myBmobLogin.setUser(user);
+                myBmobLogin.save(MyApplication.getInstance());
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
     }
 
 }
