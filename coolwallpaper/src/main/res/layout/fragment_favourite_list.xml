@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+        android:id="@+id/pull_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </com.handmark.pulltorefresh.library.PullToRefreshGridView>
+
+    <!--empty view-->
+    <RelativeLayout
+        android:id="@+id/ly_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tv_empty_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="您还没有收藏任何图片，赶紧去挑选图片收藏吧^^"
+            android:textColor="@color/txtBlue"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_tip"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rectange_round_blue_shape"
+            android:padding="10dp"
+            android:text="去选图片"
+            android:textColor="@color/txtGray"
+            />
+    </RelativeLayout>
+
+    <!--error view-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_error_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="网络似乎有问题，刷新试试"
+            android:textColor="@color/txtBlue"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_error_tip"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rectange_round_blue_shape"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:text="刷新"
+            android:textColor="@color/txtGray"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>
