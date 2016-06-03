@@ -4,18 +4,32 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CoolWallPaper.iml" filepath="$PROJECT_DIR$/CoolWallPaper.iml" />
       <module fileurl="file://$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" filepath="$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" filepath="$PROJECT_DIR$/coolwallpaper/coolwallpaper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/daogenerator/daogenerator.iml" filepath="$PROJECT_DIR$/daogenerator/daogenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/daogenerator/daogenerator.iml" filepath="$PROJECT_DIR$/daogenerator/daogenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-Alertview/library-Alertview.iml" filepath="$PROJECT_DIR$/library-Alertview/library-Alertview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-Alertview/library-Alertview.iml" filepath="$PROJECT_DIR$/library-Alertview/library-Alertview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-AndroidCommon/library-AndroidCommon.iml" filepath="$PROJECT_DIR$/library-AndroidCommon/library-AndroidCommon.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-AndroidCommon/library-AndroidCommon.iml" filepath="$PROJECT_DIR$/library-AndroidCommon/library-AndroidCommon.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-AndroidTagGroup/library-AndroidTagGroup.iml" filepath="$PROJECT_DIR$/library-AndroidTagGroup/library-AndroidTagGroup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-AndroidTagGroup/library-AndroidTagGroup.iml" filepath="$PROJECT_DIR$/library-AndroidTagGroup/library-AndroidTagGroup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-CircleProgress/library-CircleProgress.iml" filepath="$PROJECT_DIR$/library-CircleProgress/library-CircleProgress.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-CircleProgress/library-CircleProgress.iml" filepath="$PROJECT_DIR$/library-CircleProgress/library-CircleProgress.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-MultiImageSelector/library-MultiImageSelector.iml" filepath="$PROJECT_DIR$/library-MultiImageSelector/library-MultiImageSelector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-MultiImageSelector/library-MultiImageSelector.iml" filepath="$PROJECT_DIR$/library-MultiImageSelector/library-MultiImageSelector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" filepath="$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" filepath="$PROJECT_DIR$/library-PullToRefresh/library-PullToRefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-ResideMenu/library-ResideMenu.iml" filepath="$PROJECT_DIR$/library-ResideMenu/library-ResideMenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-ResideMenu/library-ResideMenu.iml" filepath="$PROJECT_DIR$/library-ResideMenu/library-ResideMenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-SelectableRoundedImageViewLib/library-SelectableRoundedImageViewLib.iml" filepath="$PROJECT_DIR$/library-SelectableRoundedImageViewLib/library-SelectableRoundedImageViewLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-SelectableRoundedImageViewLib/library-SelectableRoundedImageViewLib.iml" filepath="$PROJECT_DIR$/library-SelectableRoundedImageViewLib/library-SelectableRoundedImageViewLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-UmengSocialSdk/library-UmengSocialSdk.iml" filepath="$PROJECT_DIR$/library-UmengSocialSdk/library-UmengSocialSdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-ViewPagerIndicator/library-ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/library-ViewPagerIndicator/library-ViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-ViewPagerIndicator/library-ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/library-ViewPagerIndicator/library-ViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-umengsocialsdk/library-umengsocialsdk.iml" filepath="$PROJECT_DIR$/library-umengsocialsdk/library-umengsocialsdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-xUtils/library-xUtils.iml" filepath="$PROJECT_DIR$/library-xUtils/library-xUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-xUtils/library-xUtils.iml" filepath="$PROJECT_DIR$/library-xUtils/library-xUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sharelib/sharelib.iml" filepath="$PROJECT_DIR$/sharelib/sharelib.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharelib/sharelib.iml" filepath="$PROJECT_DIR$/sharelib/sharelib.iml" />
     </modules>
   </component>

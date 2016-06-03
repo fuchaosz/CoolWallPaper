@@ -44,7 +44,7 @@ dependencies {
     compile project(':library-Alertview') //仿ios的对话框
     compile project(':library-CircleProgress') //圆形进度条CircleProgress
     compile project(':library-AndroidTagGroup') //流式布局
-    compile project(':library-UmengSocialSdk') //友盟社会化分享组件
+    compile project(':library-umengsocialsdk') //友盟社会化分享组件
     compile project(':library-AndroidCommon') //AndroidCommon工具包
     compile(name: 'android-gif-drawable-1.1.15', ext: 'aar') //gif显示库android-gif-drawable引用本地aar文件
     compile(name: 'logger-release', ext: 'aar') //日志框架Loggers

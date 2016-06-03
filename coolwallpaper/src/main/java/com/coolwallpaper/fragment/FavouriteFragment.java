@@ -21,7 +21,6 @@ import cn.bmob.v3.BmobQuery;
 public class FavouriteFragment extends Fragment {
 
     private MyBmobUser user;
-    private
 
     /**
      * Get fragment instance
@@ -57,7 +56,7 @@ public class FavouriteFragment extends Fragment {
     //get my favourite paper
     private void queryFavourite() {
         BmobQuery<MyBmobFavourite> query = BmobUtil.getMyFavouriteQuery();
-        query.addWhereEqualTo("user",user);
-        query.find
+        query.addWhereEqualTo("user", user);
+        //query.findObjects(this, );
     }
 }
