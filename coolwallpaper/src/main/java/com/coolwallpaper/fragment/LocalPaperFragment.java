@@ -61,10 +61,10 @@ public class LocalPaperFragment extends Fragment {
 
 
     //本地壁纸的ListView
-    private class LocalAdapter extends BaseAdapter {
+    public class LocalAdapter extends BaseAdapter {
 
-        Context context;
-        List<LocalPicture> localPaperList;
+        private Context context;
+        private List<LocalPicture> localPaperList;
 
         public LocalAdapter(Context context) {
             this.context = context;
