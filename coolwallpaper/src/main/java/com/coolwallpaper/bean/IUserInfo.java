@@ -1,10 +1,12 @@
 package com.coolwallpaper.bean;
 
+import java.io.Serializable;
+
 /**
  * 第三方登录后用户信息接口
  * Created by fuchao on 2016/5/27.
  */
-public interface IUserInfo {
+public interface IUserInfo extends Serializable{
 
     /**
      * 获取用户登录账号

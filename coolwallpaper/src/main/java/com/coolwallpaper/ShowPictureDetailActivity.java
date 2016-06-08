@@ -13,21 +13,34 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.bean.IUserOperator;
+import com.coolwallpaper.bmob.BmobUtil;
+import com.coolwallpaper.bmob.MyBmobFavourite;
+import com.coolwallpaper.bmob.MyBmobPicture;
+import com.coolwallpaper.bmob.MyBmobUser;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
 import com.coolwallpaper.event.UpdatePictureEvent;
 import com.coolwallpaper.fragment.PictureDetailFragment;
 import com.coolwallpaper.fragment.PictureListFragment;
 import com.coolwallpaper.model.Picture;
+import com.coolwallpaper.utils.ConvertUtil;
 import com.coolwallpaper.utils.FileUtil;
+import com.coolwallpaper.utils.LogUtil;
+import com.coolwallpaper.utils.ToastUtil;
+import com.coolwallpaper.utils.UserUtil;
+import com.library.common.util.ScreenUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.orhanobut.logger.Logger;
 import com.squareup.otto.Subscribe;
@@ -44,6 +57,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * 显示图片详情
@@ -51,6 +67,7 @@ import butterknife.Bind;
  */
 public class ShowPictureDetailActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final int REQUEST_CODE_LOGIN = 0x100;//登录界面请求码
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpeg";//调用uCrop之前必须给图片一个名字
     private Picture pictureBean;
     private int position;
@@ -164,6 +181,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.ly_favorite_pic).setOnClickListener(this);
         findViewById(R.id.ly_set_wallpaper).setOnClickListener(this);
         findViewById(R.id.ly_cut_pic).setOnClickListener(this);
+        findViewById(R.id.ly_more_choose).setOnClickListener(this);
         //进度条
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -221,6 +239,11 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             //剪切
             case R.id.ly_cut_pic:
                 crop();
+                break;
+            //更多
+            case R.id.ly_more_choose:
+                //显示更多
+                showMoreMenu();
                 break;
         }
     }
@@ -399,6 +422,11 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 fragmentList.get(currentPage).setAutoLoad(false);
             }
         }
+
+        //获取当前显示的图片
+        private Picture getCurrentPicture() {
+            return beanList.get(currentPage);
+        }
     }
 
     //显示seekBar
@@ -514,10 +542,154 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                     }
                 }
             }
+            //登录界面返回
+            else if (requestCode == REQUEST_CODE_LOGIN) {
+                //取出参数
+                IUserInfo user = (IUserInfo) data.getSerializableExtra("USER");
+                //登录失败
+                if (user == null) {
+                    ToastUtil.show("登录失败");
+                }
+                //登录成功
+                else {
+                    ToastUtil.show("登录成功，继续收藏吧");
+                }
+            }
         }
         //剪切图片失败
         if (resultCode == UCrop.RESULT_ERROR) {
             Toast.makeText(getActivity(), "图片裁切失败", Toast.LENGTH_SHORT).show();
         }
     }
+
+    //显示更多菜单
+    private void showMoreMenu() {
+        View view = LayoutInflater.from(this).inflate(R.layout.activity_pic_detail_popup_window, null);
+        //设置PopupWindwow
+        PopupWindow window = new PopupWindow(this);
+        window.setHeight(ScreenUtils.dpToPxInt(this, 80));
+        window.setWidth(ScreenUtils.dpToPxInt(this, 80));
+        window.setOutsideTouchable(true);
+        window.setFocusable(true);
+        window.getBackground().setAlpha(0);
+        window.setContentView(view);
+        //下载按钮添加监听器
+        view.findViewById(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //收藏图片
+                doMyFavourite(adapter.getCurrentPicture());
+            }
+        });
+        //显示PopupWindow
+        window.showAsDropDown(lyPictureDetailMenu.findViewById(R.id.ly_more_choose), 0, 0);
+    }
+
+    //收藏图片
+    private void doMyFavourite(Picture picture) {
+        //首先判断有没有登录成功
+        IUserOperator operator = UserUtil.getInstance();
+        IUserInfo user = operator.getUser();
+        //本地没有保存的用户
+        if (user == null) {
+            //跳转到登录中心
+            LoginActivity.startActivityForResult(this, REQUEST_CODE_LOGIN);
+        }
+        //本地有用户登录
+        else {
+            //获取到BmobUser
+            BmobQuery<MyBmobUser> query = BmobUtil.getMyUserQuery();
+            query.addWhereEqualTo("account", user.getAccount());
+            query.findObjects(this, new FindListener<MyBmobUser>() {
+                @Override
+                public void onSuccess(List<MyBmobUser> list) {
+                    //表示没有这个用户
+                    if (list == null || list.size() == 0) {
+                        ToastUtil.showDebug("error:本地这个用户在Bmob上查不到");
+                        return;
+                    }
+                    //取出这个用户
+                    MyBmobUser bmobUser = list.get(0);
+                    //保存图片到bmob的图片表中，如果图片没有保存
+                    saveBmobPicture(bmobUser, picture);
+                }
+
+                @Override
+                public void onError(int i, String s) {
+
+                }
+            });
+        }
+    }
+
+    //保存当前要收藏的图片到Bmob上，如果不存在的话
+    private void saveBmobPicture(MyBmobUser bmobUser, Picture picture) {
+        //查找Bmob上是否存在这个图片
+        BmobQuery<MyBmobPicture> query = BmobUtil.getMyPictureQuery();
+        //query.addWhereEqualTo("url", picture.getDownloadUrl());
+        query.addWhereEqualTo("width", 100);
+        query.findObjects(this, new FindListener<MyBmobPicture>() {
+            @Override
+            public void onSuccess(List<MyBmobPicture> list) {
+                //没有这个图片，则要先把这个图片保存到bmob上
+                if (list == null || list.size() == 0) {
+                    //转换为bmob对象
+                    MyBmobPicture myBmobPicture = ConvertUtil.toMyBmobPicture(picture);
+                    //保存到bmob上
+                    myBmobPicture.save(ShowPictureDetailActivity.this, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            ToastUtil.showDebug("保存图片到bmob成功,desc=" + picture.getDesc());
+                            //保存收藏信息
+                            saveMyFavoutiteInfo(bmobUser, myBmobPicture);
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            LogUtil.d("保存图片失败,s = " + s);
+                        }
+                    });
+
+                }
+                //这个图片已经存在了
+                else {
+                    //保存收藏信息
+                    saveMyFavoutiteInfo(bmobUser, list.get(0));
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                LogUtil.d("查找图片失败,s = " + s);
+            }
+        });
+    }
+
+    //保存收藏信息，到这一步，用户和图片都已经保存到bmob上
+    private void saveMyFavoutiteInfo(MyBmobUser user, MyBmobPicture picture) {
+        //开始保存收藏信息
+        MyBmobFavourite favourite = new MyBmobFavourite();
+        favourite.setPicture(picture);
+        favourite.setUser(user);
+        favourite.save(ShowPictureDetailActivity.this, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                ToastUtil.show("收藏成功");
+                //收藏成功
+                favouriteSuccess();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+            }
+        });
+    }
+
+    //收藏成功后，做一些界面有关的工作
+    private void favouriteSuccess() {
+        //收藏图标改一下
+        ivFavorite.setImageDrawable(favoriteRemoveDrawable);
+    }
+
 }

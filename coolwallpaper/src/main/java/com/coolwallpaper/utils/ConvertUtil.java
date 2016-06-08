@@ -2,6 +2,7 @@ package com.coolwallpaper.utils;
 
 import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.SearchResult;
+import com.coolwallpaper.bmob.MyBmobPicture;
 import com.coolwallpaper.model.Picture;
 
 import java.util.ArrayList;
@@ -68,5 +69,24 @@ public class ConvertUtil {
             pictureList.add(toPicture(r));
         }
         return pictureList;
+    }
+
+    /**
+     * 将Picture转换为MyBmobPicture.MyBmobPicture是Bmob上的表
+     *
+     * @param picture 本地数据库保存的壁纸表
+     * @return Bmob上保存的壁纸表对象
+     */
+    public static MyBmobPicture toMyBmobPicture(Picture picture) {
+        MyBmobPicture myBmobPicture = new MyBmobPicture();
+        myBmobPicture.setUrl(picture.getDownloadUrl());
+        myBmobPicture.setThumbUrl(picture.getThumbUrl());
+        myBmobPicture.setWidth(picture.getWidth());
+        myBmobPicture.setHeight(picture.getHeight());
+        myBmobPicture.setDescribe(picture.getDesc());
+        myBmobPicture.setDownloadCount(0);
+        myBmobPicture.setWallPaperCount(0);
+        myBmobPicture.setFavouriteCount(0);
+        return myBmobPicture;
     }
 }

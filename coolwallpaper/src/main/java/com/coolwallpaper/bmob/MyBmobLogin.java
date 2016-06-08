@@ -1,7 +1,5 @@
 package com.coolwallpaper.bmob;
 
-import java.util.Date;
-
 import cn.bmob.v3.BmobObject;
 
 /**
@@ -19,7 +17,7 @@ public class MyBmobLogin extends BmobObject {
     /**
      * 登录
      */
-    private Date time;
+    private String time;
 
     /**
      * 登录地点
@@ -51,14 +49,6 @@ public class MyBmobLogin extends BmobObject {
         this.user = user;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -81,5 +71,13 @@ public class MyBmobLogin extends BmobObject {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

@@ -10,10 +10,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.bean.IUserOperator;
 import com.coolwallpaper.bmob.BmobUtil;
 import com.coolwallpaper.bmob.MyBmobLogin;
 import com.coolwallpaper.bmob.MyBmobUser;
+import com.coolwallpaper.utils.TimeUtil;
+import com.coolwallpaper.utils.ToastUtil;
 import com.coolwallpaper.utils.UmengUtil;
+import com.coolwallpaper.utils.UserUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -203,7 +207,7 @@ public class MyCenterActivity extends BaseActivity {
                 }
                 //写入登录记录
                 MyBmobLogin myBmobLogin = new MyBmobLogin();
-                myBmobLogin.setTime(new Date());
+                myBmobLogin.setTime(TimeUtil.toString(new Date()));
                 myBmobLogin.setType(userInfo.getUserType());
                 myBmobLogin.setUser(user);
                 myBmobLogin.save(MyApplication.getInstance());
@@ -214,6 +218,14 @@ public class MyCenterActivity extends BaseActivity {
 
             }
         });
+        //写入本地文件
+        IUserOperator operator = UserUtil.getInstance();
+        boolean result = operator.addUser(userInfo);
+        if (result) {
+            ToastUtil.showDebug("保存用户到本地成功,name=" + userInfo.getName());
+        } else {
+            ToastUtil.showDebug("保存用户到本地失败,name=" + userInfo.getName());
+        }
     }
 
 }

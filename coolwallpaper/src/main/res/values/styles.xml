@@ -35,4 +35,11 @@
         <item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/exit_to_bottom</item>
     </style>
+
+    <!--activity从下到上的动画-->
+    <style name="activity_bottom_top_anim" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/enter_from_bottom</item>
+        <item name="android:activityOpenExitAnimation">@anim/exit_to_bottom</item>
+    </style>
 </resources>
+

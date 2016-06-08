@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!--改为左右滑动的界面-->
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
     <!--浮动半透明菜单-->
-    <include
+    <include xmlns:android="http://schemas.android.com/apk/res/android"
         layout="@layout/activity_pic_detail_menu"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <!--左边的弹出fragment-->
     <FrameLayout
         android:id="@+id/fl_left_container"
         android:layout_width="@dimen/picdetail_fragment_left_width"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        >
-    </FrameLayout>
+        android:visibility="gone"></FrameLayout>
 
 </FrameLayout>
