@@ -11,11 +11,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.fragment.PaperListFragment;
+import com.coolwallpaper.utils.UserUtil;
 import com.orhanobut.logger.Logger;
 import com.special.ResideMenu.ResideMenu;
 import com.squareup.otto.Subscribe;
@@ -42,6 +46,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     private LeftMenuListener leftMenuListener;//左边菜单按钮监听
     private float startY;//按下的时候y坐标
     private int DISTANCE = 100;//上滑的距离
+    private IUserInfo mUser;//本地保存的用户
 
     //标题栏
     @Bind(R.id.ly_title)
@@ -86,6 +91,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
 
     //初始化
     private void init() {
+        this.mUser = UserUtil.getInstance().getUser();
         //创建ResidMenu
         this.resideMenu = new ResideMenu(this, R.layout.menu_main_left, R.layout.menu_main_right);
         this.resideMenu.setBackground(R.drawable.coolwallpaper_main_bg);
@@ -106,6 +112,20 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         //创建监听器
         this.rightMenuListener = new RightMenuListener();
         this.leftMenuListener = new LeftMenuListener();
+        //初始化左边菜单
+        this.initLeftMenu();
+    }
+
+    //初始化左边菜单
+    private void initLeftMenu() {
+        //用户登录过了
+        if (mUser != null && mUser.getImg() != null) {
+            ImageView ivFace = (ImageView) leftMenuView.findViewById(R.id.iv_face);
+            TextView tvName = (TextView) leftMenuView.findViewById(R.id.tv_name);
+            //显示头像
+            Glide.with(this).load(mUser.getImg()).into(ivFace);
+            tvName.setText(mUser.getName());
+        }
     }
 
     //添加监听器

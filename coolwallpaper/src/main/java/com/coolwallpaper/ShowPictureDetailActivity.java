@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.bmob.BmobUtil;
 import com.coolwallpaper.bmob.MyBmobFavourite;
+import com.coolwallpaper.bmob.MyBmobPicture;
 import com.coolwallpaper.bmob.MyBmobUser;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
@@ -94,6 +95,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                     try {
                         getActivity().setWallpaper(bitmap);
                         Toast.makeText(getActivity(), "设置壁纸成功", Toast.LENGTH_SHORT).show();
+                        //更新bmob图片信息
+                        updateBmobPicture(getCurrentPicture(), 0, 1, 0);
                     } catch (IOException e) {
                         Toast.makeText(getActivity(), "设置壁纸失败", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
@@ -303,7 +306,9 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     //订阅下载文件成功的事件
     @Subscribe
     public void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
-        Toast.makeText(this, "图片成功收藏到本地" + event.getSavePath(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "图片成功下载到本地" + event.getSavePath(), Toast.LENGTH_SHORT).show();
+        //更新bmob图片信息
+        updateBmobPicture(event.getPictureBean(), 0, 0, 1);
     }
 
     //订阅下载文件失败的事件
@@ -615,6 +620,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             public void onSuccess() {
                 //收藏成功
                 favouriteSuccess(myBmobFavourite);
+                //更新图片信息
+                updateBmobPicture(picture, 1, 0, 0);
             }
 
             @Override
@@ -683,6 +690,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                     public void onSuccess() {
                         //删除成功
                         cancelFavouriteSuccess(picture.getDownloadUrl());
+                        //更新图片信息
+                        updateBmobPicture(picture, -1, 0, 0);
                     }
 
                     @Override
@@ -717,7 +726,61 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         refreshFavouriteIcon(url);
     }
 
+    //获取当前的图片
     private Picture getCurrentPicture() {
         return beanList.get(viewPager.getCurrentItem());
+    }
+
+    /**
+     * 更新图片信息
+     *
+     * @param picture
+     * @param favouriteCountAdd 增加的收藏数量, 取消收藏则传-1
+     * @param wallCountAdd      增加的设为壁纸是数量
+     * @param downloadCountAdd  增加的下载数量
+     */
+    private void updateBmobPicture(Picture picture, int favouriteCountAdd, int wallCountAdd, int downloadCountAdd) {
+        //判断参数
+        if (picture == null) {
+            return;
+        }
+        //先查询有没有这个图片
+        BmobQuery<MyBmobPicture> query = BmobUtil.getMyPictureQuery();
+        query.addWhereEqualTo("url", picture.getDownloadUrl());
+        query.findObjects(this, new FindListener<MyBmobPicture>() {
+            @Override
+            public void onSuccess(List<MyBmobPicture> list) {
+                //没有图片则直接插入
+                if (EmptyUtil.isEmpty(list)) {
+                    MyBmobPicture myBmobPicture = ConvertUtil.toMyBmobPicture(picture);
+                    int favCount = myBmobPicture.getFavouriteCount() + favouriteCountAdd;
+                    int wallCount = myBmobPicture.getWallPaperCount() + wallCountAdd;
+                    int downCount = myBmobPicture.getDownloadCount() + downloadCountAdd;
+                    myBmobPicture.setFavouriteCount(Math.max(favCount, 0));
+                    myBmobPicture.setWallPaperCount(Math.max(wallCount, 0));
+                    myBmobPicture.setDownloadCount(Math.max(downCount, 0));
+                    myBmobPicture.save(ShowPictureDetailActivity.this);
+                }
+                //有图片
+                else {
+                    //更新
+                    MyBmobPicture myBmobPicture = list.get(0);
+                    int favCount = myBmobPicture.getFavouriteCount() + favouriteCountAdd;
+                    int wallCount = myBmobPicture.getWallPaperCount() + wallCountAdd;
+                    int downCount = myBmobPicture.getDownloadCount() + downloadCountAdd;
+                    myBmobPicture.setFavouriteCount(Math.max(favCount, 0));
+                    myBmobPicture.setWallPaperCount(Math.max(wallCount, 0));
+                    myBmobPicture.setDownloadCount(Math.max(downCount, 0));
+                    //保存
+                    myBmobPicture.update(ShowPictureDetailActivity.this);
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+
     }
 }
