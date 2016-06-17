@@ -1,7 +1,5 @@
 package com.coolwallpaper.bmob;
 
-import com.coolwallpaper.MyFavouritePaper;
-
 import cn.bmob.v3.BmobQuery;
 
 /**
@@ -45,6 +43,5 @@ public class BmobUtil {
     public static BmobQuery<MyBmobLogin> getMyLoginQuery() {
         return new BmobQuery<MyBmobLogin>(BmobConst.TB_LOGIN);
     }
-
 
 }

@@ -8,10 +8,11 @@ public class BmobConst {
 
     public static String TB_USER = "_User";//用户表
 
-    public static String TB_FAVORITE = "favourite";//用户收藏表
+    public static String TB_FAVORITE = "MyBmobFavourite";//用户收藏表
 
-    public static String TB_LOGIN = "login";//登录表
+    public static String TB_LOGIN = "MyBmobLogin";//登录表
 
-    public static String TB_PICTURE = "picture";//图片表
+    public static String TB_PICTURE = "MyBmobPicture";//图片表
+
 
 }

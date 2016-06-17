@@ -25,7 +25,6 @@ public class MyBmobPicture extends BmobObject {
     private Integer favouriteCount;//收藏的次数
 
     public MyBmobPicture() {
-        this.setTableName(BmobConst.TB_PICTURE);
     }
 
     public String getUrl() {

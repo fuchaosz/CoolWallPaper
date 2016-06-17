@@ -8,7 +8,7 @@ import android.util.Log;
  */
 public class LogUtil {
 
-    public static String customTagPrefix = "";
+    public static String customTagPrefix = "John";
 
     public static boolean debug = true;
     public static boolean allowD = true;

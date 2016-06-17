@@ -6,6 +6,7 @@ import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.constant.ConstDB;
 import com.coolwallpaper.model.DaoMaster;
 import com.coolwallpaper.model.DaoSession;
+import com.coolwallpaper.model.LocalFavouriteDao;
 import com.coolwallpaper.model.LocalPictureDao;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.PictureDao;
@@ -23,6 +24,7 @@ public class DBUtil {
     private ParamDao paramDao;//参数的操作类
     private LocalPictureDao localPictureDao;//本地图片实体类操作类
     private SQLiteDatabase db;//实际的数据库
+    private LocalFavouriteDao localFavouriteDao;//本地收藏表
 
     /**
      * 私有构造函数
@@ -81,5 +83,12 @@ public class DBUtil {
             localPictureDao = daoSession.getLocalPictureDao();
         }
         return localPictureDao;
+    }
+
+    public synchronized LocalFavouriteDao getLocalFavouriteDao() {
+        if (localFavouriteDao == null) {
+            localFavouriteDao = daoSession.getLocalFavouriteDao();
+        }
+        return localFavouriteDao;
     }
 }

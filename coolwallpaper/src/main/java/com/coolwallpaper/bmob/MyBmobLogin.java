@@ -38,7 +38,6 @@ public class MyBmobLogin extends BmobObject {
     private Integer type;
 
     public MyBmobLogin(){
-        this.setTableName(BmobConst.TB_LOGIN);
     }
 
     public MyBmobUser getUser() {

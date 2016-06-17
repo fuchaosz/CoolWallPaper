@@ -226,7 +226,7 @@ public class FavouriteFragment extends Fragment {
             //fetch data
             MyBmobFavourite favourite = favouriteList.get(position);
             //show picture's thumbnail
-            Glide.with(context).load(favourite.getPicture().getThumbUrl()).into(holder.ivItem);
+            Glide.with(context).load(favourite.getThumbUrl()).into(holder.ivItem);
             return view;
         }
 

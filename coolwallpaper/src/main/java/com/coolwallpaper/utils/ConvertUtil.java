@@ -1,8 +1,11 @@
 package com.coolwallpaper.utils;
 
+import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.SearchResult;
+import com.coolwallpaper.bmob.MyBmobFavourite;
 import com.coolwallpaper.bmob.MyBmobPicture;
+import com.coolwallpaper.model.LocalFavourite;
 import com.coolwallpaper.model.Picture;
 
 import java.util.ArrayList;
@@ -88,5 +91,37 @@ public class ConvertUtil {
         myBmobPicture.setWallPaperCount(0);
         myBmobPicture.setFavouriteCount(0);
         return myBmobPicture;
+    }
+
+    /**
+     * 将Bmob上的用户收藏，转换为本地数据库收藏对象
+     *
+     * @param myBmobFavourite bmob用户收藏对象
+     * @return 本地数据库用户收藏对象
+     */
+    public static LocalFavourite toLocalFavourite(MyBmobFavourite myBmobFavourite) {
+        LocalFavourite localFavourite = new LocalFavourite();
+        localFavourite.setAccount(myBmobFavourite.getAccount());
+        localFavourite.setUrl(myBmobFavourite.getUrl());
+        localFavourite.setName(myBmobFavourite.getName());
+        return localFavourite;
+    }
+
+    /**
+     * 将本地图片picture对象转换为bmob上收藏图片对象
+     *
+     * @param picture
+     * @return
+     */
+    public static MyBmobFavourite toMyBmobFavourite(IUserInfo user, Picture picture) {
+        MyBmobFavourite favourite = new MyBmobFavourite();
+        favourite.setAccount(user.getAccount());
+        favourite.setName(user.getName());
+        favourite.setUrl(picture.getDownloadUrl());
+        favourite.setThumbUrl(picture.getThumbUrl());
+        favourite.setWidth(picture.getWidth());
+        favourite.setHeight(picture.getHeight());
+        favourite.setDescribe(picture.getDesc());
+        return favourite;
     }
 }

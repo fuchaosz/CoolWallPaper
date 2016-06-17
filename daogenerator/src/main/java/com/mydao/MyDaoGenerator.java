@@ -14,14 +14,17 @@ public class MyDaoGenerator {
     public static final String TB_PICTURE = "tb_picture";//关于图片的网址的表
     public static final String TB_PARAM = "tb_param";//一级二级标题的表
     public static final String TB_LOCAL_PICTURE = "tb_local_picture";//本地壁纸的表
-    public static final int DB_VERSION = 2;//数据库版本，每次更新表结构之后，都应该更新版本
+    public static final String TB_USER_FAVOURITE = "tb_user_favourite";//用户收藏表
+    public static final int DB_VERSION = 3;//数据库版本，每次更新表结构之后，都应该更新版本
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(2, "com.coolwallpaper.model");
+        Schema schema = new Schema(DB_VERSION, "com.coolwallpaper.model");
         //创建数据库表
         addNote(schema);
         //创建本地壁纸表
         addLocalPictureNote(schema);
+        //创建用户收藏表
+        addUserFavouriteNote(schema);
         new DaoGenerator().generateAll(schema, "coolwallpaper/src/main/java");
     }
 
@@ -62,6 +65,17 @@ public class MyDaoGenerator {
         localPicture.addStringProperty("path").unique();//本地绝对路径,要唯一
         localPicture.addDateProperty("crateTime");//文件创建时间
         localPicture.addLongProperty("size");//文件大小，字节
+    }
+
+    //用户本地收藏表
+    private static void addUserFavouriteNote(Schema schema) {
+        Entity userFavourite = schema.addEntity("LocalFavourite");
+        userFavourite.setTableName(TB_USER_FAVOURITE);
+        userFavourite.implementsSerializable();//实现序列化接口
+        userFavourite.addIdProperty().primaryKey().autoincrement();//添加主键
+        userFavourite.addStringProperty("account");//用户账户,用户的唯一标识
+        userFavourite.addStringProperty("name");//用户名称
+        userFavourite.addStringProperty("url");//收藏的图片url
     }
 
 }

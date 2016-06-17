@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -152,14 +151,15 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
                 PictureResultGetServevice.startService(getActivity(), requestParam);
             }
         });
-        //添加item监听
-        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 跳转到图片详情
-                ShowPictureDetailActivity.startActivity(getActivity(), position, pictureList);
-            }
-        });
+//        //添加item监听
+//        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // 跳转到图片详情
+//                // ShowPictureDetailActivity.startActivity(getActivity(), position, pictureList);
+////                LogUtil.d("position = " + position);
+//            }
+//        });
     }
 
     @Override
@@ -215,6 +215,14 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
                         ivItem.setImageDrawable(resource);
                     }
                 });
+                //添加监听器
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //跳转到图片详情
+                        ShowPictureDetailActivity.startActivity(getActivity(), position, beanList);
+                    }
+                });
             }
             //其余
             else {
@@ -234,11 +242,35 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
                     Glide.with(getActivity()).load(pictureList.get(start + 1).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivRight);
                     Logger.d("url = " + pictureList.get(start).getThumbUrl());
                     Logger.d("url = " + pictureList.get(start + 1).getThumbUrl());
+                    //左边添加监听器
+                    holder.ivLeft.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //跳转到图片详情
+                            ShowPictureDetailActivity.startActivity(getActivity(), start, beanList);
+                        }
+                    });
+                    //右边添加监听器
+                    holder.ivRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //跳转到图片详情
+                            ShowPictureDetailActivity.startActivity(getActivity(), start + 1, beanList);
+                        }
+                    });
                 }
                 //越界了，只能显示一幅图
                 else {
                     Glide.with(getActivity()).load(pictureList.get(start).getThumbUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
                     Logger.d("url = " + pictureList.get(start).getThumbUrl());
+                    //左边添加监听器
+                    holder.ivLeft.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //跳转到图片详情
+                            ShowPictureDetailActivity.startActivity(getActivity(), start, beanList);
+                        }
+                    });
                 }
             }
             return view;

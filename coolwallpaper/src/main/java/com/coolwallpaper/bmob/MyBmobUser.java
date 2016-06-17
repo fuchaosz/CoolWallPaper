@@ -29,8 +29,6 @@ public class MyBmobUser extends BmobUser {
     private String imgUrl;
 
     public MyBmobUser() {
-        //表名和类名称不一致的时候要指定表名称
-        this.setTableName(BmobConst.TB_USER);
     }
 
     public Integer getSex() {

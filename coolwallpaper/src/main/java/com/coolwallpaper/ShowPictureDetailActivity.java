@@ -5,8 +5,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,20 +22,22 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.coolwallpaper.bean.IUserInfo;
-import com.coolwallpaper.bean.IUserOperator;
 import com.coolwallpaper.bmob.BmobUtil;
 import com.coolwallpaper.bmob.MyBmobFavourite;
-import com.coolwallpaper.bmob.MyBmobPicture;
 import com.coolwallpaper.bmob.MyBmobUser;
 import com.coolwallpaper.event.DownloadPictureFailureEvent;
 import com.coolwallpaper.event.DownloadPictureSuccessEvent;
 import com.coolwallpaper.event.UpdatePictureEvent;
 import com.coolwallpaper.fragment.PictureDetailFragment;
 import com.coolwallpaper.fragment.PictureListFragment;
+import com.coolwallpaper.model.LocalFavourite;
+import com.coolwallpaper.model.LocalFavouriteDao;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.utils.ConvertUtil;
+import com.coolwallpaper.utils.DBUtil;
+import com.coolwallpaper.utils.EmptyUtil;
 import com.coolwallpaper.utils.FileUtil;
-import com.coolwallpaper.utils.LogUtil;
+import com.coolwallpaper.utils.NetworkUtil;
 import com.coolwallpaper.utils.ToastUtil;
 import com.coolwallpaper.utils.UserUtil;
 import com.library.common.util.ScreenUtils;
@@ -55,11 +55,15 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * 显示图片详情
@@ -71,14 +75,11 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage.jpeg";//调用uCrop之前必须给图片一个名字
     private Picture pictureBean;
     private int position;
-    private Matrix matrix;
-    private float maxMoveLength;//最大可以移动的距离
-    private int currentProgress = 50;//当前进度
     private PictureListFragment fragment;//左边的图片的列表
     private List<Picture> beanList;//图片列表
-    private Drawable favoriteAddDrawable;//没有收藏的时候显示的drawable
-    private Drawable favoriteRemoveDrawable;//收藏了之后显示的drawable
     private MyAdapter adapter;
+    private Set<String> localFavouriteSet;//本地数据库里面的用户收藏数据
+    private IUserInfo mUser;
     private Handler handler = new Handler() {
 
         @Override
@@ -160,16 +161,23 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.fl_left_container, fragment);
         transaction.commit();
-        //创建收藏图片的Drawable
-        this.favoriteAddDrawable = getResources().getDrawable(R.drawable.btn_add_favorate_selector);
-        this.favoriteRemoveDrawable = getResources().getDrawable(R.drawable.btn_remove_favorate_selector);
-        //默认为未收藏的按钮
-        this.ivFavorite.setImageDrawable(favoriteAddDrawable);
         //创建adapter
         adapter = new MyAdapter(this, beanList);
         viewPager.setAdapter(adapter);
         //设置选中的页数
         viewPager.setCurrentItem(position);
+        //获取本地收藏
+        localFavouriteSet = MyApplication.getInstance().getLocalFavouriteSet();
+        //如果第一个图片被收藏了
+        if (localFavouriteSet != null && localFavouriteSet.contains(pictureBean.getDownloadUrl())) {
+            //第一个图片是被收藏的图片
+            ivFavorite.setImageResource(R.drawable.btn_remove_favorate_selector);
+        }
+        //没有被收藏
+        else {
+            //显示可以被收藏的icon
+            ivFavorite.setImageResource(R.drawable.btn_add_favorate_selector);
+        }
     }
 
     //添加监听器
@@ -207,11 +215,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         viewPager.addOnPageChangeListener(adapter);
     }
 
-    //查询下载量和收藏量
-    private void queryMyBmobPicture() {
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -230,7 +233,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 break;
             //收藏图片
             case R.id.ly_favorite_pic:
-                doFavorite();
+                onFavouriteClick();
                 break;
             //设置壁纸
             case R.id.ly_set_wallpaper:
@@ -306,28 +309,45 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     //订阅下载文件失败的事件
     @Subscribe
     public void downloadFailuerEvent(DownloadPictureFailureEvent event) {
-        Toast.makeText(this, "图片 " + event.getPictureBean().getDesc() + " 收藏失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "图片 " + event.getPictureBean().getDesc() + " 下载失败", Toast.LENGTH_SHORT).show();
         //设置按钮为未收藏的状态
-        this.ivFavorite.setImageDrawable(favoriteAddDrawable);
+        //this.ivFavorite.setImageDrawable(favoriteAddDrawable);
     }
 
-    //点击了收藏按钮
-    private void doFavorite() {
-        //如果是没有收藏的状态
-        if (ivFavorite.getDrawable() == favoriteAddDrawable) {
-            //设置按钮为已经收藏的状态
-            this.ivFavorite.setImageDrawable(favoriteRemoveDrawable);
-            //下载图片
-            FileUtil.getInstance().downloadPictureFile(pictureBean);
+    //点击收藏按钮
+    private void onFavouriteClick() {
+        //如果网络不可用则直接提示
+        if (!NetworkUtil.isNetworkAvailable()) {
+            ToastUtil.show("网络不可用，请检查网络");
+            return;
         }
-        //已经收藏的状态
+        //判断是否登录了
+        mUser = UserUtil.getInstance().getUser();
+        //没有登录
+        if (mUser == null) {
+            //跳转到登录中心
+            LoginActivity.startActivityForResult(this, REQUEST_CODE_LOGIN);
+        }
+        //已经登录了
         else {
-            //设置按钮为未收藏的状态
-            this.ivFavorite.setImageDrawable(favoriteAddDrawable);
-            //删除收藏的图片
-            FileUtil.getInstance().deleteDownloadPictureFile(FileUtil.getFileName(pictureBean.getDownloadUrl()));
-            Toast.makeText(this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+            Picture currentPicture = getCurrentPicture();
+            //如果还没有收藏
+            if (localFavouriteSet != null && !localFavouriteSet.contains(currentPicture.getDownloadUrl())) {
+                //去收藏
+                doMyFavourite(currentPicture);
+            }
+            //已经收藏了
+            else {
+                //取消收藏
+                doCancelFavouroite(currentPicture);
+            }
         }
+    }
+
+    //点击了下载按钮
+    private void doDownload() {
+        //下载图片
+        FileUtil.getInstance().downloadPictureFile(pictureBean);
     }
 
     //适配器
@@ -401,6 +421,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 Toast.makeText(getActivity(), "已经到最后一页了", Toast.LENGTH_SHORT).show();
             }
             isPageChange = true;
+            //翻页了之后，要刷新一下收藏按钮的图标
+            refreshFavouriteIcon(getCurrentPicture().getDownloadUrl());
         }
 
         @Override
@@ -423,10 +445,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             }
         }
 
-        //获取当前显示的图片
-        private Picture getCurrentPicture() {
-            return beanList.get(currentPage);
-        }
     }
 
     //显示seekBar
@@ -447,6 +465,10 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     public void showMaskMenu() {
         //如果浮层不可见
         if (lyPictureDetailMenu.getVisibility() != View.VISIBLE) {
+            //当前图片是否在本地收藏中
+            String url = getCurrentPicture().getDownloadUrl();
+            //刷新一下收藏按钮的图标
+            refreshFavouriteIcon(url);
             //弹出浮动层菜单
             lyPictureDetailMenu.setVisibility(View.VISIBLE);
             Toast.makeText(this, "点击了图片", Toast.LENGTH_SHORT).show();
@@ -577,8 +599,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         view.findViewById(R.id.tv_download).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //收藏图片
-                doMyFavourite(adapter.getCurrentPicture());
+                //下载图片
+                doDownload();
             }
         });
         //显示PopupWindow
@@ -587,109 +609,115 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     //收藏图片
     private void doMyFavourite(Picture picture) {
-        //首先判断有没有登录成功
-        IUserOperator operator = UserUtil.getInstance();
-        IUserInfo user = operator.getUser();
-        //本地没有保存的用户
-        if (user == null) {
-            //跳转到登录中心
-            LoginActivity.startActivityForResult(this, REQUEST_CODE_LOGIN);
-        }
-        //本地有用户登录
-        else {
-            //获取到BmobUser
-            BmobQuery<MyBmobUser> query = BmobUtil.getMyUserQuery();
-            query.addWhereEqualTo("account", user.getAccount());
-            query.findObjects(this, new FindListener<MyBmobUser>() {
-                @Override
-                public void onSuccess(List<MyBmobUser> list) {
-                    //表示没有这个用户
-                    if (list == null || list.size() == 0) {
-                        ToastUtil.showDebug("error:本地这个用户在Bmob上查不到");
-                        return;
-                    }
-                    //取出这个用户
-                    MyBmobUser bmobUser = list.get(0);
-                    //保存图片到bmob的图片表中，如果图片没有保存
-                    saveBmobPicture(bmobUser, picture);
-                }
-
-                @Override
-                public void onError(int i, String s) {
-
-                }
-            });
-        }
-    }
-
-    //保存当前要收藏的图片到Bmob上，如果不存在的话
-    private void saveBmobPicture(MyBmobUser bmobUser, Picture picture) {
-        //查找Bmob上是否存在这个图片
-        BmobQuery<MyBmobPicture> query = BmobUtil.getMyPictureQuery();
-        //query.addWhereEqualTo("url", picture.getDownloadUrl());
-        query.addWhereEqualTo("width", 100);
-        query.findObjects(this, new FindListener<MyBmobPicture>() {
-            @Override
-            public void onSuccess(List<MyBmobPicture> list) {
-                //没有这个图片，则要先把这个图片保存到bmob上
-                if (list == null || list.size() == 0) {
-                    //转换为bmob对象
-                    MyBmobPicture myBmobPicture = ConvertUtil.toMyBmobPicture(picture);
-                    //保存到bmob上
-                    myBmobPicture.save(ShowPictureDetailActivity.this, new SaveListener() {
-                        @Override
-                        public void onSuccess() {
-                            ToastUtil.showDebug("保存图片到bmob成功,desc=" + picture.getDesc());
-                            //保存收藏信息
-                            saveMyFavoutiteInfo(bmobUser, myBmobPicture);
-                        }
-
-                        @Override
-                        public void onFailure(int i, String s) {
-                            LogUtil.d("保存图片失败,s = " + s);
-                        }
-                    });
-
-                }
-                //这个图片已经存在了
-                else {
-                    //保存收藏信息
-                    saveMyFavoutiteInfo(bmobUser, list.get(0));
-                }
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                LogUtil.d("查找图片失败,s = " + s);
-            }
-        });
-    }
-
-    //保存收藏信息，到这一步，用户和图片都已经保存到bmob上
-    private void saveMyFavoutiteInfo(MyBmobUser user, MyBmobPicture picture) {
-        //开始保存收藏信息
-        MyBmobFavourite favourite = new MyBmobFavourite();
-        favourite.setPicture(picture);
-        favourite.setUser(user);
-        favourite.save(ShowPictureDetailActivity.this, new SaveListener() {
+        MyBmobFavourite myBmobFavourite = ConvertUtil.toMyBmobFavourite(mUser, picture);
+        myBmobFavourite.save(this, new SaveListener() {
             @Override
             public void onSuccess() {
-                ToastUtil.show("收藏成功");
                 //收藏成功
-                favouriteSuccess();
+                favouriteSuccess(myBmobFavourite);
             }
 
             @Override
             public void onFailure(int i, String s) {
-
+                ToastUtil.show("收藏失败");
             }
         });
     }
 
     //收藏成功后，做一些界面有关的工作
-    private void favouriteSuccess() {
+    private void favouriteSuccess(MyBmobFavourite favourite) {
         //收藏图标改一下
-        ivFavorite.setImageDrawable(favoriteRemoveDrawable);
+        ivFavorite.setImageResource(R.drawable.btn_remove_favorate_selector);
+        //查询本地数据库是否存在
+        LocalFavouriteDao dao = DBUtil.getInstance().getLocalFavouriteDao();
+        QueryBuilder<LocalFavourite> qb = dao.queryBuilder();
+        qb.where(LocalFavouriteDao.Properties.Account.eq(mUser.getAccount()), LocalFavouriteDao.Properties.Url.eq(favourite.getUrl()));
+        List tmpList = qb.list();
+        //没有数据
+        if (EmptyUtil.isEmpty(tmpList)) {
+            //保存到本地数据库
+            LocalFavourite localFavourite = ConvertUtil.toLocalFavourite(favourite);
+            dao.insert(localFavourite);
+            //刷新数据
+            MyApplication.getInstance().addFavouroiteUrl(localFavourite.getUrl());
+            this.localFavouriteSet = MyApplication.getInstance().getLocalFavouriteSet();
+        }
     }
 
+    //每次滑动图片后刷新一下收藏按钮的图标
+    private void refreshFavouriteIcon(String url) {
+        //用户已经收藏
+        if (localFavouriteSet != null && localFavouriteSet.contains(url)) {
+            ivFavorite.setImageResource(R.drawable.btn_remove_favorate_selector);
+        }
+        //用户没有收藏
+        else {
+            ivFavorite.setImageResource(R.drawable.btn_add_favorate_selector);
+        }
+    }
+
+    //取消收藏
+    private void doCancelFavouroite(Picture picture) {
+        //获取MyBmobUser对象
+        MyBmobUser myBmobUser = BmobUser.getCurrentUser(this, MyBmobUser.class);
+        //查询收藏记录
+        BmobQuery<MyBmobFavourite> query = BmobUtil.getMyFavouriteQuery();
+        query.addWhereEqualTo("account", mUser.getAccount());
+        query.addWhereEqualTo("url", picture.getDownloadUrl());
+        query.findObjects(this, new FindListener<MyBmobFavourite>() {
+            @Override
+            public void onSuccess(List<MyBmobFavourite> list) {
+                //服务器上没有查询到这条数据
+                if (EmptyUtil.isEmpty(list)) {
+                    ToastUtil.showDebug("服务器上不存在这个收藏记录，取消收藏成功");
+                    cancelFavouriteSuccess(picture.getDownloadUrl());
+                    return;
+                }
+                //获取objecId
+                String objectId = list.get(0).getObjectId();
+                //正式删除
+                MyBmobFavourite favourite = new MyBmobFavourite();
+                favourite.setObjectId(objectId);
+                favourite.delete(MyApplication.getInstance(), new DeleteListener() {
+                    @Override
+                    public void onSuccess() {
+                        //删除成功
+                        cancelFavouriteSuccess(picture.getDownloadUrl());
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+        });
+    }
+
+    //取消收藏成功后，处理一下逻辑
+    private void cancelFavouriteSuccess(String url) {
+        //删除本地数据库中的记录
+        LocalFavouriteDao dao = DBUtil.getInstance().getLocalFavouriteDao();
+        QueryBuilder<LocalFavourite> qb = dao.queryBuilder();
+        IUserInfo user = UserUtil.getInstance().getUser();
+        qb.where(LocalFavouriteDao.Properties.Account.eq(user.getAccount()), LocalFavouriteDao.Properties.Url.eq(url));
+        List<LocalFavourite> list = qb.list();
+        if (!EmptyUtil.isEmpty(list)) {
+            dao.deleteInTx(list);
+        }
+        //刷新数据
+        MyApplication.getInstance().removeFavouriteUrl(url);
+        this.localFavouriteSet = MyApplication.getInstance().getLocalFavouriteSet();
+        //刷新收藏图标
+        refreshFavouriteIcon(url);
+    }
+
+    private Picture getCurrentPicture() {
+        return beanList.get(viewPager.getCurrentItem());
+    }
 }
