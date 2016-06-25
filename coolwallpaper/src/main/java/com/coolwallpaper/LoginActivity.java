@@ -57,7 +57,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.popup_window_login);
     }
 
-    @OnClick({R.id.ly_qq, R.id.ly_sina})
+    @OnClick({R.id.ly_qq, R.id.ly_sina,R.id.iv_close})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -68,6 +68,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             //新浪微博登录
             case R.id.ly_sina:
                 sinaLogin();
+                break;
+            //关闭按钮
+            case R.id.iv_close:
+                finish();
                 break;
         }
     }

@@ -76,21 +76,21 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onTagClick(String tag) {
                 //跳转到搜索结果页面
-                showSearchResult(tag);
+                showSearchResult(tag + "壁纸");
             }
         });
         this.tagGroup2.setOnTagClickListener(new TagGroup.OnTagClickListener() {
             @Override
             public void onTagClick(String tag) {
                 //跳转到搜索结果页面
-                showSearchResult(tag);
+                showSearchResult(tag + "壁纸");
             }
         });
         this.tagGroup3.setOnTagClickListener(new TagGroup.OnTagClickListener() {
             @Override
             public void onTagClick(String tag) {
                 //跳转到搜索结果页面
-                showSearchResult(tag);
+                showSearchResult(tag + "电影");
             }
         });
     }
@@ -101,7 +101,7 @@ public class SearchActivity extends BaseActivity {
             //搜索按钮
             case R.id.btn_search:
                 //跳转到搜索结果页面
-                showSearchResult(edSearch.getText().toString());
+                showSearchResult(edSearch.getText().toString() + "壁纸");
                 break;
             //左边的箭头
             case R.id.ly_left:

@@ -3,14 +3,18 @@ package com.coolwallpaper;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,6 +50,9 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
 
     @Bind(R.id.ly_left)
     View lyLeft;
+
+    @Bind(R.id.ly_del)
+    View lyDel;
 
     @Bind(R.id.iv_del)
     View ivDel;
@@ -83,6 +90,7 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_paper);
         this.init();
+        this.addListener();
     }
 
     private void init() {
@@ -94,6 +102,8 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
             lyEmpty.setVisibility(View.VISIBLE);
             //隐藏列表
             gvPaper.setVisibility(View.GONE);
+            //隐藏左边的删除图片
+            ivDel.setVisibility(View.GONE);
         }
         //有图片
         else {
@@ -103,6 +113,8 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
             gvPaper.setVisibility(View.VISIBLE);
             localPaperAdapter = new LocalPaperAdapter(this, pathList);
             gvPaper.setAdapter(localPaperAdapter);
+            //显示左边的删除图片
+            ivDel.setVisibility(View.VISIBLE);
         }
         int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -112,7 +124,20 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         lyDelConfirm.setLayoutParams(params);
     }
 
-    @OnClick({R.id.ly_left, R.id.iv_del, R.id.tv_del, R.id.ly_del_confirm, R.id.ly_empty})
+    private void addListener() {
+        //添加GridView点击监听
+        this.gvPaper.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //取出点击的图片
+                String path = pathList.get(position);
+                //查看整个图片
+                showPopupWoindow(path);
+            }
+        });
+    }
+
+    @OnClick({R.id.ly_left, R.id.iv_del, R.id.ly_del, R.id.ly_del_confirm, R.id.ly_empty})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -129,10 +154,10 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
                 //隐藏图标
                 ivDel.setVisibility(View.GONE);
                 //显示全不选
-                tvDel.setVisibility(View.VISIBLE);
+                lyDel.setVisibility(View.VISIBLE);
                 break;
             //点击了全选按钮
-            case R.id.tv_del:
+            case R.id.ly_del:
                 onRightMenuClick();
                 break;
             //确认删除
@@ -458,5 +483,26 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
             //如果数据库存在则删除
             localPictureDao.deleteInTx(qb.list());
         }
+    }
+
+    //用PopupWindow来查看整个图片
+    private void showPopupWoindow(String path) {
+        View view = getLayoutInflater().inflate(R.layout.activity_local_paper_show, null);
+        Glide.with(this).load(path).into((ImageView) view.findViewById(R.id.iv));
+        PopupWindow popupWindow = new PopupWindow();
+        popupWindow.setContentView(view);
+        popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.coolwallpaper_home_bg));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //关闭弹窗
+                popupWindow.dismiss();
+                return false;
+            }
+        });
     }
 }

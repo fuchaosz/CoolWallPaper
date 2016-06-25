@@ -26,8 +26,6 @@ import com.coolwallpaper.bmob.BmobUtil;
 import com.coolwallpaper.bmob.MyBmobFavourite;
 import com.coolwallpaper.bmob.MyBmobPicture;
 import com.coolwallpaper.bmob.MyBmobUser;
-import com.coolwallpaper.event.DownloadPictureFailureEvent;
-import com.coolwallpaper.event.DownloadPictureSuccessEvent;
 import com.coolwallpaper.event.UpdatePictureEvent;
 import com.coolwallpaper.fragment.PictureDetailFragment;
 import com.coolwallpaper.fragment.PictureListFragment;
@@ -45,6 +43,10 @@ import com.library.common.util.ScreenUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.orhanobut.logger.Logger;
 import com.squareup.otto.Subscribe;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -87,7 +89,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                //下载成功的消息
+                //设置壁纸时下载成功的消息
                 case 0:
                     String filePath = (String) msg.obj;
                     //设置壁纸
@@ -102,10 +104,22 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                         e.printStackTrace();
                     }
                     break;
-                //下载失败的消息
+                //设置壁纸时下载失败的消息
                 case 1:
                     String reason = (String) msg.obj;
                     Toast.makeText(getActivity(), "设置壁纸失败:" + reason, Toast.LENGTH_SHORT).show();
+                    break;
+                //下载壁纸成功
+                case 2:
+                    String tmpFilePath = (String) msg.obj;
+                    ToastUtil.show("文件下载成功,保存在：" + tmpFilePath);
+                    //更新bmob的图片表
+                    updateBmobPicture(getCurrentPicture(), 0, 0, 1);
+                    break;
+                //下载壁纸失败
+                case 3:
+                    String reason2 = (String) msg.obj;
+                    ToastUtil.show("下载壁纸失败:" + reason2);
                     break;
             }
         }
@@ -193,6 +207,7 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.ly_set_wallpaper).setOnClickListener(this);
         findViewById(R.id.ly_cut_pic).setOnClickListener(this);
         findViewById(R.id.ly_more_choose).setOnClickListener(this);
+        findViewById(R.id.iv_share).setOnClickListener(this);
         //进度条
         this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -251,6 +266,10 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
                 //显示更多
                 showMoreMenu();
                 break;
+            //分享
+            case R.id.iv_share:
+                share2();
+                break;
         }
     }
 
@@ -303,22 +322,6 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         viewPager.setCurrentItem(position);
     }
 
-    //订阅下载文件成功的事件
-    @Subscribe
-    public void downloadSuccessEvent(DownloadPictureSuccessEvent event) {
-        Toast.makeText(this, "图片成功下载到本地" + event.getSavePath(), Toast.LENGTH_SHORT).show();
-        //更新bmob图片信息
-        updateBmobPicture(event.getPictureBean(), 0, 0, 1);
-    }
-
-    //订阅下载文件失败的事件
-    @Subscribe
-    public void downloadFailuerEvent(DownloadPictureFailureEvent event) {
-        Toast.makeText(this, "图片 " + event.getPictureBean().getDesc() + " 下载失败", Toast.LENGTH_SHORT).show();
-        //设置按钮为未收藏的状态
-        //this.ivFavorite.setImageDrawable(favoriteAddDrawable);
-    }
-
     //点击收藏按钮
     private void onFavouriteClick() {
         //如果网络不可用则直接提示
@@ -351,8 +354,29 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     //点击了下载按钮
     private void doDownload() {
+        //获取当前的Fragment
+        PictureDetailFragment fragment = adapter.getFragmentList().get(viewPager.getCurrentItem());
+        //获取当前显示的图片
+        String url = fragment.getPictureUrl();
         //下载图片
-        FileUtil.getInstance().downloadPictureFile(pictureBean);
+        FileUtil.getInstance().downloadFile(url, FileUtil.DIRECTORY_DOWNLOAD, new FileUtil.DownloadCallback() {
+            @Override
+            public void onSuccess(String filePath) {
+                //发送下载成功消息
+                Message msg = Message.obtain();
+                msg.what = 2;
+                msg.obj = filePath;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onError(String reason) {
+                Message msg = Message.obtain();
+                msg.what = 3;
+                msg.obj = reason;
+                handler.sendMessage(msg);
+            }
+        });
     }
 
     //适配器
@@ -731,6 +755,11 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         return beanList.get(viewPager.getCurrentItem());
     }
 
+    //获取当前显示的URL
+    private String getCurrentUrl() {
+        return adapter.getFragment(viewPager.getCurrentItem()).getPictureUrl();
+    }
+
     /**
      * 更新图片信息
      *
@@ -781,6 +810,40 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
             }
         });
+    }
 
+    //分享
+    private void share() {
+        //获取当前显示的图片
+        String url = getCurrentUrl();
+        //由文件得到uri
+        Uri imageUri = Uri.parse(url);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        shareIntent.setType("image/*");
+        startActivity(Intent.createChooser(shareIntent, "分享到"));
+    }
+
+    //友盟分享
+    private void share2() {
+        UMImage image = new UMImage(getActivity(), getCurrentUrl());
+        final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.DOUBAN};
+        new ShareAction(this).setDisplayList(displaylist).withText("呵呵").withTitle("title").withTargetUrl("http://www.baidu.com").withMedia(image).setListenerList(new UMShareListener() {
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+
+            }
+        }).open();
     }
 }

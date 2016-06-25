@@ -172,6 +172,11 @@ public class UmengUtil {
         });
     }
 
+    //
+    public void share(String title,String content,String url){
+
+    }
+
     //登录接口回调
     public static interface Callback {
 

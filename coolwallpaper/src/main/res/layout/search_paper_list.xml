@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@drawable/coolwallpaper_search_bg"
-             android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/coolwallpaper_search_bg"
+                android:orientation="vertical"
     >
 
     <!--标题栏-->
     <LinearLayout
+        android:id="@+id/ly_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
         android:background="@color/halfTransparent"
@@ -35,8 +36,10 @@
         android:id="@+id/lv_paper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/ly_title"
         android:divider="@null"
         >
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
-</FrameLayout>
+
+</RelativeLayout>

@@ -33,8 +33,8 @@ public class SearchRequestParam extends SogouBaseRequestParam {
         StringBuilder builder = new StringBuilder();
         try {
             builder.append(baseUrl);
-            //单纯的搜关键字出来的图片不好看，所以后面手动加上“壁纸”两个字
-            builder.append("?query=" + URLEncoder.encode(query.trim() + " 壁纸", "GBK"));
+            //单纯的搜关键字出来的图片不好看
+            builder.append("?query=" + URLEncoder.encode(query.trim(), "GBK"));
             builder.append("&mood=" + mood);
             builder.append("&picformat=" + picformat);
             builder.append("&mode=" + mode);

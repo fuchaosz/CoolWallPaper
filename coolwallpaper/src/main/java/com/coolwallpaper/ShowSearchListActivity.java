@@ -8,7 +8,6 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -123,14 +122,6 @@ public class ShowSearchListActivity extends BaseActivity {
                 querySearchResult(param);
             }
         });
-        //给列表添加点击监听器
-        pullListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //跳转到图片详情
-                ShowPictureDetailActivity.startActivity(getActivity(), position, pictureList);
-            }
-        });
     }
 
     @OnClick({R.id.ly_left})
@@ -209,8 +200,23 @@ public class ShowSearchListActivity extends BaseActivity {
             }
             Picture picture1 = pictureList.get(position * 2);
             Picture picture2 = pictureList.get(position * 2 + 1);
-            Glide.with(context).load(picture1.getDownloadUrl()).into(holder.ivLeft);
-            Glide.with(context).load(picture2.getDownloadUrl()).into(holder.ivRight);
+            Glide.with(context).load(picture1.getDownloadUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivLeft);
+            Glide.with(context).load(picture2.getDownloadUrl()).placeholder(R.drawable.coolwallpaper_empty).into(holder.ivRight);
+            //添加监听器
+            holder.ivLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //跳转到图片详情
+                    ShowPictureDetailActivity.startActivity(getActivity(), position * 2, pictureList);
+                }
+            });
+            holder.ivRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //跳转到图片详情
+                    ShowPictureDetailActivity.startActivity(getActivity(), position * 2 + 1, pictureList);
+                }
+            });
             return view;
         }
 

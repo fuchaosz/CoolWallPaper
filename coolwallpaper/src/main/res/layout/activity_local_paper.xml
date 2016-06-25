@@ -28,13 +28,21 @@
         android:background="@drawable/coolwallpaper_bar_bg_2"
         >
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/ly_left"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
-            android:src="@drawable/btn_left_arrow"
-            />
+            >
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_left_arrow"
+                />
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,17 +71,25 @@
                 />
 
             <!--进入多选模式后显示-->
-            <TextView
-                android:id="@+id/tv_del"
+            <LinearLayout
+                android:id="@+id/ly_del"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:padding="15dp"
-                android:text="全选"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_big_x1"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:visibility="gone"
-                />
+                >
+
+                <TextView
+                    android:id="@+id/tv_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="全选"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_big_x1"
+                    />
+            </LinearLayout>
 
         </FrameLayout>
 
