@@ -38,15 +38,12 @@ import com.coolwallpaper.utils.EmptyUtil;
 import com.coolwallpaper.utils.FileUtil;
 import com.coolwallpaper.utils.NetworkUtil;
 import com.coolwallpaper.utils.ToastUtil;
+import com.coolwallpaper.utils.UmengUtil;
 import com.coolwallpaper.utils.UserUtil;
 import com.library.common.util.ScreenUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.orhanobut.logger.Logger;
 import com.squareup.otto.Subscribe;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -550,6 +547,8 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //确保友盟能够正确调用
+        UmengUtil.getInstence().setActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //剪切成功
             if (requestCode == UCrop.REQUEST_CROP) {
@@ -827,23 +826,17 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
 
     //友盟分享
     private void share2() {
-        UMImage image = new UMImage(getActivity(), getCurrentUrl());
-        final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.DOUBAN};
-        new ShareAction(this).setDisplayList(displaylist).withText("呵呵").withTitle("title").withTargetUrl("http://www.baidu.com").withMedia(image).setListenerList(new UMShareListener() {
+        Picture pic = getCurrentPicture();
+        UmengUtil.getInstence().share(this, "分享", "酷壁纸:" + pic.getDesc(), pic.getDownloadUrl(), new UmengUtil.Callback() {
             @Override
-            public void onResult(SHARE_MEDIA share_media) {
-
+            public void onSuccess() {
+                ToastUtil.show("分享成功");
             }
 
             @Override
-            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-
+            public void onFailure(String reason) {
+                ToastUtil.show("分享失败");
             }
-
-            @Override
-            public void onCancel(SHARE_MEDIA share_media) {
-
-            }
-        }).open();
+        });
     }
 }

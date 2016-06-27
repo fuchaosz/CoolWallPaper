@@ -33,7 +33,11 @@ public class ConvertUtil {
         picture.setFromUrl(result.getFromUrl());
         picture.setWidth(result.getWidth());
         picture.setHeight(result.getHeight());
-        picture.setDesc(result.getDesc());
+        //处理一下图片描述,去掉strong标签
+        String desc = result.getDesc();
+        desc = desc.replace("<strong>", "");
+        desc = desc.replace("</strong>", "");
+        picture.setDesc(desc);
         return picture;
     }
 

@@ -151,15 +151,6 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
                 PictureResultGetServevice.startService(getActivity(), requestParam);
             }
         });
-//        //添加item监听
-//        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // 跳转到图片详情
-//                // ShowPictureDetailActivity.startActivity(getActivity(), position, pictureList);
-////                LogUtil.d("position = " + position);
-//            }
-//        });
     }
 
     @Override

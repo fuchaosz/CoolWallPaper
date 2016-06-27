@@ -7,9 +7,12 @@ import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.bean.QQUserInfo;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 
 import java.util.Map;
 
@@ -172,9 +175,32 @@ public class UmengUtil {
         });
     }
 
-    //
-    public void share(String title,String content,String url){
+    //分享
+    public void share(Activity activity, String title, String content, String url, Callback callback) {
+        UMImage image = new UMImage(activity, url);
+        final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.DOUBAN};
+        new ShareAction(activity).setDisplayList(displaylist).withText(content).withTitle(title).withTargetUrl(url).withMedia(image).setListenerList(new UMShareListener() {
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+                if (callback != null) {
+                    callback.onSuccess();
+                }
+            }
 
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                if (callback != null) {
+                    callback.onFailure(throwable.toString());
+                }
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+                if (callback != null) {
+                    callback.onFailure("share canceled");
+                }
+            }
+        }).open();
     }
 
     //登录接口回调

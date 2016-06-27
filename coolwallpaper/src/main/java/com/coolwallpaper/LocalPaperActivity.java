@@ -499,10 +499,10 @@ public class LocalPaperActivity extends BaseActivity implements View.OnClickList
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //关闭弹窗
                 popupWindow.dismiss();
                 return false;
             }
         });
+
     }
 }
