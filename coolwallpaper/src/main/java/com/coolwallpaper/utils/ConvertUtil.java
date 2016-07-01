@@ -5,6 +5,7 @@ import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.SearchResult;
 import com.coolwallpaper.bmob.MyBmobFavourite;
 import com.coolwallpaper.bmob.MyBmobPicture;
+import com.coolwallpaper.bmob.MyBmobUpload;
 import com.coolwallpaper.model.LocalFavourite;
 import com.coolwallpaper.model.Picture;
 
@@ -127,5 +128,22 @@ public class ConvertUtil {
         favourite.setHeight(picture.getHeight());
         favourite.setDescribe(picture.getDesc());
         return favourite;
+    }
+
+    /**
+     * 将Bmob上上传的图片转为本地图片
+     *
+     * @param myBmobUpload 用户上传到bmob上的图片表对象
+     * @return
+     */
+    public static Picture toPicture(MyBmobUpload myBmobUpload) {
+        Picture picture = new Picture();
+        picture.setThumbUrl(myBmobUpload.getFileUrl());
+        picture.setDownloadUrl(myBmobUpload.getFileUrl());
+        picture.setFromUrl("");
+        picture.setWidth(myBmobUpload.getWidth());
+        picture.setHeight(myBmobUpload.getHeight());
+        picture.setDesc(myBmobUpload.getDesc());
+        return picture;
     }
 }

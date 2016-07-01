@@ -607,8 +607,12 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
             }
         }
         //剪切图片失败
-        if (resultCode == UCrop.RESULT_ERROR) {
+        else if (resultCode == UCrop.RESULT_ERROR) {
             Toast.makeText(getActivity(), "图片裁切失败", Toast.LENGTH_SHORT).show();
+        }
+        //登录失败
+        else if (resultCode == LoginActivity.RESULT_CODE_FAILURE) {
+            ToastUtil.show("登录失败，请重试");
         }
     }
 

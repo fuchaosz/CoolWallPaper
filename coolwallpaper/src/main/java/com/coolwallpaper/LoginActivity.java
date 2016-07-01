@@ -33,7 +33,7 @@ import cn.bmob.v3.listener.SaveListener;
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final int RESULT_CODE = 0x100;
+    public static final int RESULT_CODE_FAILURE = 0x1002;//登录失败的返回码
     private String TAG = "[LoginActivity]";
     private IUserInfo mUser;//登录成功后的用户
 
@@ -55,9 +55,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.popup_window_login);
+        //默认是登录失败
+        setResult(RESULT_CODE_FAILURE);
     }
 
-    @OnClick({R.id.ly_qq, R.id.ly_sina,R.id.iv_close})
+    @OnClick({R.id.ly_qq, R.id.ly_sina, R.id.iv_close})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -216,7 +218,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void exit() {
         Intent intent = new Intent();
         intent.putExtra("USER", mUser);
-        setResult(RESULT_CODE, intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

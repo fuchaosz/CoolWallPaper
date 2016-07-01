@@ -25,4 +25,8 @@ public abstract class BaseService extends Service {
         AppBus.getInstance().unregister(this);
         super.onDestroy();
     }
+
+    public BaseService getService() {
+        return this;
+    }
 }

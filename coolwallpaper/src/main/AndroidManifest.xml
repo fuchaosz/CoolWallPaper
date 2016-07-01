@@ -129,11 +129,17 @@
             android:name=".LoginActivity"
             android:theme="@style/activity_bottom_top_anim"/>
 
+        <!--获取用户在Bmob上的收藏的服务-->
         <service android:name=".service.UserFavouriteGetService">
             <intent-filter>
                 <action android:name="action_user_favourite_get_service"/>
             </intent-filter>
         </service>
+
+        <!--上传图片的界面-->
+        <activity android:name=".UploadActivity"/>
+        <!--图片上传服务-->
+        <service android:name=".service.BmobUploadService"/>
 
     </application>
 

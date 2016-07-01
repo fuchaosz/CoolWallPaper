@@ -14,5 +14,5 @@ public class BmobConst {
 
     public static String TB_PICTURE = "MyBmobPicture";//图片表
 
-
+    public static String TB_UPLOAD = "MyBmobUpload";//上传表
 }

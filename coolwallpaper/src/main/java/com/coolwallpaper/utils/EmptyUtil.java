@@ -21,4 +21,11 @@ public class EmptyUtil {
         }
         return false;
     }
+
+    public static boolean isEmpty(Object[] objs) {
+        if (objs == null || objs.length == 0) {
+            return true;
+        }
+        return false;
+    }
 }

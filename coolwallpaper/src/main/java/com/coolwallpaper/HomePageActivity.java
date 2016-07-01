@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.fragment.PaperListFragment;
+import com.coolwallpaper.utils.ToastUtil;
 import com.coolwallpaper.utils.UserUtil;
 import com.orhanobut.logger.Logger;
 import com.special.ResideMenu.ResideMenu;
@@ -36,6 +37,7 @@ import butterknife.Bind;
  */
 public class HomePageActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int REQUEST_CODE_UPLOAD = 0x1002;
     private PaperViewPagerAdapter adapter;
     private String title1;//一级标题
     private String[] subTitles;//二级标题
@@ -374,6 +376,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                     break;
                 //我要供图
                 case R.id.ly_provide_paper:
+                    onMyUploadClick();
                     break;
                 //检查升级
                 case R.id.ly_check_update:
@@ -453,4 +456,32 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         lyActionBar.startAnimation(animation);
     }
 
+    //点击了我要供图
+    private void onMyUploadClick() {
+        //如果用户没有登录，则首先跳转到登录界面
+        if (mUser == null) {
+            LoginActivity.startActivityForResult(this, REQUEST_CODE_UPLOAD);
+        }
+        //用户登录了，则直接跳转到上传界面
+        else {
+            UploadActivity.startActivity(this);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            //登录后返回
+            if (requestCode == REQUEST_CODE_UPLOAD) {
+                ToastUtil.show("登录成功");
+                //继续跳转到上传界面
+                UploadActivity.startActivity(this);
+            }
+        }
+        //登录失败
+        if (resultCode == LoginActivity.RESULT_CODE_FAILURE) {
+            ToastUtil.show("登录失败，请重试");
+        }
+    }
 }

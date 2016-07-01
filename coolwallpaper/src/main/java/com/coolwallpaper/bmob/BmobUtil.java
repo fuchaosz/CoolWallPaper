@@ -44,4 +44,13 @@ public class BmobUtil {
         return new BmobQuery<MyBmobLogin>(BmobConst.TB_LOGIN);
     }
 
+    /**
+     * 获取Bmob上传表查询对象
+     *
+     * @return BmobQuery对象
+     */
+    public static BmobQuery<MyBmobUpload> getMyUploadQuery() {
+        return new BmobQuery<MyBmobUpload>(BmobConst.TB_UPLOAD);
+    }
+
 }
