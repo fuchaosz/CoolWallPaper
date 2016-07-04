@@ -137,4 +137,5 @@ public class MyApplication extends Application {
         return localFavouriteSet;
     }
 
+    //检查升级
 }
