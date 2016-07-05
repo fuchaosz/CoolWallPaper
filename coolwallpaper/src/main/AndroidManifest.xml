@@ -140,6 +140,8 @@
         <activity android:name=".UploadActivity"/>
         <!--图片上传服务-->
         <service android:name=".service.BmobUploadService"/>
+        <!--升级服务-->
+        <service android:name=".service.UpdateService"/>
 
     </application>
 

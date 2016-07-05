@@ -1,5 +1,6 @@
 package com.coolwallpaper;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,11 +8,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.bmob.BmobUtil;
+import com.coolwallpaper.bmob.MyBmobUpdate;
 import com.coolwallpaper.constant.Constant;
 import com.coolwallpaper.model.LocalFavourite;
 import com.coolwallpaper.model.LocalFavouriteDao;
 import com.coolwallpaper.service.UserFavouriteGetService;
+import com.coolwallpaper.utils.CommonUtil;
 import com.coolwallpaper.utils.DBUtil;
+import com.coolwallpaper.utils.EmptyUtil;
 import com.coolwallpaper.utils.LogUtil;
 import com.coolwallpaper.utils.UserUtil;
 import com.orhanobut.logger.Logger;
@@ -22,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 import de.greenrobot.dao.query.QueryBuilder;
 
 
@@ -114,6 +121,7 @@ public class MyApplication extends Application {
                     getLocalFavoureiteList();
                 }
             }
+            //来自版本升级的广播
         }
     }
 
@@ -138,4 +146,39 @@ public class MyApplication extends Application {
     }
 
     //检查升级
+    public void checkUpdate(Activity activity) {
+        BmobQuery<MyBmobUpdate> query = BmobUtil.getMyUpdateQuery();
+        query.findObjects(this, new FindListener<MyBmobUpdate>() {
+            @Override
+            public void onSuccess(List<MyBmobUpdate> list) {
+                //如果没有数据
+                if (EmptyUtil.isEmpty(list)) {
+                    LogUtil.e("Bmob上没有数据");
+                    return;
+                }
+                //取出最后一条数据，也就是最新的版本
+                MyBmobUpdate update = list.get(list.size() - 1);
+                //获取当前的版本号
+                int versionCode = CommonUtil.getVersionCode();
+                //获取版本失败了
+                if (versionCode == 0) {
+                    LogUtil.e("获取版本号失败");
+                    return;
+                }
+                //如果当前版本是最新版本
+                if (versionCode == update.getVersionCode()) {
+                    LogUtil.i("当前版本是最新版本，不需要更新");
+                    return;
+                }
+                //发现新版本，弹出对话框
+                UpdateDialog dialog = new UpdateDialog(activity, update);
+                dialog.show();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                LogUtil.e("获取Bmob上版本信息失败,reason = " + s);
+            }
+        });
+    }
 }

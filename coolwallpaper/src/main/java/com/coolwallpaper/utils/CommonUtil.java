@@ -1,7 +1,11 @@
 package com.coolwallpaper.utils;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.coolwallpaper.MyApplication;
 
 /**
  * 通用工具
@@ -24,6 +28,40 @@ public class CommonUtil {
         out[0] = options.outWidth;
         out[1] = options.outHeight;
         return out;
+    }
+
+    /**
+     * 获取当前版本号
+     *
+     * @return 当前版本号
+     */
+    public static int getVersionCode() {
+        int result = 0;
+        try {
+            PackageManager pm = MyApplication.getInstance().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(MyApplication.getInstance().getPackageName(), 0);
+            result = pi.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 获取当前版本名称
+     *
+     * @return 当前版本名称
+     */
+    public static String getVersionName() {
+        String result = null;
+        try {
+            PackageManager pm = MyApplication.getInstance().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(MyApplication.getInstance().getPackageName(), 0);
+            result = pi.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

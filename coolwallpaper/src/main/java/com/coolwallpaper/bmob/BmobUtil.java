@@ -53,4 +53,12 @@ public class BmobUtil {
         return new BmobQuery<MyBmobUpload>(BmobConst.TB_UPLOAD);
     }
 
+    /**
+     * 获取Bmob版本更新表查询对象
+     *
+     * @return BmobQuery对象
+     */
+    public static BmobQuery<MyBmobUpdate> getMyUpdateQuery() {
+        return new BmobQuery<MyBmobUpdate>(BmobConst.TB_UPDATE);
+    }
 }

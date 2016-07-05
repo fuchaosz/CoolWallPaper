@@ -89,6 +89,8 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_home_page_2);
         this.init();
         this.addListener();
+        //检测升级
+        MyApplication.getInstance().checkUpdate(this);
     }
 
     //初始化
