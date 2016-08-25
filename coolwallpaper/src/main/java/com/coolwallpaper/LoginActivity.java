@@ -124,6 +124,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
     }
 
+    //获取新浪微博用户信息
+    private void getSinaUserInfo(){
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

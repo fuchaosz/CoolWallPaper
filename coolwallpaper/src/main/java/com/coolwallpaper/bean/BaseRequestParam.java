@@ -12,29 +12,27 @@ public abstract class BaseRequestParam implements Serializable {
     /**
      * 基URL
      */
-    protected String baseUrl = "http://image.baidu.com/search/avatarjson";
+    protected String baseUrl = "http://image.baidu.com/search/acjson";
 
-    /**
-     * 表示是壁纸
-     */
-    protected String cg = "wallpaper";
+    protected String cl = "2";
 
-    protected String fr;
+    protected String face = "0";
 
-    protected String gsm = "3c";
+    protected String fp = "result";
 
-    protected String height = "";
+    protected String ic = "0";
 
-    protected String ic = "";
-
-    /**
-     * 输入的字符编码格式
-     */
     protected String ie = "utf-8";
 
-    protected String itg = "1";
+    protected String ipn = "rj";
 
-    protected int lm = -1;
+    protected String istype = "2";
+
+    protected String lm = "-1";
+
+    protected String nc = "1";
+
+    protected String oe = "utf-8";
 
     /**
      * 页码，从0开始
@@ -50,7 +48,7 @@ public abstract class BaseRequestParam implements Serializable {
 
     protected String st = "-1";
 
-    protected String tn = "resultjsonavatarnew";
+    protected String tn = "resultjson_com";
 
     /**
      * 图片宽度
@@ -62,7 +60,7 @@ public abstract class BaseRequestParam implements Serializable {
      */
     protected String word = "";
 
-    protected String z = "";
+    protected String z = "0";
 
     /**
      * 一级标题，例如：风景
@@ -95,36 +93,28 @@ public abstract class BaseRequestParam implements Serializable {
         this.baseUrl = baseUrl;
     }
 
-    public String getCg() {
-        return cg;
+    public String getCl() {
+        return cl;
     }
 
-    public void setCg(String cg) {
-        this.cg = cg;
+    public void setCl(String cl) {
+        this.cl = cl;
     }
 
-    public String getFr() {
-        return fr;
+    public String getFace() {
+        return face;
     }
 
-    public void setFr(String fr) {
-        this.fr = fr;
+    public void setFace(String face) {
+        this.face = face;
     }
 
-    public String getGsm() {
-        return gsm;
+    public String getFp() {
+        return fp;
     }
 
-    public void setGsm(String gsm) {
-        this.gsm = gsm;
-    }
-
-    public String getHeight() {
-        return height;
-    }
-
-    public void setHeight(String height) {
-        this.height = height;
+    public void setFp(String fp) {
+        this.fp = fp;
     }
 
     public String getIc() {
@@ -143,20 +133,44 @@ public abstract class BaseRequestParam implements Serializable {
         this.ie = ie;
     }
 
-    public String getItg() {
-        return itg;
+    public String getIpn() {
+        return ipn;
     }
 
-    public void setItg(String itg) {
-        this.itg = itg;
+    public void setIpn(String ipn) {
+        this.ipn = ipn;
     }
 
-    public int getLm() {
+    public String getIstype() {
+        return istype;
+    }
+
+    public void setIstype(String istype) {
+        this.istype = istype;
+    }
+
+    public String getLm() {
         return lm;
     }
 
-    public void setLm(int lm) {
+    public void setLm(String lm) {
         this.lm = lm;
+    }
+
+    public String getNc() {
+        return nc;
+    }
+
+    public void setNc(String nc) {
+        this.nc = nc;
+    }
+
+    public String getOe() {
+        return oe;
+    }
+
+    public void setOe(String oe) {
+        this.oe = oe;
     }
 
     public int getPn() {

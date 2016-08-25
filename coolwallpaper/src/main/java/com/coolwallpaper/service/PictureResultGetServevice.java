@@ -9,15 +9,13 @@ import android.util.Log;
 
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.PictureResult;
-import com.coolwallpaper.constant.AppBus;
-import com.coolwallpaper.event.DownloadPictureResultFailureEvent;
-import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
 import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.model.PictureDao;
 import com.coolwallpaper.utils.ConvertUtil;
 import com.coolwallpaper.utils.DBUtil;
+import com.coolwallpaper.utils.LogUtil;
 import com.coolwallpaper.utils.PictureParseUtil;
 
 import java.io.IOException;
@@ -39,6 +37,8 @@ import okhttp3.Response;
  */
 public class PictureResultGetServevice extends BaseService {
 
+    public static String ACTION_SAVE_SUCCESS = "PictureResultGetServevice_action_save_success";//保存数据成功
+    public static String ACTION_SAVE_FAILURE = "PictureResultGetServevice_action_save_failure";//保存数据失败
     private OkHttpClient okHttpClient;//采用okHttp来访问网络
     private ExecutorService executor;//线程池
 
@@ -70,11 +70,14 @@ public class PictureResultGetServevice extends BaseService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            return super.onStartCommand(intent, Service.START_REDELIVER_INTENT, startId);
+        }
         //取出参数
         BaseRequestParam requestParam = (BaseRequestParam) intent.getSerializableExtra("BaseRequestParam");
-        Log.d(TAG, "onStartCommand() title1=" + requestParam.getTitle1() + " title2=" + requestParam.getTitle2());
         //判断一下空指针
         if (requestParam != null) {
+            Log.d(TAG, "onStartCommand() title1=" + requestParam.getTitle1() + " title2=" + requestParam.getTitle2());
             //放进线程池里面访问网络，获取数据
             executor.execute(new GetPictureRunable(okHttpClient, requestParam));
         }
@@ -102,7 +105,9 @@ public class PictureResultGetServevice extends BaseService {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     //发送失败消息
-                    AppBus.getInstance().post(new DownloadPictureResultFailureEvent(e.toString()));
+                    //AppBus.getInstance().post(new DownloadPictureResultFailureEvent(e.toString()));
+                    //发送下载失败的广播
+                    sendFailureBroadcast(e.toString());
                 }
 
                 @Override
@@ -114,7 +119,9 @@ public class PictureResultGetServevice extends BaseService {
                     save();
                     Log.d(TAG, String.format("send Message DownloadPictureResultSuccessEvent() title1=%s title2=%s", requestParam.getTitle1(), requestParam.getTitle2()));
                     //发送成功消息
-                    AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(requestParam));
+                    //AppBus.getInstance().post(new DownloadPictureResultSuccessEvent(requestParam));
+                    //发送成功的广播
+                    sendSuccessBroadcast(requestParam);
                 }
             });
         }
@@ -155,6 +162,7 @@ public class PictureResultGetServevice extends BaseService {
                 //插入之前先判断一下有没有这个数据
                 QueryBuilder qb2 = pictureDao.queryBuilder();
                 qb2.where(PictureDao.Properties.DownloadUrl.eq(tmp.getDownloadUrl()));
+                LogUtil.d("i = " + i + "  DownloadUrl = " + tmp.getDownloadUrl());
                 //如果没有查到数据
                 if (qb2.count() == 0) {
                     //插入数据
@@ -162,5 +170,22 @@ public class PictureResultGetServevice extends BaseService {
                 }
             }
         }
+
+    }
+
+    //发送成功的广播
+    private void sendSuccessBroadcast(BaseRequestParam requestParam) {
+        Intent intent = new Intent();
+        intent.putExtra("requestParam", requestParam);
+        intent.setAction(ACTION_SAVE_SUCCESS);
+        sendBroadcast(intent);
+    }
+
+    //发送失败的广播
+    private void sendFailureBroadcast(String reason) {
+        Intent intent = new Intent();
+        intent.putExtra("reason", reason);
+        intent.setAction(ACTION_SAVE_FAILURE);
+        sendBroadcast(intent);
     }
 }

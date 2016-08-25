@@ -32,11 +32,17 @@ public class PictureParseUtil {
         try {
             //注意：图片都保存在imgs属性中
             JSONObject jo = new JSONObject(jsonArrayStr);
-            JSONArray jsonArray = new JSONArray(jo.getString("imgs"));
+            JSONArray jsonArray = new JSONArray(jo.getString("data"));
             Gson gson = new Gson();
             //遍历，使用Gson将json直接解析成bean
             for (int i = 0; i < jsonArray.length(); i++) {
-                String tmp = jsonArray.get(i).toString();
+                //判断json是否为空
+                JSONObject joTmp = jsonArray.getJSONObject(i);
+                if (joTmp.length() == 0) {
+                    //json为空则跳过
+                    continue;
+                }
+                String tmp = joTmp.toString();
                 PictureResult bean = gson.fromJson(tmp, PictureResult.class);
                 beanList.add(bean);
             }

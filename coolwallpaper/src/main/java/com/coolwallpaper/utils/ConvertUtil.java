@@ -36,8 +36,12 @@ public class ConvertUtil {
         picture.setHeight(result.getHeight());
         //处理一下图片描述,去掉strong标签
         String desc = result.getDesc();
-        desc = desc.replace("<strong>", "");
-        desc = desc.replace("</strong>", "");
+        if (desc != null && desc.contains("<strong>")) {
+            desc = desc.replace("<strong>", "");
+        }
+        if (desc != null && desc.contains("</strong>")) {
+            desc = desc.replace("</strong>", "");
+        }
         picture.setDesc(desc);
         return picture;
     }

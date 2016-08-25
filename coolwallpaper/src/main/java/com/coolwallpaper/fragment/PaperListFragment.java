@@ -1,6 +1,9 @@
 package com.coolwallpaper.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -20,7 +23,6 @@ import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.constant.AppBus;
-import com.coolwallpaper.event.DownloadPictureResultSuccessEvent;
 import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.model.Param;
 import com.coolwallpaper.model.ParamDao;
@@ -28,11 +30,12 @@ import com.coolwallpaper.model.Picture;
 import com.coolwallpaper.model.PictureDao;
 import com.coolwallpaper.service.PictureResultGetServevice;
 import com.coolwallpaper.utils.DBUtil;
+import com.coolwallpaper.utils.LogUtil;
+import com.coolwallpaper.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.orhanobut.logger.Logger;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -50,6 +53,7 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
     private String title2;
     private List<Picture> pictureList;
     private BaseRequestParam requestParam;//访问网络的参数
+    private MyReceiver myReceiver = new MyReceiver();//广播接收器
 
     @Bind(R.id.lv_paper)
     PullToRefreshListView listView;
@@ -104,11 +108,13 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
         requestParam.setTitle2(title2);
         //如果查询出来的数据为空则启动服务
         if (pictureList == null || pictureList.size() == 0) {
+            LogUtil.d("数据库没有数据");
             //启动下载图片列表的服务
             PictureResultGetServevice.startService(getActivity(), requestParam);
         }
         //数据库有数据
         else {
+            LogUtil.d("数据库有数据,pictureList.size() = " + pictureList.size());
             //设置页数,从0开始,注意pn是当前的页数，如果当前有30条数据，当前就pn就是0
             requestParam.setPn(pictureList.size() - requestParam.getRn());
             //创建适配器
@@ -151,6 +157,11 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
                 PictureResultGetServevice.startService(getActivity(), requestParam);
             }
         });
+        //注册广播监听器
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PictureResultGetServevice.ACTION_SAVE_SUCCESS);
+        filter.addAction(PictureResultGetServevice.ACTION_SAVE_FAILURE);
+        getActivity().registerReceiver(myReceiver, filter);
     }
 
     @Override
@@ -287,6 +298,7 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
+    /*
     //otto接收事件
     @Subscribe
     public void onDownloadSuccess(DownloadPictureResultSuccessEvent event) {
@@ -316,5 +328,55 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
             }
 
         }
+    }
+    */
+
+    //接收下载服务发送的广播
+    private class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            //保存成功事件的广播
+            if (action.equals(PictureResultGetServevice.ACTION_SAVE_SUCCESS)) {
+                BaseRequestParam tmpParam = (BaseRequestParam) intent.getSerializableExtra("requestParam");
+                Log.d(TAG, String.format("getBroadcast title1=%s title2=%s", tmpParam.getTitle1(), tmpParam.getTitle2()));
+                if (tmpParam != null && tmpParam.getUrl().equals(requestParam.getUrl())) {
+                    //查询数据
+                    pictureList = queryDB();
+                    if (pictureList != null && pictureList.size() > 0) {
+                        //发送加载成功消息
+                        //AppBus.getInstance().post(new LoadingFinishEvent());
+                        //还没有加载第一页
+                        if (adapter == null) {
+                            //创建适配器
+                            adapter = new PictureGridAdapter(getActivity(), pictureList);
+                            //设置适配器
+                            listView.setAdapter(adapter);
+                        }
+                        //已经有数据了
+                        else {
+                            adapter.setBeanList(pictureList);
+                            adapter.notifyDataSetChanged();
+                        }
+                        //停止刷新
+                        listView.onRefreshComplete();
+                    }
+                }
+            }
+            //保存失败的广播
+            else if (action.equals(PictureResultGetServevice.ACTION_SAVE_FAILURE)) {
+                String reason = intent.getStringExtra("reason");
+                ToastUtil.show("加载失败,请检车你的网络");
+                ToastUtil.showDebug("加载失败,reason = " + reason);
+            }
+
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(myReceiver);
+        super.onDestroy();
     }
 }

@@ -47,21 +47,21 @@ public class WallPaperRequetParam extends BaseRequestParam {
         try {
             builder.append(baseUrl);
             builder.append("?tn=" + tn);
+            builder.append("&ipn=" + ipn);
+            builder.append("&fp=" + fp);
+            builder.append("&cl=" + cl);
+            builder.append("&lm=" + lm);
             builder.append("&ie=" + ie);
+            builder.append("&oe=" + oe);
+            builder.append("&st=" + st);
+            builder.append("&z=" + z);
+            builder.append("&ic=" + ic);
             builder.append("&word=" + URLEncoder.encode(word.trim(), "UTF-8"));
-            builder.append("&cg=" + cg);
+            builder.append("&face=" + face);
+            builder.append("&istype=" + istype);
+            builder.append("&nc=" + nc);
             builder.append("&pn=" + pn);
             builder.append("&rn=" + rn);
-            builder.append("&itg=" + itg);
-            builder.append("&z=" + z);
-            builder.append("&fr=" + fr);
-            builder.append("&width=" + width);
-            builder.append("&height=" + height);
-            builder.append("&lm=" + lm);
-            builder.append("&ic=" + ic);
-            builder.append("&s=" + s);
-            builder.append("&st=" + st);
-            builder.append("&gsm=" + gsm);
         } catch (Exception e) {
             e.printStackTrace();
         }

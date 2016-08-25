@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.coolwallpaper.MyApplication;
 import com.coolwallpaper.bean.IUserInfo;
 import com.coolwallpaper.bean.QQUserInfo;
+import com.coolwallpaper.bean.SinaUserInfo;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMAuthListener;
@@ -105,6 +106,16 @@ public class UmengUtil {
     }
 
     /**
+     * 获取新浪微博登录的用户的信息
+     *
+     * @param activity
+     * @param callBack
+     */
+    public void getSinaUserInfo(Activity activity, InfoCallBack callBack) {
+        getUserInfo(activity, SHARE_MEDIA.SINA,callBack);
+    }
+
+    /**
      * 第三方登录
      *
      * @param shareMedia 常量，用于表示哪个第三方,例如：qq, 新浪微博
@@ -151,6 +162,10 @@ public class UmengUtil {
                 switch (share_media) {
                     case QQ:
                         userInfo = new QQUserInfo(map);
+                        break;
+                    //新浪微博
+                    case SINA:
+                        userInfo = new SinaUserInfo();
                         break;
                 }
                 //call back to method caller
