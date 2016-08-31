@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
@@ -47,7 +49,7 @@ public class BmobUploadService extends BaseService {
     private static Map<String, Integer> progressMap = new HashMap<>();//所有图片的上传进度
     private static Map<String, String> pathUrlMap = new HashMap<>();//上传完毕后，本地图片在bmob上的url地址
     private static Set<String> delPathSet = new HashSet<>();//取消上传的文件
-    //private ExecutorService executor;//线程池
+    private ExecutorService executor;//线程池
     private IUserInfo mUser;//用户
 
     /**
@@ -97,10 +99,7 @@ public class BmobUploadService extends BaseService {
         super.onCreate();
         LogUtil.d("服务被创建了,id=" + this.toString());
         //创建线程池
-        //executor = Executors.newCachedThreadPool();
-        //测试代码
-//        pathList.add("hello");
-//        pathList.add("world");
+        executor = Executors.newCachedThreadPool();
     }
 
     @Override
@@ -133,8 +132,7 @@ public class BmobUploadService extends BaseService {
         //将要上传的图片加入列表
         pathList.addAll(uploadList);
         //开启线程
-        //executor.execute(new UploadThread(uploadList, desc));
-        new UploadThread(uploadList, desc).run();
+        executor.execute(new UploadThread(uploadList, desc));
     }
 
     //上传线程
@@ -180,6 +178,8 @@ public class BmobUploadService extends BaseService {
                                 //告诉用户，这个图片上传成功了
                                 LogUtil.d(TAG, "过滤掉，发送广播,tmpPath = " + tmpPath);
                                 updateProgress(tmpPath, 100, 2000);
+                                //将这个图片的进度设为100
+                                progressMap.put(tmpPath, 100);
                             }
                         }
                     }
