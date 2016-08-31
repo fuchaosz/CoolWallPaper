@@ -51,6 +51,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
     private BmobUploadService uploadService;//上传服务
     private Set<String> delSet;//删除或取消上传的图片列表
     private String desc;//图片的描述,上传图片的时候要写图片描述
+    private BroadcastReceiver receiver;
 
     @Bind(R.id.tv_title)
     TextView tvTitle;
@@ -104,6 +105,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
         pathList = uploadService.getUploadingPathList();
         progressMap = uploadService.getProgressMap();
         delSet = uploadService.getDelPathSet();
+        LogUtil.d("UploadActivity pathList=" + pathList.toString() + " pathList.size = " + (pathList == null ? 0 : pathList.size()));
         //如果没有数据
         if (EmptyUtil.isEmpty(pathList)) {
             //显示空白页
@@ -121,7 +123,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
         }
         //注册广播,刷新进度
         IntentFilter filter = new IntentFilter(BmobUploadService.ACTION_UPDATE_PFROGRESS);
-        registerReceiver(new BroadcastReceiver() {
+        this.receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //取出参数
@@ -131,7 +133,8 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
                 //刷新图片
                 updateProgress(path, progress);
             }
-        }, filter);
+        };
+        registerReceiver(receiver, filter);
 
     }
 
@@ -423,6 +426,8 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
         if (myConn != null) {
             unbindService(myConn);
         }
+        //取消广播注册
+        unregisterReceiver(receiver);
         super.onDestroy();
     }
 }

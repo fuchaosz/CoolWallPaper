@@ -15,7 +15,7 @@ public class Constant {
     public static final int USER_TYPE_APP = 0;
     //登录类型:QQ登录
     public static final int USER_TYPE_QQ = 1;
-    //登录类型:新浪微博登录
+    //登录类型:新浪微博登录(目前放弃新浪微博登录功能，因为它的审核太麻烦)
     public static final int USER_TYPE_SINA = 2;
 
     //0 表示性别男

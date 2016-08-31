@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
@@ -45,31 +43,12 @@ public class BmobUploadService extends BaseService {
 
     public static final String TAG = "[BmobUploadService]";
     public static final String ACTION_UPDATE_PFROGRESS = "action_update_progress";
-    private List<String> pathList = new ArrayList<>();//要上传的图片地址
-    private Map<String, Integer> progressMap = new HashMap<>();//所有图片的上传进度
-    private Map<String, String> pathUrlMap = new HashMap<>();//上传完毕后，本地图片在bmob上的url地址
-    private Set<String> delPathSet = new HashSet<>();//取消上传的文件
-    private ExecutorService executor;//线程池
+    private static List<String> pathList = new ArrayList<>();//要上传的图片地址
+    private static Map<String, Integer> progressMap = new HashMap<>();//所有图片的上传进度
+    private static Map<String, String> pathUrlMap = new HashMap<>();//上传完毕后，本地图片在bmob上的url地址
+    private static Set<String> delPathSet = new HashSet<>();//取消上传的文件
+    //private ExecutorService executor;//线程池
     private IUserInfo mUser;//用户
-    /*
-    private IUploadAidlInterface.Stub stub = new IUploadAidlInterface.Stub() {
-
-        @Override
-        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
-
-        }
-
-        @Override
-        public int getUploadingCount() throws RemoteException {
-            return 0;
-        }
-
-        @Override
-        public String[] getUploadingFilePaths() throws RemoteException {
-            return new String[0];
-        }
-    };
-    */
 
     /**
      * 绑定服务
@@ -116,8 +95,12 @@ public class BmobUploadService extends BaseService {
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.d("服务被创建了,id=" + this.toString());
         //创建线程池
-        executor = Executors.newCachedThreadPool();
+        //executor = Executors.newCachedThreadPool();
+        //测试代码
+//        pathList.add("hello");
+//        pathList.add("world");
     }
 
     @Override
@@ -150,7 +133,8 @@ public class BmobUploadService extends BaseService {
         //将要上传的图片加入列表
         pathList.addAll(uploadList);
         //开启线程
-        executor.execute(new UploadThread(uploadList, desc));
+        //executor.execute(new UploadThread(uploadList, desc));
+        new UploadThread(uploadList, desc).run();
     }
 
     //上传线程
@@ -223,6 +207,7 @@ public class BmobUploadService extends BaseService {
                                 progressMap.put(paths[i - 1], i1);
                             }
                             LogUtil.d(String.format("onProgress(%d,%d,%d,%d)", i, i1, i2, i3));
+                            LogUtil.d(String.format("pathList.size=" + pathList.size()));
                             //刷新进度
                             updateProgress(paths[i - 1], i1);
                         }
@@ -338,27 +323,33 @@ public class BmobUploadService extends BaseService {
     }
 
     //获取正在上传的图片的进度
-    public Map<String, Integer> getProgressMap() {
+    public static Map<String, Integer> getProgressMap() {
         return progressMap;
     }
 
     //获取正在上传的图片列表
-    public List<String> getUploadingPathList() {
+    public static List<String> getUploadingPathList() {
         return pathList;
     }
 
     //获取上传完毕后图片的path和bmob上地址url对应的map
-    public Map<String, String> getPathUrlMap() {
+    public static Map<String, String> getPathUrlMap() {
         return pathUrlMap;
     }
 
     //获取删除的列表
-    public Set<String> getDelPathSet() {
+    public static Set<String> getDelPathSet() {
         return delPathSet;
     }
 
     //设置删除的列表
-    public void setDelPathSet(Set<String> delPathSet) {
-        this.delPathSet = delPathSet;
+    public static void setDelPathSet(Set<String> delPathSet) {
+        BmobUploadService.delPathSet = delPathSet;
+    }
+
+    @Override
+    public void onDestroy() {
+        LogUtil.d("服务被销毁掉了,id=" + this.toString());
+        super.onDestroy();
     }
 }

@@ -69,7 +69,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             //新浪微博登录
             case R.id.ly_sina:
-                sinaLogin();
                 break;
             //关闭按钮
             case R.id.iv_close:
@@ -109,24 +108,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 dealLoginSuccess(userInfo);
             }
         });
-    }
-
-    //新浪登录
-    private void sinaLogin() {
-        UmengUtil.getInstence().sinaLogin(this, new UmengUtil.Callback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure(String reason) {
-            }
-        });
-    }
-
-    //获取新浪微博用户信息
-    private void getSinaUserInfo(){
-
     }
 
     @Override

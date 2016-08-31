@@ -477,6 +477,10 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
             //登录后返回
             if (requestCode == REQUEST_CODE_UPLOAD) {
                 ToastUtil.show("登录成功");
+                //获取当前的用户
+                mUser = UserUtil.getInstance().getUser();
+                //登录成功之后要刷新侧边栏
+                initLeftMenu();
                 //继续跳转到上传界面
                 UploadActivity.startActivity(this);
             }

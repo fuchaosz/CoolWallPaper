@@ -119,7 +119,6 @@ public class MyCenterActivity extends BaseActivity {
                         break;
                     //sina login
                     case LoginPopupWindow.LOGIN_TYPE_SINA:
-                        sinaLogin();
                         break;
                 }
             }
@@ -159,19 +158,6 @@ public class MyCenterActivity extends BaseActivity {
                 refresh(userInfo);
                 //登录成功后要做一些业务处理
                 dealLoginSuccess(userInfo);
-            }
-        });
-    }
-
-    //新浪登录
-    private void sinaLogin() {
-        UmengUtil.getInstence().sinaLogin(this, new UmengUtil.Callback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure(String reason) {
             }
         });
     }
