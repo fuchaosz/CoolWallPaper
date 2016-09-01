@@ -150,4 +150,22 @@ public class ConvertUtil {
         picture.setDesc(myBmobUpload.getDesc());
         return picture;
     }
+
+    /**
+     * 将Bmob上上传的图片批量转换为本地图片
+     *
+     * @param myBmobUploadList 用户上传到bmob上的图片表对象
+     * @return
+     */
+    public static List<Picture> toPictures(List<MyBmobUpload> myBmobUploadList) {
+        if (EmptyUtil.isEmpty(myBmobUploadList)) {
+            return null;
+        }
+        List<Picture> pictureList = new ArrayList<>();
+        for (MyBmobUpload u : myBmobUploadList) {
+            Picture tmp = toPicture(u);
+            pictureList.add(tmp);
+        }
+        return pictureList;
+    }
 }
