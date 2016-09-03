@@ -144,7 +144,8 @@ public class ConvertUtil {
         Picture picture = new Picture();
         picture.setThumbUrl(myBmobUpload.getFileUrl());
         picture.setDownloadUrl(myBmobUpload.getFileUrl());
-        picture.setFromUrl("");
+        //注意FromURl填充的是bmob上的objectId
+        picture.setFromUrl(myBmobUpload.getObjectId());
         picture.setWidth(myBmobUpload.getWidth());
         picture.setHeight(myBmobUpload.getHeight());
         picture.setDesc(myBmobUpload.getDesc());

@@ -134,7 +134,8 @@
         <service android:name=".service.BmobUploadService"/>
         <!--升级服务-->
         <service android:name=".service.UpdateService"/>
-
+        <!--查看用户上传图片列表的类-->
+        <activity android:name="ShowUserUploadPictureList"/>
     </application>
 
 </manifest>

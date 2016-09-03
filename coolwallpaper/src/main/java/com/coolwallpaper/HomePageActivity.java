@@ -138,6 +138,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         leftMenuView.findViewById(R.id.ly_my_wallpaper).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_local_paper).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_provide_paper).setOnClickListener(leftMenuListener);
+        leftMenuView.findViewById(R.id.ly_user_upload).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_check_update).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_more_set).setOnClickListener(leftMenuListener);
         leftMenuView.findViewById(R.id.ly_my_center).setOnClickListener(leftMenuListener);
@@ -379,6 +380,10 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                 //我要供图
                 case R.id.ly_provide_paper:
                     onMyUploadClick();
+                    break;
+                //用户上传
+                case R.id.ly_user_upload:
+                    ShowUserUploadPictureList.startActivity(getActivity());
                     break;
                 //检查升级
                 case R.id.ly_check_update:

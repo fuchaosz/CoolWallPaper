@@ -114,6 +114,31 @@
             />
     </LinearLayout>
 
+    <!--用户上传-->
+    <LinearLayout
+        android:id="@+id/ly_user_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/menu_icon_size"
+            android:layout_height="@dimen/menu_icon_size"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_user_pic"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户上传"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+
     <!--检查升级-->
     <LinearLayout
         android:id="@+id/ly_check_update"
