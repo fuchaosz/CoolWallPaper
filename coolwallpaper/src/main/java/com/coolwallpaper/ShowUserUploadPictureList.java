@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -96,18 +97,17 @@ public class ShowUserUploadPictureList extends BaseActivity implements View.OnCl
 
     private void addListener() {
         //下拉刷新，上拉加载
-//        lvPaper.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-//            @Override
-//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//
-//            }
-//
-//            @Override
-//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                //加载更多
-//                queryUserUpload(currentPage);
-//            }
-//        });
+        lvPaper.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+                //上拉加载下一页
+            }
+        });
     }
 
     //查询用户上传的图片
@@ -175,13 +175,18 @@ public class ShowUserUploadPictureList extends BaseActivity implements View.OnCl
         lvPaper.setVisibility(View.VISIBLE);
     }
 
-    @OnClick({R.id.ly_menu_left})
+    @OnClick({R.id.ly_menu_left, R.id.ly_menu_right, R.id.tv_my_upload})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             //向左的箭头
             case R.id.ly_menu_left:
                 finish();
+                break;
+            case R.id.ly_menu_right://右边的上传菜单按钮
+            case R.id.tv_my_upload://我要上传
+                //跳转到上传界面
+                UploadActivityStarter.startActivity(this);
                 break;
         }
     }

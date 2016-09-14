@@ -130,6 +130,8 @@
 
         <!--上传图片的界面-->
         <activity android:name=".UploadActivity"/>
+        <!--上传图片的启动类-->
+        <activity android:name=".UploadActivityStarter"/>
         <!--图片上传服务-->
         <service android:name=".service.BmobUploadService"/>
         <!--升级服务-->

@@ -90,7 +90,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         this.init();
         this.addListener();
         //检测升级
-        MyApplication.getInstance().checkUpdate(this);
+        //MyApplication.getInstance().checkUpdate(this);
     }
 
     //初始化
@@ -243,6 +243,13 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         return resideMenu.dispatchTouchEvent(event);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mUser = UserUtil.getInstance().getUser();
+        //初始化左边菜单
+        initLeftMenu();
+    }
 
     //viewpager适配器
     class PaperViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -387,6 +394,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
                     break;
                 //检查升级
                 case R.id.ly_check_update:
+                    MyApplication.getInstance().checkUpdate(getActivity());
                     break;
                 //更多设置
                 case R.id.ly_more_set:
