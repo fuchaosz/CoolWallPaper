@@ -21,6 +21,7 @@ import com.coolwallpaper.utils.ToastUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -37,7 +38,7 @@ public class ShowUserUploadPictureList extends BaseActivity implements View.OnCl
 
     private int PAGE_SIZE = 2;
     private int currentPage = 1;
-    private List<Picture> picList;//用户上传的图片列表
+    private List<Picture> picList = new ArrayList<>();//用户上传的图片列表
     private MyAdapter adapter;//图片列表适配器
 
 
@@ -106,6 +107,7 @@ public class ShowUserUploadPictureList extends BaseActivity implements View.OnCl
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
                 //上拉加载下一页
+                queryUserUpload(currentPage);
             }
         });
     }
@@ -129,12 +131,14 @@ public class ShowUserUploadPictureList extends BaseActivity implements View.OnCl
                     else {
                         //不能再上拉了
                         lvPaper.setMode(PullToRefreshBase.Mode.DISABLED);
+                        //提示用户
+                        ToastUtil.show("图片全部加载完毕");
                     }
                 }
                 //有数据
                 else {
                     //将Bmob数据转换为JavaBean
-                    picList = ConvertUtil.toPictures(list);
+                    picList.addAll(ConvertUtil.toPictures(list));
                     //显示列表
                     showListView();
                     //更新数据
