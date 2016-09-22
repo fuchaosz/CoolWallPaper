@@ -5,8 +5,10 @@ import java.net.URLEncoder;
 /**
  * 获取壁纸的请求参数
  * Created by John on 2015/9/29.
+ * 该为从搜狗壁纸获取壁纸
+ * Modify by fuchao on 2015/9/22
  */
-public class WallPaperRequetParam extends BaseRequestParam {
+public class WallPaperRequetParam extends SogouBaseRequestParam {
 
     /**
      * 默认构造函数,显示壁纸--全部
@@ -32,10 +34,10 @@ public class WallPaperRequetParam extends BaseRequestParam {
      * @param page
      */
     public WallPaperRequetParam(String title1, String title2, int page, int pageSize) {
-        this.title1 = title1;
-        this.title2 = title2;
-        this.pn = page;
-        this.rn = pageSize;
+        this.category = title1;
+        this.tag = title2;
+        this.start = page;
+        this.len = pageSize;
     }
 
 
@@ -43,25 +45,12 @@ public class WallPaperRequetParam extends BaseRequestParam {
     public String getUrl() {
         //组装参数,组合成URL
         StringBuilder builder = new StringBuilder();
-        word = "壁纸 " + title1 + " " + title2;
         try {
             builder.append(baseUrl);
-            builder.append("?tn=" + tn);
-            builder.append("&ipn=" + ipn);
-            builder.append("&fp=" + fp);
-            builder.append("&cl=" + cl);
-            builder.append("&lm=" + lm);
-            builder.append("&ie=" + ie);
-            builder.append("&oe=" + oe);
-            builder.append("&st=" + st);
-            builder.append("&z=" + z);
-            builder.append("&ic=" + ic);
-            builder.append("&word=" + URLEncoder.encode(word.trim(), "UTF-8"));
-            builder.append("&face=" + face);
-            builder.append("&istype=" + istype);
-            builder.append("&nc=" + nc);
-            builder.append("&pn=" + pn);
-            builder.append("&rn=" + rn);
+            builder.append("?category="+URLEncoder.encode(category,"UTF-8"));
+            builder.append("&tag=" + URLEncoder.encode(tag,"UTF-8"));
+            builder.append("&start=" + start);
+            builder.append("&len=" + len);
         } catch (Exception e) {
             e.printStackTrace();
         }
