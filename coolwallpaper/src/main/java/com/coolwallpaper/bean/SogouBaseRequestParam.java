@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 搜狗图片的基本请求参数.搜狗图片比百度图片好用多了，没有无效图片,外链一目了然,百度图片搜索后居然还加密，fuck
  * Created by fuchao on 2016/4/19.
  */
-public abstract class SogouBaseRequestParam implements Serializable {
+public abstract class SogouBaseRequestParam extends BaseRequestParam {
 
     protected String baseUrl = "http://pic.sogou.com/pics/channel/getAllRecomPicByTag.jsp";
 
@@ -101,5 +101,25 @@ public abstract class SogouBaseRequestParam implements Serializable {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    @Override
+    public String getTitle1() {
+        return category;
+    }
+
+    @Override
+    public String getTitle2() {
+        return tag;
+    }
+
+    @Override
+    public int getPageSize() {
+        return len;
+    }
+
+    @Override
+    public void setPageSize(int pageSize) {
+        this.len = pageSize;
     }
 }

@@ -10,67 +10,30 @@ import java.io.Serializable;
 public abstract class BaseRequestParam implements Serializable {
 
     /**
-     * 基URL
+     * 基URL,不同的图片来源有不同的baseUrl
      */
-    protected String baseUrl = "http://image.baidu.com/search/acjson";
-
-    protected String cl = "2";
-
-    protected String face = "0";
-
-    protected String fp = "result";
-
-    protected String ic = "0";
-
-    protected String ie = "utf-8";
-
-    protected String ipn = "rj";
-
-    protected String istype = "2";
-
-    protected String lm = "-1";
-
-    protected String nc = "1";
-
-    protected String oe = "utf-8";
+    protected String baseUrl = "";
 
     /**
-     * 页码，从0开始
-     */
-    protected int pn = 0;
-
-    /**
-     * 每页显示的图片数
-     */
-    protected int rn = 30;
-
-    protected String s = "0";
-
-    protected String st = "-1";
-
-    protected String tn = "resultjson_com";
-
-    /**
-     * 图片宽度
-     */
-    protected String width = "";
-
-    /**
-     * 关键词，注意：多层次的关键词用空格分开
-     */
-    protected String word = "";
-
-    protected String z = "0";
-
-    /**
-     * 一级标题，例如：风景
+     * 一级标签
      */
     protected String title1;
 
     /**
-     * 二级标题，例如：雪景
+     * 二级标签
      */
     protected String title2;
+
+    /**
+     * 起始页码
+     */
+    protected int start = 0;
+
+    /**
+     * 每页显示的图片数
+     */
+    protected int pageSize = 30;
+
 
     /**
      * 默认构造函数
@@ -84,158 +47,6 @@ public abstract class BaseRequestParam implements Serializable {
      * @return
      */
     public abstract String getUrl();
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getCl() {
-        return cl;
-    }
-
-    public void setCl(String cl) {
-        this.cl = cl;
-    }
-
-    public String getFace() {
-        return face;
-    }
-
-    public void setFace(String face) {
-        this.face = face;
-    }
-
-    public String getFp() {
-        return fp;
-    }
-
-    public void setFp(String fp) {
-        this.fp = fp;
-    }
-
-    public String getIc() {
-        return ic;
-    }
-
-    public void setIc(String ic) {
-        this.ic = ic;
-    }
-
-    public String getIe() {
-        return ie;
-    }
-
-    public void setIe(String ie) {
-        this.ie = ie;
-    }
-
-    public String getIpn() {
-        return ipn;
-    }
-
-    public void setIpn(String ipn) {
-        this.ipn = ipn;
-    }
-
-    public String getIstype() {
-        return istype;
-    }
-
-    public void setIstype(String istype) {
-        this.istype = istype;
-    }
-
-    public String getLm() {
-        return lm;
-    }
-
-    public void setLm(String lm) {
-        this.lm = lm;
-    }
-
-    public String getNc() {
-        return nc;
-    }
-
-    public void setNc(String nc) {
-        this.nc = nc;
-    }
-
-    public String getOe() {
-        return oe;
-    }
-
-    public void setOe(String oe) {
-        this.oe = oe;
-    }
-
-    public int getPn() {
-        return pn;
-    }
-
-    public void setPn(int pn) {
-        this.pn = pn;
-    }
-
-    public int getRn() {
-        return rn;
-    }
-
-    public void setRn(int rn) {
-        this.rn = rn;
-    }
-
-    public String getS() {
-        return s;
-    }
-
-    public void setS(String s) {
-        this.s = s;
-    }
-
-    public String getSt() {
-        return st;
-    }
-
-    public void setSt(String st) {
-        this.st = st;
-    }
-
-    public String getTn() {
-        return tn;
-    }
-
-    public void setTn(String tn) {
-        this.tn = tn;
-    }
-
-    public String getWidth() {
-        return width;
-    }
-
-    public void setWidth(String width) {
-        this.width = width;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
-    }
-
-    public String getZ() {
-        return z;
-    }
-
-    public void setZ(String z) {
-        this.z = z;
-    }
 
     public String getTitle1() {
         return title1;
@@ -251,5 +62,21 @@ public abstract class BaseRequestParam implements Serializable {
 
     public void setTitle2(String title2) {
         this.title2 = title2;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

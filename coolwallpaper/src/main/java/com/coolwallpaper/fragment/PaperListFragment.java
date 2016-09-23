@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.coolwallpaper.R;
 import com.coolwallpaper.ShowPictureDetailActivity;
 import com.coolwallpaper.bean.BaseRequestParam;
+import com.coolwallpaper.bean.SogouBaseRequestParam;
 import com.coolwallpaper.bean.WallPaperRequetParam;
 import com.coolwallpaper.constant.AppBus;
 import com.coolwallpaper.event.LoadingFinishEvent;
@@ -116,7 +117,7 @@ public class PaperListFragment extends BaseFragment implements View.OnClickListe
         else {
             LogUtil.d("数据库有数据,pictureList.size() = " + pictureList.size());
             //设置页数,从0开始,注意pn是当前的页数，如果当前有30条数据，当前就pn就是0
-            requestParam.setPn(pictureList.size() - requestParam.getRn());
+            requestParam.setStart(pictureList.size() - requestParam.getRn());
             //创建适配器
             this.adapter = new PictureGridAdapter(getActivity(), pictureList);
             //设置适配器
