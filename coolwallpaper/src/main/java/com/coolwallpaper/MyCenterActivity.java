@@ -35,6 +35,7 @@ public class MyCenterActivity extends BaseActivity {
 
     private LoginPopupWindow popupWindow;
     private MyBmobUser user;
+    private IUserInfo mUser;
 
     @Bind(R.id.iv_face)
     ImageView ivFace;
@@ -63,7 +64,13 @@ public class MyCenterActivity extends BaseActivity {
     }
 
     public void init() {
-
+        mUser = UserUtil.getInstance().getUser();
+        //判断用户是否登录
+        if(mUser != null ){
+            //如果用户登录过了，则显示用户信息
+            Glide.with(this).load(mUser.getImg()).into(ivFace);
+            tvName.setText(mUser.getName());
+        }
     }
 
     //刷新
@@ -80,11 +87,19 @@ public class MyCenterActivity extends BaseActivity {
 
     @OnClick({R.id.ly_left_arrow, R.id.iv_face, R.id.ly_my_wallpaper, R.id.ly_my_favour, R.id.ly_my_download, R.id.ly_my_upload})
     public void onClick(View v) {
+        //标题栏上返回键
+        if(v.getId() == R.id.ly_left_arrow){
+            finish();
+            return;
+        }
+        //其余按钮要检查是否登录
+        if(mUser == null){
+            //没有登录则要调到登录界面
+            showLoginWindow();
+            return;
+        }
+        //登录后则处理正常的逻辑
         switch (v.getId()) {
-            //标题栏上返回键
-            case R.id.ly_left_arrow:
-                finish();
-                break;
             //我的头像
             case R.id.iv_face:
                 showLoginWindow();

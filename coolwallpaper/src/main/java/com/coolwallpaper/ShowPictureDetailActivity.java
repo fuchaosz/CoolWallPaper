@@ -540,7 +540,14 @@ public class ShowPictureDetailActivity extends BaseActivity implements View.OnCl
         } else {
             Uri sourceUri = Uri.parse(url);
             Uri destinationUri = Uri.fromFile(new File(FileUtil.getInstance().DIRECTORY_DOWNLOAD, SAMPLE_CROPPED_IMAGE_NAME));
-            UCrop.of(sourceUri, destinationUri).withAspectRatio(16, 9).withMaxResultSize(picture.getWidth(), picture.getHeight()).start(this);
+            UCrop uCrop = UCrop.of(sourceUri, destinationUri).withAspectRatio(16, 9).withMaxResultSize(picture.getWidth(), picture.getHeight());
+            //开始设置
+            UCrop.Options options = new UCrop.Options();
+            options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+            //options.setToolbarWidgetColor(ContextCompat.getColor(this,R.color.lightBlue));
+            uCrop.withOptions(options);
+            //结束设置
+            uCrop.start(this);
         }
     }
 

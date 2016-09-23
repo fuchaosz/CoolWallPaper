@@ -34,9 +34,10 @@ public class WallPaperRequetParam extends SogouBaseRequestParam {
      * @param page
      */
     public WallPaperRequetParam(String title1, String title2, int page, int pageSize) {
+        super.setPage(page);
         this.category = title1;
         this.tag = title2;
-        this.start = page;
+        this.page = page;
         this.len = pageSize;
     }
 

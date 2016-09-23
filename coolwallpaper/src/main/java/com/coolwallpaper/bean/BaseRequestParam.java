@@ -25,9 +25,9 @@ public abstract class BaseRequestParam implements Serializable {
     protected String title2;
 
     /**
-     * 起始页码
+     * 当前页数，第一页是0
      */
-    protected int start = 0;
+    protected int page = 0;
 
     /**
      * 每页显示的图片数
@@ -64,19 +64,19 @@ public abstract class BaseRequestParam implements Serializable {
         this.title2 = title2;
     }
 
-    public int getStart() {
-        return start;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
     public int getPageSize() {
         return pageSize;
     }
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 }

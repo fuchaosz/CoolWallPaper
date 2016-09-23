@@ -29,6 +29,13 @@ public interface DataSouece {
     public String[] getTitle2(int index);
 
     /**
+     * 通过一级标题获取二级标题
+     * @param title1 一级标题
+     * @return 二级标题
+     */
+    public String[] getTitle2(String title1);
+
+    /**
      * 获取所有一级标题
      * @return
      */

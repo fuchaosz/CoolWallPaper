@@ -12,19 +12,19 @@ public class PictureResult implements Serializable {
     /**
      * 缩略图
      */
-    @SerializedName("hoverURL")
+    @SerializedName("thumbUrl")
     private String thumbUrl;
 
     /**
      * 原图地址
      */
-    @SerializedName("objURL")
+    @SerializedName("pic_url")
     private String downloadUrl;
 
     /**
      * 图片来源
      */
-    @SerializedName("fromURL")
+    @SerializedName("page_url")
     private String fromUrl;
 
     /**
@@ -40,7 +40,7 @@ public class PictureResult implements Serializable {
     /**
      * 图片描述，这里是图片来源的页面的标题
      */
-    @SerializedName("fromPageTitle")
+    @SerializedName("tags")
     private String desc;
 
     public PictureResult() {

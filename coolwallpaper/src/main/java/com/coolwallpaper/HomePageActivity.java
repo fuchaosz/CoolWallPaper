@@ -16,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.coolwallpaper.bean.DataSouece;
 import com.coolwallpaper.bean.IUserInfo;
+import com.coolwallpaper.bean.SogouDataSource;
 import com.coolwallpaper.event.LoadingFinishEvent;
 import com.coolwallpaper.fragment.PaperListFragment;
 import com.coolwallpaper.utils.ToastUtil;
@@ -49,6 +51,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     private float startY;//按下的时候y坐标
     private int DISTANCE = 100;//上滑的距离
     private IUserInfo mUser;//本地保存的用户
+    private DataSouece dataSouece = new SogouDataSource();//数据来源,默认来自搜狗
 
     //标题栏
     @Bind(R.id.ly_title)
@@ -301,45 +304,45 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
             switch (v.getId()) {
                 //首页
                 case R.id.ly_home:
-                    title1 = "不同风格";
-                    subTitles = new String[]{"美女", "可爱", "帅哥", "萝莉", "萌宠", "中国风", "炫酷", "时尚", "古典"};
+                    title1 = "";
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 //热门
                 case R.id.ly_hot:
                     title1 = "不同风格";
-                    subTitles = new String[]{"唯美", "小清新", "性感", "国家地理", "旅游风光", "高清壁纸", "水墨画", "搞笑"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_scenery:
                     title1 = "风景";
-                    subTitles = new String[]{"雪景", "山水", "蓝天", "田园", "火焰", "公路", "海底", "冰雪", "宇宙", "秋天", "日出", "沙漠", "星空", "海滩"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_plant:
                     title1 = "植物花卉";
-                    subTitles = new String[]{"向日葵", "玫瑰", "枫叶", "花草", "蒲公英", "郁金香", "月季"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_star:
                     title1 = "明星";
-                    subTitles = new String[]{"科比", "高圆圆", "钟汉良", "李敏镐", "刘亦菲", "周杰伦", "刘诗诗", "少女时代", "赵奕欢", "张柏芝"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_animal:
                     title1 = "动物";
-                    subTitles = new String[]{"狗狗", "兔子", "老虎", "猫咪", "熊猫"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_car:
                     title1 = "名车";
-                    subTitles = new String[]{"兰博基尼", "劳斯莱斯", "跑车", "玛莎拉蒂", "保时捷", "法拉利", "宾利", "凯迪拉克", "悍马", "沃尔沃"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_film:
                     title1 = "影视";
-                    subTitles = new String[]{"变形金刚", "钢铁侠", "蝙蝠侠", "日韩影视", "港台影视", "大陆影视", "欧美影视"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_game:
                     title1 = "游戏";
-                    subTitles = new String[]{"英雄联盟", "梦幻西游", "星际争霸", "魔兽世界", "使命召唤", "仙剑奇侠传", "古剑奇谭", "穿越火线", "鬼泣"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
                 case R.id.ly_anime:
                     title1 = "卡通动漫";
-                    subTitles = new String[]{"海贼王", "火影忍者", "兔斯基", "初音未来", "秦时明月", "犬夜叉", "多啦a梦", "海绵宝宝", "动漫美女", "守护甜心"};
+                    subTitles = dataSouece.getTitle2(title1);
                     break;
             }
             //设置加载中

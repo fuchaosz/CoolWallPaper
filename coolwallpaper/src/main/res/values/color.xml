@@ -14,6 +14,9 @@
     <color name="txtGray2">#d3d3d3</color>
     <color name="txtBlue">#17abe3</color>
 
+    <!-- UCrop colors -->
+    <color name="ucrop_color_toolbar_widget">@color/white</color>
+
     <!--白色 -->
     <color name="ivory">#FFFFF0</color>
     <!--象牙色 -->

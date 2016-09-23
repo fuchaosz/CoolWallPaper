@@ -162,7 +162,7 @@ public class PictureDetailFragment extends BaseFragment implements View.OnClickL
                     super.onLoadFailed(e, errorDrawable);
                     Logger.d("大图加载失败,去加载小图,url = " + picture.getThumbUrl());
                     //如果大图加载失败了，那么必须加载小图
-                    showThumbnail(picture);
+                    //showThumbnail(picture);
                 }
             });
         } catch (Exception e) {
