@@ -6,6 +6,7 @@
               android:gravity="right|center_vertical"
               android:orientation="vertical"
               android:padding="10dp"
+    android:background="@color/black"
     >
 
     <!--表格布局-->
@@ -69,7 +70,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="热门"
+                    android:text="最热"
                     android:textColor="@color/white"
                     />
             </LinearLayout>
@@ -112,7 +113,7 @@
 
             <!--植物-->
             <LinearLayout
-                android:id="@+id/ly_plant"
+                android:id="@+id/ly_girl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -130,7 +131,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="植物"
+                    android:text="美女"
                     android:textColor="@color/white"
                     />
             </LinearLayout>
@@ -173,7 +174,7 @@
 
             <!--动物-->
             <LinearLayout
-                android:id="@+id/ly_animal"
+                android:id="@+id/ly_select"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -191,7 +192,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="萌宠"
+                    android:text="精选"
                     android:textColor="@color/white"
                     />
             </LinearLayout>
@@ -263,7 +264,7 @@
 
             <!--游戏-->
             <LinearLayout
-                android:id="@+id/ly_game"
+                android:id="@+id/ly_furniture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -281,7 +282,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="游戏"
+                    android:text="家具"
                     android:textColor="@color/white"
                     />
             </LinearLayout>
@@ -295,7 +296,7 @@
 
             <!--动漫-->
             <LinearLayout
-                android:id="@+id/ly_anime"
+                android:id="@+id/ly_beautiful"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -313,7 +314,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="动漫"
+                    android:text="唯美"
                     android:textColor="@color/white"
                     />
             </LinearLayout>

@@ -5,10 +5,20 @@ import android.support.annotation.NonNull;
 import com.coolwallpaper.bean.PictureResult;
 import com.coolwallpaper.bean.SearchResult;
 import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.library.common.util.JSONUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +52,20 @@ public class PictureParseUtil {
                     //json为空则跳过
                     continue;
                 }
+                //处理一下tags标签
+                JSONArray arrayTags = joTmp.getJSONArray("tags");
+                String tmpTags = "";
+                if (arrayTags != null) {
+                    for (int j = 0; j < arrayTags.length(); j++) {
+                        String tagStr = arrayTags.getString(j);
+                        //将每个tag用空格隔开
+                        tmpTags = tmpTags + " " + tagStr;
+                    }
+                    //最后去除掉末尾的空格
+                    tmpTags = tmpTags.trim();
+                }
+                //替换掉原来的tags
+                joTmp.put("tags",tmpTags);
                 String tmp = joTmp.toString();
                 PictureResult bean = gson.fromJson(tmp, PictureResult.class);
                 beanList.add(bean);
@@ -82,4 +106,5 @@ public class PictureParseUtil {
         }
         return beanList;
     }
+
 }

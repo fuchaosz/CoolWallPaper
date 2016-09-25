@@ -102,8 +102,20 @@ public abstract class SogouBaseRequestParam extends BaseRequestParam {
     }
 
     @Override
+    public void setTitle1(String title1) {
+        super.setTitle1(title1);
+        this.category = title1;
+    }
+
+    @Override
     public String getTitle1() {
         return category;
+    }
+
+    @Override
+    public void setTitle2(String title2) {
+        super.setTitle2(title2);
+        this.tag = title2;
     }
 
     @Override
@@ -133,4 +145,5 @@ public abstract class SogouBaseRequestParam extends BaseRequestParam {
        }
         start = page * len;
     }
+
 }

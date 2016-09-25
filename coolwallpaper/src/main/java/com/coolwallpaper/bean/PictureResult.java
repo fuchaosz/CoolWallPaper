@@ -12,7 +12,7 @@ public class PictureResult implements Serializable {
     /**
      * 缩略图
      */
-    @SerializedName("thumbUrl")
+    @SerializedName("sthumbUrl")
     private String thumbUrl;
 
     /**

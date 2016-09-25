@@ -51,7 +51,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     private float startY;//按下的时候y坐标
     private int DISTANCE = 100;//上滑的距离
     private IUserInfo mUser;//本地保存的用户
-    private DataSouece dataSouece = new SogouDataSource();//数据来源,默认来自搜狗
+    //private DataSouece dataSouece = new SogouDataSource();//数据来源,默认来自搜狗
 
     //标题栏
     @Bind(R.id.ly_title)
@@ -109,8 +109,8 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         //关闭左滑右滑开关
         this.resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         //初始化的数据
-        subTitles = new String[]{"雪景", "田园", "公路", "海底", "宇宙", "秋天", "日出", "沙漠", "星空", "海滩"};
-        title1 = "风景";
+        title1 = "壁纸";
+        subTitles = new String[]{"世界风光", "动物", "明星", "影视", "日韩明星", "摄影", "游戏"};
         //设置适配器
         adapter = new PaperViewPagerAdapter(this, title1, subTitles);
         viewPager.setAdapter(adapter);
@@ -149,13 +149,13 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         rightMenuView.findViewById(R.id.ly_home).setOnClickListener(rightMenuListener);
         rightMenuView.findViewById(R.id.ly_hot).setOnClickListener(rightMenuListener);
         rightMenuView.findViewById(R.id.ly_scenery).setOnClickListener(rightMenuListener);
-        rightMenuView.findViewById(R.id.ly_plant).setOnClickListener(rightMenuListener);
+        rightMenuView.findViewById(R.id.ly_girl).setOnClickListener(rightMenuListener);
         rightMenuView.findViewById(R.id.ly_star).setOnClickListener(rightMenuListener);
-        rightMenuView.findViewById(R.id.ly_animal).setOnClickListener(rightMenuListener);
+        rightMenuView.findViewById(R.id.ly_select).setOnClickListener(rightMenuListener);
         rightMenuView.findViewById(R.id.ly_car).setOnClickListener(rightMenuListener);
         rightMenuView.findViewById(R.id.ly_film).setOnClickListener(rightMenuListener);
-        rightMenuView.findViewById(R.id.ly_game).setOnClickListener(rightMenuListener);
-        rightMenuView.findViewById(R.id.ly_anime).setOnClickListener(rightMenuListener);
+        rightMenuView.findViewById(R.id.ly_furniture).setOnClickListener(rightMenuListener);
+        rightMenuView.findViewById(R.id.ly_beautiful).setOnClickListener(rightMenuListener);
         //顶部菜单
         findViewById(R.id.ly_set).setOnClickListener(this);
         findViewById(R.id.iv_search).setOnClickListener(this);
@@ -304,45 +304,53 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
             switch (v.getId()) {
                 //首页
                 case R.id.ly_home:
-                    title1 = "";
-                    subTitles = dataSouece.getTitle2(title1);
+                    title1 = "壁纸";
+                    subTitles = new String[]{"世界风光", "动物", "明星", "影视", "日韩明星", "摄影", "游戏"};
                     break;
                 //热门
                 case R.id.ly_hot:
-                    title1 = "不同风格";
-                    subTitles = dataSouece.getTitle2(title1);
+                    title1 = "美女";
+                    subTitles = new String[]{"女神", "车模", "时尚", "文艺", "甜素纯", "甜美", "清纯"};
                     break;
+                //风景
                 case R.id.ly_scenery:
-                    title1 = "风景";
-                    subTitles = dataSouece.getTitle2(title1);
+                    title1 = "壁纸";
+                    subTitles = new String[]{"全部", "军事", "微软", "萌宠", "静物", "卡通", "清新", "优质", "日历", "手绘"};
                     break;
-                case R.id.ly_plant:
-                    title1 = "植物花卉";
-                    subTitles = dataSouece.getTitle2(title1);
+                //美女
+                case R.id.ly_girl:
+                    title1 = "美女";
+                    subTitles = new String[]{"全部", "唯美", "风情", "妹纸", "高挑", "可爱", "惊艳", "长腿美女"};
                     break;
+                //明星
                 case R.id.ly_star:
                     title1 = "明星";
-                    subTitles = dataSouece.getTitle2(title1);
+                    subTitles = new String[]{"全部", "宋仲基", "鹿晗", "霍建华", "林心如", "陈学冬", "杨幂", "angelababy", "赵丽颖", "刘诗诗", "刘涛", "唐嫣"};
                     break;
-                case R.id.ly_animal:
-                    title1 = "动物";
-                    subTitles = dataSouece.getTitle2(title1);
+                //精选
+                case R.id.ly_select:
+                    title1 = "美女";
+                    subTitles = new String[]{"摄影", "小清新", "自拍照", "秀色丽影", "妹纸"};
                     break;
+                //名车
                 case R.id.ly_car:
                     title1 = "名车";
-                    subTitles = dataSouece.getTitle2(title1);
+                    subTitles = new String[]{"全部", "超跑", "官方车图", "经典名车", "豪车", "车模", "车展"};
                     break;
+                //影视
                 case R.id.ly_film:
-                    title1 = "影视";
-                    subTitles = dataSouece.getTitle2(title1);
+                    title1 = "壁纸";
+                    subTitles = new String[]{"影视", "日韩明星", "欧美影视", "大陆明星"};
                     break;
-                case R.id.ly_game:
-                    title1 = "游戏";
-                    subTitles = dataSouece.getTitle2(title1);
+                //家具
+                case R.id.ly_furniture:
+                    title1 = "家具";
+                    subTitles = new String[]{"全部", "新古典", "乡村田园", "现代", "混搭", "美式", "北欧", "复式", "别墅"};
                     break;
-                case R.id.ly_anime:
-                    title1 = "卡通动漫";
-                    subTitles = dataSouece.getTitle2(title1);
+                //唯美
+                case R.id.ly_beautiful:
+                    title1 = "LOFTER";
+                    subTitles = new String[]{"全部", "最文艺", "拍私房", "LOFTER少女", "旅行微攻略", "遇见世界", "今天穿什么", "美妆潮流", "慢食堂", "元气早餐", "萌宠"};
                     break;
             }
             //设置加载中
@@ -357,16 +365,6 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
             resideMenu.setSwipeDirectionEnable(ResideMenu.DIRECTION_LEFT);
             //定位到第一页
             viewPager.setCurrentItem(0);
-            //刷新标题
-            if (v.getId() == R.id.ly_home) {
-                tvTitle.setText("首页");
-            } else if (v.getId() == R.id.ly_hot) {
-                tvTitle.setText("热门");
-            } else if (v.getId() == R.id.ly_animal) {
-                tvTitle.setText("萌宠");
-            } else {
-                tvTitle.setText(title1);
-            }
         }
     }
 
